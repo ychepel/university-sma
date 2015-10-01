@@ -1,6 +1,5 @@
 package university;
 
-import java.util.Calendar;
 import java.util.Date;
 
 public abstract class Person {

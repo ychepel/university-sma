@@ -38,4 +38,8 @@ public class CourseSchedule {
 		return lecturer;
 	}
 	
+	public Set<StudentGroup> getStudentCourseGroups() {
+		return studentCourseGroups;
+	}
+
 }

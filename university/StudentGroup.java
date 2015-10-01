@@ -36,11 +36,21 @@ public class StudentGroup {
 		return grade;
 	}
 	
+	public Set<Student> getStudentsOnCourse(Course course) {
+		Set<Student> students = new HashSet<>();
+		for(Student student : getStudents()) {
+			if(student.getMarks().containsKey(course)) {
+				if(student.getMarks().get(course) == null) {
+					students.add(student);
+				}
+			}
+		}
+		return students;
+	}
 	
-	public StudentGroup(Integer grade) {
-		throw new UnsupportedOperationException();
-//		this.name = name;
-//		this.students = new HashSet<Student>();
+	public StudentGroup(String name) {
+		this.name = name;
+		this.students = new HashSet<Student>();
 	}
 	
 	public void addStudentToGroup(Student student) {

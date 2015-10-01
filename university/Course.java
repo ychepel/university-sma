@@ -25,7 +25,7 @@ public class Course {
 		}
 	}
 	
-	public Set<CourseSchedule> getLecturerCourseSchedule(Lecturer person) {
+	public Set<CourseSchedule> getCourseSchedule(Lecturer person) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			if(courseSchedule.getLecturer().equals(person)) {
@@ -33,6 +33,25 @@ public class Course {
 			}
 		}
 		return schedule;
+	}
+	
+	public Set<CourseSchedule> getCourseSchedule(StudentGroup studentGroup) {
+		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
+		for(CourseSchedule courseSchedule : getCourseSchedules()) {
+			if(courseSchedule.getStudentCourseGroups().contains(studentGroup)) {
+				schedule.add(courseSchedule);
+			}
+		}
+		return schedule;
+	}
+	
+	public Boolean isStudentGroupScheduled(StudentGroup studentGroup) {
+		for(CourseSchedule courseSchedule : getCourseSchedules()) {
+			if(courseSchedule.getStudentCourseGroups().contains(studentGroup)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public Set<CourseSchedule> getCourseSchedules() {

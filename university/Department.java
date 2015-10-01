@@ -10,12 +10,33 @@ public class Department {
 	private Set<Lecturer> lecturers;
 	private Set<Course> courses;
 	
-	public Set<CourseSchedule> getLecturerSchedule(Lecturer person) {
+	public Set<CourseSchedule> getLecturerSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
-				schedule.addAll(course.getLecturerCourseSchedule(person));
+				schedule.addAll(course.getCourseSchedule(lecturer));
 		}
 		return schedule;
+	}
+	
+	public Boolean enrollStudent(Student student, Course course) {
+		if(!getCourses().contains(course)) return false;
+		if(course.isStudentGroupScheduled(student.getStudentGroup())) {
+			student.addMark(course, null);
+			return true;
+		}
+		return false;
+	}
+	
+	public void addLecturer(Lecturer lecturer) {
+		if(!lecturers.contains(lecturer)) {
+			lecturers.add(lecturer);
+		}
+	}
+	
+	public void addCourse(Course course) {
+		if(!courses.contains(course)) {
+			courses.add(course);
+		}
 	}
 	
 	public Set<Course> getCourses() {

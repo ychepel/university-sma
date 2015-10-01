@@ -1,5 +1,6 @@
 package university;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,26 +22,44 @@ public class Faculty {
 			}
 		}
 		if(student.getStudentGroup() == null) {
-			StudentGroup newStudentGroup = new StudentGroup(studentGrade);
+			String newStudentGroupName = "G" + studentGrade + "-" + (getGroupQuantityOnGrade(studentGrade) + 1); 
+			StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
 			newStudentGroup.addStudentToGroup(student);
 			student.setStudentGroup(newStudentGroup);
 		}
 	}
 	
-	public void addLecturer(Lecturer person, Department department) {
-		
+	public Integer getGroupQuantityOnGrade(Integer grade) {
+		Integer quantity = 0;
+		for(StudentGroup studentGroup : getStudentGroups()) {
+			if(grade == studentGroup.getStudentGroupGrade()) {
+				quantity++;
+			}
+		}
+		return quantity;
 	}
 	
-	public void addCourse(Course course, Department department, Lecturer lecturer) {
-		
+	public void addLecturer(Department department, Lecturer lecturer) {
+		department.addLecturer(lecturer);
 	}
 	
-	public void enrollStudent(Student person, Course course) {
-		
+	public void addCourse(Department department, Course course) {
+		department.addCourse(course);
 	}
 	
-	public Map<Course, CourseSchedule> getStudentSchedule(Student person) {
-		throw new UnsupportedOperationException();
+	public Boolean enrollStudent(Student person, Course course) {
+		for(Department department : departments) {
+			if(department.enrollStudent(person, course)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public Set<CourseSchedule> getStudentSchedule(Student student) {
+		Set<CourseSchedule> schedule = new HashSet<>();
+			//TODO
+		return schedule;
 	}
 	
 	public Set<Student> getUnderachievementStudent() {

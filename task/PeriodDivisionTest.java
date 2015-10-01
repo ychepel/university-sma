@@ -1,4 +1,4 @@
-package education.task;
+package task;
 
 import static org.junit.Assert.*;
 

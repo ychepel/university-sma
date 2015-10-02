@@ -46,6 +46,15 @@ public class StudentTest {
 	}
 	
 	@Test
+	public void testGetAverageMark5() {
+		Student student = new Student();
+		student.addMark(new Course(), null);
+		student.addMark(new Course(), null);
+		Integer result = student.getAverageMark();
+		assertEquals(Integer.valueOf(0) , result);
+	}
+	
+	@Test
 	public void testGetGrade1() {
 		Student student = new Student() {
 			@Override

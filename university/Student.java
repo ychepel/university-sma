@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Student extends Person {
+	private final Integer LENGTH_OF_APPRENTICESHIP = 5;
+	
 	private Boolean governmentFinanced;
 	private Calendar entranceDate;
 	private Calendar completionDate;
@@ -13,9 +15,7 @@ public class Student extends Person {
 	private StudentGroup studentGroup;
 	private Map<Course, Integer> marks = new HashMap<>();
 	
-	private final Integer LENGTH_OF_APPRENTICESHIP = 5;
-	
-	public Integer getAverageMark() {
+	public Integer getAverageMark() throws NullPointerException {
 		Map<Course, Integer> marks = getMarks();
 		
 		if (marks.size() == 0) return 0;
@@ -26,6 +26,9 @@ public class Student extends Person {
 			if(entry.getValue() == null) continue;
 			markSum += entry.getValue();
 			markCount++; 
+		}
+		if(markCount == 0) {
+			throw new NullPointerException("all student courses have NULL mark");
 		}
 		return markSum / markCount;
 	}

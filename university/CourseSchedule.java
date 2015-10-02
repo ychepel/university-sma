@@ -17,11 +17,22 @@ public class CourseSchedule {
 		this.timetables = new HashSet<Calendar>();
 	}
 	
+	public void excludeStudent(Student student) {
+		for(StudentGroup studentGroup : getStudentCourseGroups()) {
+			Set<Student> groupStudents = studentGroup.getStudentsOnCourse(course);
+			if(!groupStudents.contains(student)) continue; 
+			if(groupStudents.size() == 1) {
+				removeCourseGroup(studentGroup);
+				break;
+			}
+		}
+	}
+	
 	public void addToCourseGroup(StudentGroup studentGroup) {
 		studentCourseGroups.add(studentGroup);
 	}
 	
-	public void removeFromCourseGroup(StudentGroup studentGroup) {
+	private void removeCourseGroup(StudentGroup studentGroup) {
 		studentCourseGroups.remove(studentGroup);
 	}
 	

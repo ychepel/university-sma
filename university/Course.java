@@ -1,6 +1,7 @@
 package university;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class Course {
@@ -52,6 +53,16 @@ public class Course {
 			}
 		}
 		return false;
+	}
+	
+	public void excludeStudent(Student student) {
+		for(Iterator<CourseSchedule> iterator = courseSchedules.iterator(); iterator.hasNext(); ) {
+			CourseSchedule courseSchedule = iterator.next();
+			courseSchedule.excludeStudent(student);
+			if(courseSchedule.getStudentCourseGroups().size() == 0) {
+				courseSchedules.remove(courseSchedule);
+			}
+		}
 	}
 	
 	public Set<CourseSchedule> getCourseSchedules() {

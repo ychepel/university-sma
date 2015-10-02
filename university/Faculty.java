@@ -4,12 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Faculty {
-	private String name;
-	private Set<StudentGroup> studentGroups;
-	private Set<Department> departments;
 	
 	private final Integer MAX_QUANTITY_IN_GROUP = 30;
 	private final Integer UNDERACHIEVMENT_AVG_MARK_LEVEL = 35;
+	
+	private String name;
+	private Set<StudentGroup> studentGroups;
+	private Set<Department> departments;
 	
 	public void addStudent(Student student) {
 		Integer studentGrade = student.getGrade();
@@ -57,7 +58,19 @@ public class Faculty {
 		return false;
 	}
 	
-	public Set<CourseSchedule> getStudentSchedule(Student student) {
+	public Set<Student> getUnderachievementStudent() {
+		Set<Student> students = new HashSet<>();
+		for(StudentGroup studentGroup : getStudentGroups()) {
+			for(Student student : studentGroup.getStudents()) {
+				if(student.getAverageMark() < UNDERACHIEVMENT_AVG_MARK_LEVEL) {
+					students.add(student);
+				}
+			}
+		}
+		return students;
+	}
+
+	public Set<CourseSchedule> getSchedule(Student student) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		StudentGroup studentGroup =  student.getStudentGroup();
 		for(Department department : departments) {
@@ -70,16 +83,20 @@ public class Faculty {
 		return schedule;
 	}
 	
-	public Set<Student> getUnderachievementStudent() {
-		Set<Student> students = new HashSet<>();
-		for(StudentGroup studentGroup : getStudentGroups()) {
-			for(Student student : studentGroup.getStudents()) {
-				if(student.getAverageMark() < UNDERACHIEVMENT_AVG_MARK_LEVEL) {
-					students.add(student);
-				}
-			}
+	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
+		Set<CourseSchedule> schedule = new HashSet<>();
+		for(Department department :departments) {
+				schedule.addAll(department.getDepartmentSchedule(lecturer));
 		}
-		return students;
+		return schedule;
+	}
+	
+	public Set<Lecturer> getLecturers() {
+		Set<Lecturer> lecturers = new HashSet<>();
+		for(Department department :departments) {
+			lecturers.addAll(department.getLecturers());
+		}
+		return lecturers;
 	}
 	
 	public Set<StudentGroup> getStudentGroups() {
@@ -91,4 +108,12 @@ public class Faculty {
 		studentGroups = new HashSet<>();
 		departments = new HashSet<>();
 	}
+
+	public void removeStudent(Student student) {
+		for(Department department :departments) {
+			department.excludeStudent(student);
+		}
+		student.setStudentGroup(null);
+	}
+	
 }

@@ -8,7 +8,7 @@ public class Department {
 	private Set<Lecturer> lecturers;
 	private Set<Course> courses;
 	
-	public Set<CourseSchedule> getLecturerSchedule(Lecturer lecturer) {
+	public Set<CourseSchedule> getDepartmentSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
 				schedule.addAll(course.getCourseSchedule(lecturer));
@@ -39,5 +39,15 @@ public class Department {
 	
 	public Set<Course> getCourses() {
 		return courses;
+	}
+
+	public Set<Lecturer> getLecturers() {
+		return lecturers;
+	}
+
+	public void excludeStudent(Student student) {
+		for(Course course : getCourses()) {
+			course.excludeStudent(student);
+		}
 	}
 }

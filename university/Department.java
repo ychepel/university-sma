@@ -8,10 +8,10 @@ public class Department {
 	private Set<Lecturer> lecturers;
 	private Set<Course> courses;
 	
-	public Set<CourseSchedule> getDepartmentSchedule(Lecturer lecturer) {
+	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
-				schedule.addAll(course.getCourseSchedule(lecturer));
+				schedule.addAll(course.getSchedule(lecturer));
 		}
 		return schedule;
 	}
@@ -25,13 +25,13 @@ public class Department {
 		return false;
 	}
 	
-	public void addLecturer(Lecturer lecturer) {
+	public void add(Lecturer lecturer) {
 		if(!lecturers.contains(lecturer)) {
 			lecturers.add(lecturer);
 		}
 	}
 	
-	public void addCourse(Course course) {
+	public void add(Course course) {
 		if(!courses.contains(course)) {
 			courses.add(course);
 		}

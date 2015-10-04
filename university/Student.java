@@ -15,7 +15,7 @@ public class Student extends Person {
 	private StudentGroup studentGroup;
 	private Map<Course, Integer> marks = new HashMap<>();
 	
-	public Integer getAverageMark() throws NullPointerException {
+	public Integer getAverageMark() {
 		Map<Course, Integer> marks = getMarks();
 		
 		if (marks.size() == 0) return 0;
@@ -28,7 +28,7 @@ public class Student extends Person {
 			markCount++; 
 		}
 		if(markCount == 0) {
-			throw new NullPointerException("all student courses have NULL mark");
+			return -1;
 		}
 		return markSum / markCount;
 	}

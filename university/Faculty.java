@@ -12,29 +12,29 @@ public class Faculty {
 	private Set<StudentGroup> studentGroups;
 	private Set<Department> departments;
 	
-	public void addStudent(Student student) {
+	public void add(Student student) {
 		Integer studentGrade = student.getGrade();
 		for(StudentGroup studentGroup : getStudentGroups()) {
-			if(studentGrade == studentGroup.getStudentGroupGrade()) {
+			if(studentGrade == studentGroup.getGrade()) {
 				if(studentGroup.getStudentQuantity() < MAX_QUANTITY_IN_GROUP) {
-					studentGroup.addStudentToGroup(student);
+					studentGroup.addToGroup(student);
 					student.setStudentGroup(studentGroup);
 					break;
 				}
 			}
 		}
 		if(student.getStudentGroup() == null) {
-			String newStudentGroupName = "G" + studentGrade + "-" + (getGroupQuantityOnGrade(studentGrade) + 1); 
+			String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
 			StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
-			newStudentGroup.addStudentToGroup(student);
+			newStudentGroup.addToGroup(student);
 			student.setStudentGroup(newStudentGroup);
 		}
 	}
 	
-	public Integer getGroupQuantityOnGrade(Integer grade) {
+	public Integer getGroupsQuantityOnGrade(Integer grade) {
 		Integer quantity = 0;
 		for(StudentGroup studentGroup : getStudentGroups()) {
-			if(grade == studentGroup.getStudentGroupGrade()) {
+			if(grade == studentGroup.getGrade()) {
 				quantity++;
 			}
 		}
@@ -42,11 +42,11 @@ public class Faculty {
 	}
 	
 	public void addLecturer(Department department, Lecturer lecturer) {
-		department.addLecturer(lecturer);
+		department.add(lecturer);
 	}
 	
 	public void addCourse(Department department, Course course) {
-		department.addCourse(course);
+		department.add(course);
 	}
 	
 	public Boolean enrollStudent(Student person, Course course) {
@@ -62,7 +62,9 @@ public class Faculty {
 		Set<Student> students = new HashSet<>();
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			for(Student student : studentGroup.getStudents()) {
-				if(student.getAverageMark() < UNDERACHIEVMENT_AVG_MARK_LEVEL) {
+				Integer averageMark = student.getAverageMark();
+				if(averageMark < 0 ) continue;
+				if(averageMark < UNDERACHIEVMENT_AVG_MARK_LEVEL) {
 					students.add(student);
 				}
 			}
@@ -76,7 +78,7 @@ public class Faculty {
 		for(Department department : departments) {
 			for(Course course : department.getCourses()) {
 				if(studentGroup.getStudentsOnCourse(course).contains(student)) {
-					schedule.addAll(course.getCourseSchedule(studentGroup));
+					schedule.addAll(course.getSchedule(studentGroup));
 				}
 			}
 		}
@@ -86,7 +88,7 @@ public class Faculty {
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Department department :departments) {
-				schedule.addAll(department.getDepartmentSchedule(lecturer));
+				schedule.addAll(department.getSchedule(lecturer));
 		}
 		return schedule;
 	}

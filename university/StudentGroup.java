@@ -19,7 +19,7 @@ public class StudentGroup {
 		return result;
 	}
 	
-	public Integer getStudentGroupGrade() {
+	public Integer getGrade() {
 		Integer grade = 0;
 		for(Student student : getStudents()) {
 			if(student.getGrade() != 0) {
@@ -47,7 +47,7 @@ public class StudentGroup {
 		this.students = new HashSet<Student>();
 	}
 	
-	public void addStudentToGroup(Student student) {
+	public void addToGroup(Student student) {
 		students.add(student);
 	}
 

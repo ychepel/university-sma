@@ -14,19 +14,19 @@ public class Course {
 		Boolean scheduleExist = false;
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			if(courseSchedule.getLecturer().equals(person)) {
-				courseSchedule.addToCourseGroup(studentGroup);
+				courseSchedule.add(studentGroup);
 				scheduleExist = true;
 				break;
 			}
 			if(!scheduleExist) {
 				CourseSchedule newCourseSchedule = new CourseSchedule(this, person);
-				newCourseSchedule.addToCourseGroup(studentGroup);
-				this.addCourseSchedule(newCourseSchedule);
+				newCourseSchedule.add(studentGroup);
+				this.add(newCourseSchedule);
 			}
 		}
 	}
 	
-	public Set<CourseSchedule> getCourseSchedule(Lecturer person) {
+	public Set<CourseSchedule> getSchedule(Lecturer person) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			if(courseSchedule.getLecturer().equals(person)) {
@@ -36,10 +36,10 @@ public class Course {
 		return schedule;
 	}
 	
-	public Set<CourseSchedule> getCourseSchedule(StudentGroup studentGroup) {
+	public Set<CourseSchedule> getSchedule(StudentGroup studentGroup) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getStudentCourseGroups().contains(studentGroup)) {
+			if(courseSchedule.getStudentGroups().contains(studentGroup)) {
 				schedule.add(courseSchedule);
 			}
 		}
@@ -48,7 +48,7 @@ public class Course {
 	
 	public Boolean isStudentGroupScheduled(StudentGroup studentGroup) {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getStudentCourseGroups().contains(studentGroup)) {
+			if(courseSchedule.getStudentGroups().contains(studentGroup)) {
 				return true;
 			}
 		}
@@ -59,7 +59,7 @@ public class Course {
 		for(Iterator<CourseSchedule> iterator = courseSchedules.iterator(); iterator.hasNext(); ) {
 			CourseSchedule courseSchedule = iterator.next();
 			courseSchedule.excludeStudent(student);
-			if(courseSchedule.getStudentCourseGroups().size() == 0) {
+			if(courseSchedule.getStudentGroups().size() == 0) {
 				courseSchedules.remove(courseSchedule);
 			}
 		}
@@ -69,7 +69,7 @@ public class Course {
 		return courseSchedules;
 	}
 	
-	public void addCourseSchedule(CourseSchedule courseSchedule) {
+	public void add(CourseSchedule courseSchedule) {
 		courseSchedules.add(courseSchedule);
 	}
 }

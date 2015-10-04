@@ -28,7 +28,7 @@ public class University {
 		return result;
 	}
 	
-	public Map<Faculty, Set<CourseSchedule>> getUniversitySchedule() {
+	public Map<Faculty, Set<CourseSchedule>> getSchedule() {
 		Map<Faculty, Set<CourseSchedule>> schedule = new HashMap<>();
 		for(Faculty faculty : faculties) {
 			Set<CourseSchedule> facultySchedule = new HashSet<>();
@@ -40,7 +40,7 @@ public class University {
 		return schedule;
 	}
 	
-	public void changeStudentFaculty(Student student, Faculty newFaculty) {
+	public void removeToFaculty(Student student, Faculty newFaculty) {
 		StudentGroup oldStudentGroup = student.getStudentGroup();
 		Faculty oldStudentFaculty = null;
 		for(Faculty faculty : faculties) {
@@ -53,7 +53,7 @@ public class University {
 		if(oldStudentFaculty != null) {
 			oldStudentFaculty.removeStudent(student);
 		}
-		newFaculty.addStudent(student);
+		newFaculty.add(student);
 	}
 	
 }

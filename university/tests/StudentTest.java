@@ -1,4 +1,4 @@
-package university;
+package university.tests;
 
 import static org.junit.Assert.*;
 
@@ -39,7 +39,7 @@ public class StudentTest {
 	@Test
 	public void testGetAverageMark4() {
 		Student student = new Student();
-		student.addMark(new Course(), null);
+		student.addMark(new Course(), -1);
 		student.addMark(new Course(), 0);
 		Integer result = student.getAverageMark();
 		assertEquals(Integer.valueOf(0) , result);
@@ -48,10 +48,10 @@ public class StudentTest {
 	@Test
 	public void testGetAverageMark5() {
 		Student student = new Student();
-		student.addMark(new Course(), null);
-		student.addMark(new Course(), null);
+		student.addMark(new Course(), -1);
+		student.addMark(new Course(), -1);
 		Integer result = student.getAverageMark();
-		assertEquals(Integer.valueOf(0) , result);
+		assertEquals(Integer.valueOf(-1) , result);
 	}
 	
 	@Test

@@ -19,7 +19,7 @@ public class Department {
 	public Boolean enrollStudent(Student student, Course course) {
 		if(!getCourses().contains(course)) return false;
 		if(course.isStudentGroupScheduled(student.getStudentGroup())) {
-			student.addMark(course, null);
+			student.addMark(course, -1);
 			return true;
 		}
 		return false;

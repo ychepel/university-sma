@@ -23,7 +23,7 @@ public class Student extends Person {
 		Integer markSum = 0;
 		Integer markCount = 0;
 		for(Map.Entry<Course, Integer> entry : marks.entrySet()) {
-			if(entry.getValue() == null) continue;
+			if(entry.getValue() == -1) continue;
 			markSum += entry.getValue();
 			markCount++; 
 		}

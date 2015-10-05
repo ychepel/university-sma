@@ -19,11 +19,12 @@ public class CourseSchedule {
 	
 	public void excludeStudent(Student student) {
 		for(StudentGroup studentGroup : getStudentGroups()) {
-			Set<Student> groupStudents = studentGroup.getStudentsOnCourse(course);
-			if(!groupStudents.contains(student)) continue; 
-			if(groupStudents.size() == 1) {
+			Set<Student> studentOnCourse = studentGroup.getStudentsOnCourse(course);
+			if(! studentOnCourse.contains(student)) continue; 
+			student.addMark(course, 0);
+			if(studentOnCourse.size() == 1) {
 				remove(studentGroup);
-				break;
+				return;
 			}
 		}
 	}

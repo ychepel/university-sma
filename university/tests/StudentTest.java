@@ -15,8 +15,8 @@ public class StudentTest {
 	@Test
 	public void testGetAverageMark1() {
 		Student student = new Student();
-		student.addMark(new Course(), 12);
-		student.addMark(new Course(), 7);
+		student.addMark(new Course("A"), 12);
+		student.addMark(new Course("B"), 7);
 		Integer result = student.getAverageMark();
 		assertEquals(Integer.valueOf(9) , result);
 	}
@@ -24,7 +24,7 @@ public class StudentTest {
 	@Test
 	public void testGetAverageMark2() {
 		Student student = new Student();
-		student.addMark(new Course(), 0);
+		student.addMark(new Course("A"), 0);
 		Integer result = student.getAverageMark();
 		assertEquals(Integer.valueOf(0) , result);
 	}
@@ -33,14 +33,14 @@ public class StudentTest {
 	public void testGetAverageMark3() {
 		Student student = new Student();
 		Integer result = student.getAverageMark();
-		assertEquals(Integer.valueOf(0) , result);
+		assertEquals(Integer.valueOf(-1) , result);
 	}
 
 	@Test
 	public void testGetAverageMark4() {
 		Student student = new Student();
-		student.addMark(new Course(), -1);
-		student.addMark(new Course(), 0);
+		student.addMark(new Course("A"), -1);
+		student.addMark(new Course("B"), 0);
 		Integer result = student.getAverageMark();
 		assertEquals(Integer.valueOf(0) , result);
 	}
@@ -48,8 +48,8 @@ public class StudentTest {
 	@Test
 	public void testGetAverageMark5() {
 		Student student = new Student();
-		student.addMark(new Course(), -1);
-		student.addMark(new Course(), -1);
+		student.addMark(new Course("A"), -1);
+		student.addMark(new Course("B"), -1);
 		Integer result = student.getAverageMark();
 		assertEquals(Integer.valueOf(-1) , result);
 	}

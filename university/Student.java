@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class Student extends Person {
 	private final Integer LENGTH_OF_APPRENTICESHIP = 5;
+	private final Integer NO_VALUE = -1;
 	
 	private Boolean governmentFinanced;
 	private Calendar entranceDate;
@@ -18,17 +19,17 @@ public class Student extends Person {
 	public Integer getAverageMark() {
 		Map<Course, Integer> marks = getMarks();
 		
-		if (marks.size() == 0) return 0;
+		if (marks.size() == 0) return NO_VALUE;
 	
 		Integer markSum = 0;
 		Integer markCount = 0;
 		for(Map.Entry<Course, Integer> entry : marks.entrySet()) {
-			if(entry.getValue() == -1) continue;
+			if(entry.getValue() == NO_VALUE) continue;
 			markSum += entry.getValue();
 			markCount++; 
 		}
 		if(markCount == 0) {
-			return -1;
+			return NO_VALUE;
 		}
 		return markSum / markCount;
 	}

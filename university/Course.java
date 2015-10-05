@@ -10,20 +10,17 @@ public class Course {
 	private Boolean obligatory;
 	private Set<CourseSchedule> courseSchedules;
 	
-	public void addGroupSchedule(Lecturer person, StudentGroup studentGroup) {
-		Boolean scheduleExist = false;
+	public void addCourseSchedule(Lecturer lecturer, StudentGroup studentGroup) {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getLecturer().equals(person)) {
+			if(courseSchedule.getLecturer().equals(lecturer)) {
 				courseSchedule.add(studentGroup);
-				scheduleExist = true;
-				break;
-			}
-			if(!scheduleExist) {
-				CourseSchedule newCourseSchedule = new CourseSchedule(this, person);
-				newCourseSchedule.add(studentGroup);
-				this.add(newCourseSchedule);
+				return;
 			}
 		}
+		
+		CourseSchedule newCourseSchedule = new CourseSchedule(this, lecturer);
+		newCourseSchedule.add(studentGroup);
+		this.add(newCourseSchedule);
 	}
 	
 	public Set<CourseSchedule> getSchedule(Lecturer person) {
@@ -72,4 +69,14 @@ public class Course {
 	public void add(CourseSchedule courseSchedule) {
 		courseSchedules.add(courseSchedule);
 	}
+	
+	public void setCourseSchedules(Set<CourseSchedule> courseSchedules) {
+		this.courseSchedules = courseSchedules;
+	}
+	
+	public Course(String name) {
+		this.name = name;
+		courseSchedules =  new HashSet<>();
+	}
+
 }

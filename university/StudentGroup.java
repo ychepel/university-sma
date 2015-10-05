@@ -13,28 +13,28 @@ public class StudentGroup {
 		Map<Student, Integer> result = new HashMap<>();
 		for(Student student : getStudents()) {
 			Map<Course, Integer> studentMarks = student.getMarks();
-			if(studentMarks.containsKey(course))
+			if(studentMarks.containsKey(course)) {
+				if(studentMarks.get(course) == -1) continue;
 				result.put(student, studentMarks.get(course));
+			}
 		}
 		return result;
 	}
 	
 	public Integer getGrade() {
-		Integer grade = 0;
 		for(Student student : getStudents()) {
 			if(student.getGrade() != 0) {
-				grade = student.getGrade();
-				break;
+				return student.getGrade();
 			}
 		}
-		return grade;
+		return 0;
 	}
 	
 	public Set<Student> getStudentsOnCourse(Course course) {
 		Set<Student> students = new HashSet<>();
 		for(Student student : getStudents()) {
 			if(student.getMarks().containsKey(course)) {
-				if(student.getMarks().get(course) == null) {
+				if(student.getMarks().get(course) == -1) {
 					students.add(student);
 				}
 			}

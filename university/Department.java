@@ -11,7 +11,7 @@ public class Department {
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
-				schedule.addAll(course.getSchedule(lecturer));
+			schedule.addAll(course.getSchedule(lecturer));
 		}
 		return schedule;
 	}
@@ -55,5 +55,9 @@ public class Department {
 		this.name = name;
 		lecturers = new HashSet<>();
 		courses = new HashSet<>();
+	}
+	
+	public String getName() {
+		return name;
 	}
 }

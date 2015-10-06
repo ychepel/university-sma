@@ -17,8 +17,9 @@ public class University {
 		for(Faculty faculty : faculties) {
 			lecturerSchedule.addAll(faculty.getSchedule(lecturer));
 		}
+
 		for(CourseSchedule courseSchedule : lecturerSchedule) {
-			Set<Calendar> timetables = new HashSet<>();
+			Set<Calendar> timetables = courseSchedule.getTimetables();
 			for(Calendar timetable : timetables) {
 				if(timetable.get(Calendar.YEAR) != period.get(Calendar.YEAR)) continue;
 				if(timetable.get(Calendar.MONTH) != period.get(Calendar.MONTH)) continue;
@@ -53,7 +54,18 @@ public class University {
 		if(oldStudentFaculty != null) {
 			oldStudentFaculty.removeStudent(student);
 		}
+
 		newFaculty.add(student);
+	}
+	
+	public University(String name) {
+		this.name = name;
+		this.address = new Address();
+		this.faculties = new HashSet<>();
+	}
+	
+	public void add(Faculty faculty) {
+		this.faculties.add(faculty);
 	}
 	
 }

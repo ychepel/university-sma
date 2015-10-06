@@ -93,4 +93,12 @@ public class StudentTest {
 		assertEquals(Integer.valueOf(0) , result);
 	}
 	
+	@Test
+	public void testSetEntranceDate() {
+		Student student = new Student();
+		student.setEntranceDate(new GregorianCalendar(2015, Calendar.SEPTEMBER, 1));
+		Calendar expectedResult = new GregorianCalendar(2020, Calendar.MAY, 31);
+		assertEquals(expectedResult , student.getCompletionDate());
+	}
+	
 }

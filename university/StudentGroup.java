@@ -47,7 +47,7 @@ public class StudentGroup {
 		this.students = new HashSet<Student>();
 	}
 	
-	public void addToGroup(Student student) {
+	public void add(Student student) {
 		students.add(student);
 	}
 
@@ -61,6 +61,10 @@ public class StudentGroup {
 	
 	public Integer getStudentQuantity() {
 		return getStudents().size();
+	}
+
+	public void remove(Student student) {
+		this.students.remove(student);
 	}
 	
 }

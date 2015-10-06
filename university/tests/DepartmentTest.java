@@ -18,7 +18,6 @@ public class DepartmentTest {
 		Student student1 = new Student();
 		StudentGroup studentGroup = new StudentGroup("group - 11");
 		student1.setStudentGroup(studentGroup);
-		studentGroup.addToGroup(student1);
 		courseA.addCourseSchedule(new Lecturer() , studentGroup);
 		
 		assertTrue(department.enrollStudent(student1, courseA));

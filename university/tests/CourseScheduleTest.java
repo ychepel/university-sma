@@ -15,8 +15,6 @@ public class CourseScheduleTest {
 		StudentGroup studentGroup = new StudentGroup("Gr-101");
 		student1.setStudentGroup(studentGroup);
 		student2.setStudentGroup(studentGroup);
-		studentGroup.addToGroup(student1);
-		studentGroup.addToGroup(student2);
 
 		Course course = new Course("A");
 		Lecturer lecturer = new Lecturer();

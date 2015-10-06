@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -24,8 +23,12 @@ public class StudentGroupTest {
 		assertEquals(new HashSet<Student>(), studentGroup.getStudents());
 		
 		Student student1 = new Student();
+		student1.setStudentGroup(studentGroup);
 		Student student2 = new Student();
+		student2.setStudentGroup(studentGroup);
 		Student student3 = new Student();
+		student3.setStudentGroup(studentGroup);
+		
 		
 		Course courseA = new Course("A");
 		Course courseB = new Course("B");
@@ -35,10 +38,6 @@ public class StudentGroupTest {
 		student2.addMark(courseA, -1);
 		student2.addMark(courseB, -1);
 		student3.addMark(courseB, 10);
-		
-		studentGroup.addToGroup(student1);
-		studentGroup.addToGroup(student2);
-		studentGroup.addToGroup(student3);
 		
 		Set<Student> expectedResult = new HashSet<>();
 		expectedResult.add(student1);
@@ -61,7 +60,7 @@ public class StudentGroupTest {
 		};
 		student1.setCompletionDate(new GregorianCalendar(2016, Calendar.MAY, 31));
 		
-		studentGroup.addToGroup(student1);
+		student1.setStudentGroup(studentGroup);
 		assertEquals(Integer.valueOf(5) , studentGroup.getGrade());
 	}
 	
@@ -70,8 +69,11 @@ public class StudentGroupTest {
 		StudentGroup studentGroup = new StudentGroup("Group-001");
 		
 		Student student1 = new Student();
+		student1.setStudentGroup(studentGroup);
 		Student student2 = new Student();
+		student2.setStudentGroup(studentGroup);
 		Student student3 = new Student();
+		student3.setStudentGroup(studentGroup);
 		
 		Course courseA = new Course("A");
 		Course courseB = new Course("B");
@@ -81,10 +83,6 @@ public class StudentGroupTest {
 		student2.addMark(courseA, -1);
 		student2.addMark(courseB, 5);
 		student3.addMark(courseB, 10);
-		
-		studentGroup.addToGroup(student1);
-		studentGroup.addToGroup(student2);
-		studentGroup.addToGroup(student3);
 		
 		Map<Student, Integer> expectedResult = new LinkedHashMap<>();
 		assertEquals(expectedResult, studentGroup.getSuccessRating(courseA));

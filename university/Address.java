@@ -10,4 +10,5 @@ public class Address {
 	private int flat;
 	private List<String> phones;
 	private String email;
+	
 }

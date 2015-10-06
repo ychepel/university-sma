@@ -17,7 +17,6 @@ public class Faculty {
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			if(studentGrade == studentGroup.getGrade()) {
 				if(studentGroup.getStudentQuantity() < MAX_QUANTITY_IN_GROUP) {
-					studentGroup.addToGroup(student);
 					student.setStudentGroup(studentGroup);
 					return;
 				}
@@ -27,7 +26,6 @@ public class Faculty {
 		String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
 		StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
 		this.add(newStudentGroup);
-		newStudentGroup.addToGroup(student);
 		student.setStudentGroup(newStudentGroup);
 	}
 	
@@ -88,7 +86,7 @@ public class Faculty {
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Department department :departments) {
-				schedule.addAll(department.getSchedule(lecturer));
+			schedule.addAll(department.getSchedule(lecturer));
 		}
 		return schedule;
 	}
@@ -115,9 +113,18 @@ public class Faculty {
 		for(Department department :departments) {
 			department.excludeStudent(student);
 		}
+		StudentGroup studentGroup = student.getStudentGroup();
 		student.setStudentGroup(null);
+		studentGroup.remove(student);
+		if(studentGroup.getStudentQuantity() == 0) {
+			this.remove(studentGroup);
+		}
 	}
 	
+	private void remove(StudentGroup studentGroup) {
+		this.studentGroups.remove(studentGroup);
+	}
+
 	public void add(StudentGroup studentGroup) {
 		studentGroups.add(studentGroup);
 	}
@@ -130,4 +137,15 @@ public class Faculty {
 		return UNDERACHIEVMENT_AVG_MARK_LEVEL;
 	}
 	
+	public void add(Department department) {
+		this.departments.add(department);
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public Set<Department> getDepartments() {
+		return departments;
+	}
 }

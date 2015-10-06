@@ -79,4 +79,7 @@ public class Course {
 		courseSchedules =  new HashSet<>();
 	}
 
+	public String getName() {
+		return name;
+	}
 }

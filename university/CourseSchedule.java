@@ -53,4 +53,7 @@ public class CourseSchedule {
 		return studentGroups;
 	}
 
+	public Set<Calendar> getTimetables() {
+		return timetables;
+	}
 }

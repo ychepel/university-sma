@@ -12,7 +12,12 @@ public abstract class Person {
 	private String nationality;
 	private Address address;
 	
+	public Person() {
+		this.address = new Address();
+	}
+	
 	public String getFullName() {
 		return lastName+" "+firstName+" "+patronymicName;
 	}
+	
 }

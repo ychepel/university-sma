@@ -19,16 +19,16 @@ public class Faculty {
 				if(studentGroup.getStudentQuantity() < MAX_QUANTITY_IN_GROUP) {
 					studentGroup.addToGroup(student);
 					student.setStudentGroup(studentGroup);
-					break;
+					return;
 				}
 			}
 		}
-		if(student.getStudentGroup() == null) {
-			String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
-			StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
-			newStudentGroup.addToGroup(student);
-			student.setStudentGroup(newStudentGroup);
-		}
+		
+		String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
+		StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
+		this.add(newStudentGroup);
+		newStudentGroup.addToGroup(student);
+		student.setStudentGroup(newStudentGroup);
 	}
 	
 	public Integer getGroupsQuantityOnGrade(Integer grade) {
@@ -39,6 +39,20 @@ public class Faculty {
 			}
 		}
 		return quantity;
+	}
+	
+	public Set<Student> getUnderachievementStudent() {
+		Set<Student> students = new HashSet<>();
+		for(StudentGroup studentGroup : getStudentGroups()) {
+			for(Student student : studentGroup.getStudents()) {
+				Integer averageMark = student.getAverageMark();
+				if(averageMark < 0 ) continue;
+				if(averageMark < UNDERACHIEVMENT_AVG_MARK_LEVEL) {
+					students.add(student);
+				}
+			}
+		}
+		return students;
 	}
 	
 	public void addLecturer(Department department, Lecturer lecturer) {
@@ -58,20 +72,6 @@ public class Faculty {
 		return false;
 	}
 	
-	public Set<Student> getUnderachievementStudent() {
-		Set<Student> students = new HashSet<>();
-		for(StudentGroup studentGroup : getStudentGroups()) {
-			for(Student student : studentGroup.getStudents()) {
-				Integer averageMark = student.getAverageMark();
-				if(averageMark < 0 ) continue;
-				if(averageMark < UNDERACHIEVMENT_AVG_MARK_LEVEL) {
-					students.add(student);
-				}
-			}
-		}
-		return students;
-	}
-
 	public Set<CourseSchedule> getSchedule(Student student) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		StudentGroup studentGroup =  student.getStudentGroup();
@@ -116,6 +116,18 @@ public class Faculty {
 			department.excludeStudent(student);
 		}
 		student.setStudentGroup(null);
+	}
+	
+	public void add(StudentGroup studentGroup) {
+		studentGroups.add(studentGroup);
+	}
+	
+	public Integer getMaxQuantityInGroupParameter() {
+		return MAX_QUANTITY_IN_GROUP;
+	}
+	
+	public Integer getUnderachievmentLevelParameter() {
+		return UNDERACHIEVMENT_AVG_MARK_LEVEL;
 	}
 	
 }

@@ -62,8 +62,7 @@ public class CourseTest {
 		assertEquals(1, course.getCourseSchedules().size());
 		
 		course.excludeStudent(student2);
-		System.out.println(course.getCourseSchedules().size());
-		assertEquals(0, course.getCourseSchedules().size());
+		assertTrue(course.getCourseSchedules().isEmpty());
 	}
 
 }

@@ -73,4 +73,8 @@ public class Student extends Person {
 	public StudentGroup getStudentGroup() {
 		return studentGroup;
 	}
+	
+	public Integer getMark(Course course) {
+		return marks.get(course);
+	}
 }

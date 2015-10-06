@@ -50,4 +50,10 @@ public class Department {
 			course.excludeStudent(student);
 		}
 	}
+	
+	public Department(String name) {
+		this.name = name;
+		lecturers = new HashSet<>();
+		courses = new HashSet<>();
+	}
 }

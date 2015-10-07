@@ -3,11 +3,17 @@ package university.tests;
 import static org.junit.Assert.*;
 
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import org.junit.Test;
 
@@ -85,14 +91,12 @@ public class StudentGroupTest {
 		student3.addMark(courseB, 10);
 		
 		Map<Student, Integer> expectedResult = new LinkedHashMap<>();
-		assertEquals(expectedResult, studentGroup.getSuccessRating(courseA));
 		
 		expectedResult.put(student3, 10);
 		expectedResult.put(student1, 8);
 		expectedResult.put(student2, 5);
 
 		Map<Student, Integer> result= studentGroup.getSuccessRating(courseB);
-		fail("wrong order");
 		assertEquals(expectedResult, result);
 		
 	}

@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Student extends Person {
-	private final Integer NO_MARK_VALUE = -1;
-	private final Integer LAST_EDUCATION_MONTH = 5;
-	private final Integer DEFAULT_EDUCATION_DURATION = 5;
+	private static final Integer NO_MARK_VALUE = -1;
+	private static final Integer LAST_EDUCATION_MONTH = 5;
+	private static final Integer DEFAULT_EDUCATION_DURATION = 5;
 	
 	private static Long studentCount = 0L; 
 	

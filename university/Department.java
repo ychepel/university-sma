@@ -37,6 +37,14 @@ public class Department {
 		}
 	}
 	
+	public void remove(Lecturer lecturer) {
+		lecturers.remove(lecturer);
+	}
+	
+	public void remove(Course course) {
+		courses.remove(course);
+	}
+	
 	public Set<Course> getCourses() {
 		return courses;
 	}

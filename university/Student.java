@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Student extends Person {
-	private static final Integer NO_MARK_VALUE = -1;
-	private static final Integer LAST_EDUCATION_MONTH = 5;
-	private static final Integer DEFAULT_EDUCATION_DURATION = 5;
+	private final Integer NO_MARK_VALUE = -1;
+	private final Integer LAST_EDUCATION_MONTH = 5;
+	private final Integer DEFAULT_EDUCATION_DURATION = 5;
 	
 	private static Long studentCount = 0L; 
 	
@@ -103,6 +103,27 @@ public class Student extends Person {
 	public Long getStudentId() {
 		return studentId;
 	}
+
+	public Boolean getGovernmentFinanced() {
+		return governmentFinanced;
+	}
+
+	public void setGovernmentFinanced(Boolean governmentFinanced) {
+		this.governmentFinanced = governmentFinanced;
+	}
+
+	public String getSchoolGraduateSertificate() {
+		return schoolGraduateSertificate;
+	}
+
+	public void setSchoolGraduateSertificate(String schoolGraduateSertificate) {
+		this.schoolGraduateSertificate = schoolGraduateSertificate;
+	}
+
+	public Calendar getEntranceDate() {
+		return entranceDate;
+	}
+	
 	
 
 }

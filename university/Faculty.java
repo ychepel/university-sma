@@ -141,6 +141,10 @@ public class Faculty {
 		this.departments.add(department);
 	}
 	
+	public void remove(Department department) {
+		this.departments.remove(department);
+	}
+	
 	public String getName() {
 		return name;
 	}

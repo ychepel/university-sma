@@ -82,4 +82,26 @@ public class Course {
 	public String getName() {
 		return name;
 	}
+
+	public int getGrade() {
+		return grade;
+	}
+
+	public void setGrade(int grade) {
+		this.grade = grade;
+	}
+
+	public Boolean getObligatory() {
+		return obligatory;
+	}
+
+	public void setObligatory(Boolean obligatory) {
+		this.obligatory = obligatory;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	
 }

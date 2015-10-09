@@ -8,11 +8,12 @@ public class Faculty {
 	private final Integer MAX_QUANTITY_IN_GROUP = 30;
 	private final Integer UNDERACHIEVMENT_AVG_MARK_LEVEL = 35;
 	
+	private Integer id;
 	private String name;
 	private Set<StudentGroup> studentGroups;
 	private Set<Department> departments;
 	
-	public void add(Student student) {
+	public void addStudent(Student student) {
 		Integer studentGrade = student.getGrade();
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			if(studentGrade == studentGroup.getGrade()) {
@@ -25,7 +26,7 @@ public class Faculty {
 		
 		String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
 		StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
-		this.add(newStudentGroup);
+		this.addStudentGroup(newStudentGroup);
 		student.setStudentGroup(newStudentGroup);
 	}
 	
@@ -54,11 +55,11 @@ public class Faculty {
 	}
 	
 	public void addLecturer(Department department, Lecturer lecturer) {
-		department.add(lecturer);
+		department.addLecturer(lecturer);
 	}
 	
 	public void addCourse(Department department, Course course) {
-		department.add(course);
+		department.addCourse(course);
 	}
 	
 	public Boolean enrollStudent(Student person, Course course) {
@@ -75,8 +76,9 @@ public class Faculty {
 		StudentGroup studentGroup =  student.getStudentGroup();
 		for(Department department : departments) {
 			for(Course course : department.getCourses()) {
-				if(studentGroup.getStudentsOnCourse(course).contains(student)) {
-					schedule.addAll(course.getSchedule(studentGroup));
+				Set<Student> students = studentGroup.getStudentsOnCourse(course);
+				if(students.contains(student)) {
+					schedule.addAll(course.getScheduleByStudentGroup(studentGroup));
 				}
 			}
 		}
@@ -115,17 +117,17 @@ public class Faculty {
 		}
 		StudentGroup studentGroup = student.getStudentGroup();
 		student.setStudentGroup(null);
-		studentGroup.remove(student);
+		studentGroup.removeStudent(student);
 		if(studentGroup.getStudentQuantity() == 0) {
-			this.remove(studentGroup);
+			this.removeStudentGroup(studentGroup);
 		}
 	}
 	
-	private void remove(StudentGroup studentGroup) {
+	private void removeStudentGroup(StudentGroup studentGroup) {
 		this.studentGroups.remove(studentGroup);
 	}
 
-	public void add(StudentGroup studentGroup) {
+	public void addStudentGroup(StudentGroup studentGroup) {
 		studentGroups.add(studentGroup);
 	}
 	
@@ -137,11 +139,11 @@ public class Faculty {
 		return UNDERACHIEVMENT_AVG_MARK_LEVEL;
 	}
 	
-	public void add(Department department) {
+	public void addDepartment(Department department) {
 		this.departments.add(department);
 	}
 	
-	public void remove(Department department) {
+	public void removeDepartment(Department department) {
 		this.departments.remove(department);
 	}
 	
@@ -152,4 +154,14 @@ public class Faculty {
 	public Set<Department> getDepartments() {
 		return departments;
 	}
+	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
+	
+	
 }

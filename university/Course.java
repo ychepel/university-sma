@@ -10,7 +10,7 @@ public class Course {
 	private Boolean obligatory;
 	private Set<CourseSchedule> courseSchedules;
 	
-	public void addCourseSchedule(Lecturer lecturer, StudentGroup studentGroup) {
+	public void create(Lecturer lecturer, StudentGroup studentGroup) {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			if(courseSchedule.getLecturer().equals(lecturer)) {
 				courseSchedule.add(studentGroup);
@@ -23,7 +23,7 @@ public class Course {
 		this.add(newCourseSchedule);
 	}
 	
-	public Set<CourseSchedule> getSchedule(Lecturer person) {
+	public Set<CourseSchedule> getScheduleByLecturer(Lecturer person) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			if(courseSchedule.getLecturer().equals(person)) {
@@ -33,7 +33,7 @@ public class Course {
 		return schedule;
 	}
 	
-	public Set<CourseSchedule> getSchedule(StudentGroup studentGroup) {
+	public Set<CourseSchedule> getScheduleByStudentGroup(StudentGroup studentGroup) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			if(courseSchedule.getStudentGroups().contains(studentGroup)) {
@@ -53,7 +53,8 @@ public class Course {
 	}
 	
 	public void excludeStudent(Student student) {
-		for(Iterator<CourseSchedule> iterator = courseSchedules.iterator(); iterator.hasNext(); ) {
+		Iterator<CourseSchedule> iterator = courseSchedules.iterator();
+		while(iterator.hasNext()) {
 			CourseSchedule courseSchedule = iterator.next();
 			courseSchedule.excludeStudent(student);
 			if(courseSchedule.getStudentGroups().size() == 0) {

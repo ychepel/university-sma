@@ -25,7 +25,7 @@ public class FacultyTest {
 				}
 			};
 			student.setCompletionDate(new GregorianCalendar(2018, Calendar.MAY, 31));
-			faculty.add(student);
+			faculty.addStudent(student);
 		}
 	}
 	
@@ -39,7 +39,7 @@ public class FacultyTest {
 			}
 		};
 		student.setCompletionDate(new GregorianCalendar(2018, Calendar.MAY, 31));
-		faculty.add(student);
+		faculty.addStudent(student);
 		
 		Set<StudentGroup> result = faculty.getStudentGroups();
 		StudentGroup studentGroup = result.iterator().next();
@@ -67,19 +67,19 @@ public class FacultyTest {
 		student1.addMark(new Course("A"), UnderacievmentLevel-1);
 		student1.addMark(new Course("B"), UnderacievmentLevel-1);
 		student1.setCompletionDate(new GregorianCalendar(2018, Calendar.MAY, 31));
-		faculty.add(student1);
+		faculty.addStudent(student1);
 		
 		Student student2 = new Student();
 		student2.addMark(new Course("A"), UnderacievmentLevel+1);
 		student2.addMark(new Course("B"), UnderacievmentLevel+1);
 		student2.setCompletionDate(new GregorianCalendar(2018, Calendar.MAY, 31));
-		faculty.add(student2);
+		faculty.addStudent(student2);
 		
 		Student student3 = new Student();
 		student3.addMark(new Course("A"), UnderacievmentLevel-1);
 		student3.addMark(new Course("B"), 0);
 		student3.setCompletionDate(new GregorianCalendar(2018, Calendar.MAY, 31));
-		faculty.add(student3);
+		faculty.addStudent(student3);
 		
 		Set<Student> expectedResult = new HashSet<>();
 		expectedResult.add(student1);

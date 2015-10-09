@@ -19,7 +19,8 @@ public class StudentGroup {
 		for(Student student : getStudents()) {
 			Map<Course, Integer> studentMarks = student.getMarks();
 			if(studentMarks.containsKey(course)) {
-				if(studentMarks.get(course) == -1) continue;
+				Integer mark = studentMarks.get(course);
+				if(mark.equals(-1)) continue;
 				result.put(student, studentMarks.get(course));
 			}
 		}
@@ -44,7 +45,7 @@ public class StudentGroup {
 	
 	public Integer getGrade() {
 		for(Student student : getStudents()) {
-			if(student.getGrade() != 0) {
+			if(!student.getGrade().equals(0)) {
 				return student.getGrade();
 			}
 		}
@@ -54,8 +55,10 @@ public class StudentGroup {
 	public Set<Student> getStudentsOnCourse(Course course) {
 		Set<Student> students = new HashSet<>();
 		for(Student student : getStudents()) {
-			if(student.getMarks().containsKey(course)) {
-				if(student.getMarks().get(course) == -1) {
+			Map<Course, Integer> marks = student.getMarks(); 
+			if(marks.containsKey(course)) {
+				Integer mark = marks.get(course);
+				if(mark.equals(-1)) {
 					students.add(student);
 				}
 			}
@@ -68,7 +71,7 @@ public class StudentGroup {
 		this.students = new HashSet<Student>();
 	}
 	
-	public void add(Student student) {
+	public void addStudent(Student student) {
 		students.add(student);
 	}
 
@@ -84,7 +87,7 @@ public class StudentGroup {
 		return getStudents().size();
 	}
 
-	public void remove(Student student) {
+	public void removeStudent(Student student) {
 		this.students.remove(student);
 	}
 	

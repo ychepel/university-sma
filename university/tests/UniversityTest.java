@@ -31,7 +31,7 @@ public class UniversityTest {
 		courseScheduleA1C1S.add(new GregorianCalendar(2015, Calendar.NOVEMBER, 1, 2, 3, 4));
 		courseScheduleA1C1S.add(new GregorianCalendar(2016, Calendar.JANUARY, 1, 2, 3, 4));
 		courseA1C1.add(courseScheduleA1C1S);
-		departmentA1.add(courseA1C1);
+		departmentA1.addCourse(courseA1C1);
 		
 		Course courseA1C2 = new Course("A1C2 Course");
 		CourseSchedule courseScheduleA1C2S = new CourseSchedule(courseA1C2, lecturer1);
@@ -42,11 +42,11 @@ public class UniversityTest {
 		courseScheduleA1C2S2.add(new GregorianCalendar(2015, Calendar.NOVEMBER, 3, 4, 5, 6));
 		courseA1C2.add(courseScheduleA1C2S2);
 		
-		departmentA1.add(courseA1C2);
+		departmentA1.addCourse(courseA1C2);
 		
 		Faculty facultyA = new Faculty("A Faculty");
-		facultyA.add(departmentA1);
-		university.add(facultyA);
+		facultyA.addDepartment(departmentA1);
+		university.addFaculty(facultyA);
 		
 		Integer expectedResult = 2;
 		assertEquals(expectedResult, university.getLabourHour(lecturer1, new GregorianCalendar(2015, Calendar.NOVEMBER, 1)));
@@ -65,13 +65,13 @@ public class UniversityTest {
 		StudentGroup studentGroup = new StudentGroup("group 1");
 		student.setStudentGroup(studentGroup);
 		Faculty facultyA = new Faculty("A Faculty");
-		facultyA.add(studentGroup);
+		facultyA.addStudentGroup(studentGroup);
 		
 		University university = new University("Unitversity");
-		university.add(facultyA);
+		university.addFaculty(facultyA);
 		
 		Faculty facultyB = new Faculty("B Faculty");
-		university.add(facultyB);
+		university.addFaculty(facultyB);
 		
 		assertEquals(1, facultyA.getStudentGroups().size());
 		assertEquals(0, facultyB.getStudentGroups().size());

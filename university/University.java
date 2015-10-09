@@ -55,7 +55,7 @@ public class University {
 			oldStudentFaculty.removeStudent(student);
 		}
 
-		newFaculty.add(student);
+		newFaculty.addStudent(student);
 	}
 	
 	public University(String name) {
@@ -64,11 +64,11 @@ public class University {
 		this.faculties = new HashSet<>();
 	}
 	
-	public void add(Faculty faculty) {
+	public void addFaculty(Faculty faculty) {
 		this.faculties.add(faculty);
 	}
 	
-	public void remove(Faculty faculty) {
+	public void removeFaculty(Faculty faculty) {
 		this.faculties.remove(faculty);
 	}
 

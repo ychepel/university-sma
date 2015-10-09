@@ -20,13 +20,13 @@ public class CourseTest {
 		
 		assertEquals(new HashSet<>(), course.getCourseSchedules());
 		
-		course.addCourseSchedule(lecturer1, studentGroup101);
+		course.create(lecturer1, studentGroup101);
 		assertEquals(1, course.getCourseSchedules().size());
 		
-		course.addCourseSchedule(lecturer1, studentGroup102);
+		course.create(lecturer1, studentGroup102);
 		assertEquals(1, course.getCourseSchedules().size());
 		
-		course.addCourseSchedule(lecturer2, studentGroup102);
+		course.create(lecturer2, studentGroup102);
 		assertEquals(2, course.getCourseSchedules().size());
 	}
 
@@ -35,7 +35,7 @@ public class CourseTest {
 		Course course = new Course("A");
 		Lecturer lecturer = new Lecturer();
 		StudentGroup studentGroup = new StudentGroup("gr-101");
-		course.addCourseSchedule(lecturer, studentGroup);
+		course.create(lecturer, studentGroup);
 		
 		assertTrue(course.isStudentGroupScheduled(studentGroup));
 	}
@@ -50,7 +50,7 @@ public class CourseTest {
 
 		Course course = new Course("A");
 		Lecturer lecturer = new Lecturer();
-		course.addCourseSchedule(lecturer, studentGroup);
+		course.create(lecturer, studentGroup);
 		student1.addMark(course, -1);
 		student2.addMark(course, -1);
 		assertEquals(1, course.getCourseSchedules().size());

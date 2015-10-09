@@ -88,7 +88,7 @@ public class Student extends Person {
 	public void setStudentGroup(StudentGroup studentGroup) {
 		this.studentGroup = studentGroup;
 		if(studentGroup != null) {
-			studentGroup.add(this);
+			studentGroup.addStudent(this);
 		}
 	}
 	

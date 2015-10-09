@@ -11,7 +11,7 @@ public class Department {
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
-			schedule.addAll(course.getSchedule(lecturer));
+			schedule.addAll(course.getScheduleByLecturer(lecturer));
 		}
 		return schedule;
 	}
@@ -25,23 +25,23 @@ public class Department {
 		return false;
 	}
 	
-	public void add(Lecturer lecturer) {
+	public void addLecturer(Lecturer lecturer) {
 		if(!lecturers.contains(lecturer)) {
 			lecturers.add(lecturer);
 		}
 	}
 	
-	public void add(Course course) {
+	public void addCourse(Course course) {
 		if(!courses.contains(course)) {
 			courses.add(course);
 		}
 	}
 	
-	public void remove(Lecturer lecturer) {
+	public void removeLecturer(Lecturer lecturer) {
 		lecturers.remove(lecturer);
 	}
 	
-	public void remove(Course course) {
+	public void removeCourse(Course course) {
 		courses.remove(course);
 	}
 	

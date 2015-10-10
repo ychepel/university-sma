@@ -22,15 +22,15 @@ public class FacultyDaoImplementation implements FacultyDao {
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		
+
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
-			
+
 			while(resultSet.next()) {
-				Faculty faculty = new Faculty(resultSet.getString("Name"));
-				faculty.setId(resultSet.getInt("Id"));
+				Faculty faculty = new Faculty(resultSet.getString("name"));
+				faculty.setId(resultSet.getInt("id"));
 				
 				faculties.add(faculty);
 				
@@ -73,7 +73,7 @@ public class FacultyDaoImplementation implements FacultyDao {
 	
 	@Override
 	public Faculty get(Integer id) throws DAOException {
-		String sql = "select * from faculty where 'Id'=?";
+		String sql = "select * from faculty where id=?";
 		
 		Faculty faculty = null; 
 		Connection connection = null;
@@ -84,11 +84,10 @@ public class FacultyDaoImplementation implements FacultyDao {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
-			statement.execute();
-			resultSet = statement.getGeneratedKeys();
+			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			faculty = new Faculty(resultSet.getString("Name"));
+			faculty = new Faculty(resultSet.getString("name"));
 			faculty.setId(id);
 		}
 		catch (SQLException e) {
@@ -126,11 +125,4 @@ public class FacultyDaoImplementation implements FacultyDao {
 		return faculty;
 	}
 	
-	public static void main(String[] args) throws DAOException{
-		FacultyDaoImplementation d = new FacultyDaoImplementation();
-		Faculty f = d.get(1);
-		
-		System.out.println(f.getName());
-	}
-
 }

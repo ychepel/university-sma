@@ -15,7 +15,8 @@ public class University {
 		Integer result = 0;
 		Set<CourseSchedule> lecturerSchedule = new HashSet<>();
 		for(Faculty faculty : faculties) {
-			lecturerSchedule.addAll(faculty.getSchedule(lecturer));
+			Set<CourseSchedule> courseSchedules = faculty.getSchedule(lecturer); 
+			lecturerSchedule.addAll(courseSchedules);
 		}
 
 		for(CourseSchedule courseSchedule : lecturerSchedule) {
@@ -34,7 +35,8 @@ public class University {
 		for(Faculty faculty : faculties) {
 			Set<CourseSchedule> facultySchedule = new HashSet<>();
 			for(Lecturer lecturer : faculty.getLecturers()) {
-				facultySchedule.addAll(faculty.getSchedule(lecturer));
+				Set<CourseSchedule> courseSchedules = faculty.getSchedule(lecturer);
+				facultySchedule.addAll(courseSchedules);
 			}
 			schedule.put(faculty, facultySchedule);
 		}

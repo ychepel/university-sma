@@ -78,7 +78,8 @@ public class Faculty {
 			for(Course course : department.getCourses()) {
 				Set<Student> students = studentGroup.getStudentsOnCourse(course);
 				if(students.contains(student)) {
-					schedule.addAll(course.getScheduleByStudentGroup(studentGroup));
+					Set<CourseSchedule> courseSchedules = course.getScheduleByStudentGroup(studentGroup);
+					schedule.addAll(courseSchedules);
 				}
 			}
 		}
@@ -88,7 +89,8 @@ public class Faculty {
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Department department :departments) {
-			schedule.addAll(department.getSchedule(lecturer));
+			Set<CourseSchedule> courseSchedules = department.getSchedule(lecturer);
+			schedule.addAll(courseSchedules);
 		}
 		return schedule;
 	}
@@ -96,7 +98,8 @@ public class Faculty {
 	public Set<Lecturer> getLecturers() {
 		Set<Lecturer> lecturers = new HashSet<>();
 		for(Department department :departments) {
-			lecturers.addAll(department.getLecturers());
+			Set<Lecturer> departmentLecturers = department.getLecturers();
+			lecturers.addAll(departmentLecturers);
 		}
 		return lecturers;
 	}

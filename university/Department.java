@@ -11,14 +11,17 @@ public class Department {
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
-			schedule.addAll(course.getScheduleByLecturer(lecturer));
+			Set<CourseSchedule> courseSchedules = course.getScheduleByLecturer(lecturer);
+			schedule.addAll(courseSchedules);
 		}
 		return schedule;
 	}
 	
 	public Boolean enrollStudent(Student student, Course course) {
 		if(!getCourses().contains(course)) return false;
-		if(course.isStudentGroupScheduled(student.getStudentGroup())) {
+		
+		StudentGroup studentGroup = student.getStudentGroup();
+		if(course.isStudentGroupScheduled(studentGroup)) {
 			student.addMark(course, -1);
 			return true;
 		}

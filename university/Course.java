@@ -12,7 +12,8 @@ public class Course {
 	
 	public void create(Lecturer lecturer, StudentGroup studentGroup) {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getLecturer().equals(lecturer)) {
+			Lecturer courseLecturer = courseSchedule.getLecturer();
+			if(courseLecturer.equals(lecturer)) {
 				courseSchedule.add(studentGroup);
 				return;
 			}
@@ -26,7 +27,8 @@ public class Course {
 	public Set<CourseSchedule> getScheduleByLecturer(Lecturer person) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getLecturer().equals(person)) {
+			Lecturer lecturer = courseSchedule.getLecturer();
+			if(lecturer.equals(person)) {
 				schedule.add(courseSchedule);
 			}
 		}
@@ -36,7 +38,8 @@ public class Course {
 	public Set<CourseSchedule> getScheduleByStudentGroup(StudentGroup studentGroup) {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getStudentGroups().contains(studentGroup)) {
+			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
+			if(studentGroups.contains(studentGroup)) {
 				schedule.add(courseSchedule);
 			}
 		}
@@ -45,7 +48,8 @@ public class Course {
 	
 	public Boolean isStudentGroupScheduled(StudentGroup studentGroup) {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			if(courseSchedule.getStudentGroups().contains(studentGroup)) {
+			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
+			if(studentGroups.contains(studentGroup)) {
 				return true;
 			}
 		}
@@ -57,7 +61,8 @@ public class Course {
 		while(iterator.hasNext()) {
 			CourseSchedule courseSchedule = iterator.next();
 			courseSchedule.excludeStudent(student);
-			if(courseSchedule.getStudentGroups().size() == 0) {
+			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups(); 
+			if(studentGroups.size() == 0) {
 				courseSchedules.remove(courseSchedule);
 			}
 		}

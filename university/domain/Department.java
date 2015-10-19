@@ -1,4 +1,4 @@
-package university;
+package university.domain;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -56,9 +56,9 @@ public class Department {
 		return lecturers;
 	}
 
-	public void excludeStudent(Student student) {
+	public void excludeStudentGroup(StudentGroup studentGroup) {
 		for(Course course : getCourses()) {
-			course.excludeStudent(student);
+			course.excludeStudent(studentGroup);
 		}
 	}
 	

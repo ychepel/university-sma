@@ -1,4 +1,4 @@
-package university.tests;
+package university.domain.tests;
 
 import static org.junit.Assert.*;
 
@@ -9,7 +9,7 @@ import java.util.Set;
 
 import org.junit.Test;
 
-import university.*;
+import university.domain.*;
 
 public class FacultyTest {
 	

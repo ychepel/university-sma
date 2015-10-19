@@ -1,4 +1,4 @@
-package university;
+package university.domain;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -7,7 +7,6 @@ import java.util.Set;
 public class Course {
 	private String name;
 	private int grade;
-	private Boolean obligatory;
 	private Set<CourseSchedule> courseSchedules;
 	
 	public void create(Lecturer lecturer, StudentGroup studentGroup) {
@@ -56,11 +55,11 @@ public class Course {
 		return false;
 	}
 	
-	public void excludeStudent(Student student) {
+	public void excludeStudent(StudentGroup studentGroup) {
 		Iterator<CourseSchedule> iterator = courseSchedules.iterator();
 		while(iterator.hasNext()) {
 			CourseSchedule courseSchedule = iterator.next();
-			courseSchedule.excludeStudent(student);
+			courseSchedule.remove(studentGroup);
 			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups(); 
 			if(studentGroups.size() == 0) {
 				courseSchedules.remove(courseSchedule);
@@ -95,14 +94,6 @@ public class Course {
 
 	public void setGrade(int grade) {
 		this.grade = grade;
-	}
-
-	public Boolean getObligatory() {
-		return obligatory;
-	}
-
-	public void setObligatory(Boolean obligatory) {
-		this.obligatory = obligatory;
 	}
 
 	public void setName(String name) {

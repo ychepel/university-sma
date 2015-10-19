@@ -1,10 +1,10 @@
-package university.tests;
+package university.domain.tests;
 
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import university.*;
+import university.domain.*;
 
 public class DepartmentTest {
 

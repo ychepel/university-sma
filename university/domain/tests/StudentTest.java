@@ -1,4 +1,4 @@
-package university.tests;
+package university.domain.tests;
 
 import static org.junit.Assert.*;
 
@@ -7,8 +7,8 @@ import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
-import university.Course;
-import university.Student;
+import university.domain.Course;
+import university.domain.Student;
 
 public class StudentTest {
 

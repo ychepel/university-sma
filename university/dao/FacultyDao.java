@@ -8,11 +8,11 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-import university.Faculty;
+import university.domain.Faculty;
 
 public class FacultyDao {
 
-	private PostgresqlDaoFactory daoFactory = new PostgresqlDaoFactory();
+	private DaoFactory daoFactory = new DaoFactory();
 	
 	public Set<Faculty> getFaculties() throws DAOException {
 		String sql = "select * from faculty";

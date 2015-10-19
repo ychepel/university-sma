@@ -1,4 +1,4 @@
-package university;
+package university.domain;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -115,9 +115,6 @@ public class Faculty {
 	}
 
 	public void removeStudent(Student student) {
-		for(Department department :departments) {
-			department.excludeStudent(student);
-		}
 		StudentGroup studentGroup = student.getStudentGroup();
 		student.setStudentGroup(null);
 		studentGroup.removeStudent(student);
@@ -128,6 +125,9 @@ public class Faculty {
 	
 	private void removeStudentGroup(StudentGroup studentGroup) {
 		this.studentGroups.remove(studentGroup);
+		for(Department department :departments) {
+			department.excludeStudentGroup(studentGroup);
+		}
 	}
 
 	public void addStudentGroup(StudentGroup studentGroup) {

@@ -1,4 +1,4 @@
-package university;
+package university.domain;
 
 import java.util.Calendar;
 import java.util.HashSet;
@@ -17,23 +17,11 @@ public class CourseSchedule {
 		this.timetables = new HashSet<Calendar>();
 	}
 	
-	public void excludeStudent(Student student) {
-		for(StudentGroup studentGroup : getStudentGroups()) {
-			Set<Student> studentOnCourse = studentGroup.getStudentsOnCourse(course);
-			if(! studentOnCourse.contains(student)) continue; 
-			student.addMark(course, 0);
-			if(studentOnCourse.size() == 1) {
-				remove(studentGroup);
-				return;
-			}
-		}
-	}
-	
 	public void add(StudentGroup studentGroup) {
 		studentGroups.add(studentGroup);
 	}
 	
-	private void remove(StudentGroup studentGroup) {
+	public void remove(StudentGroup studentGroup) {
 		studentGroups.remove(studentGroup);
 	}
 	
@@ -55,5 +43,9 @@ public class CourseSchedule {
 
 	public Set<Calendar> getTimetables() {
 		return timetables;
+	}
+	
+	public Course getCourse() {
+		return course;
 	}
 }

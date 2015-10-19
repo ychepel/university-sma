@@ -1,4 +1,4 @@
-package university.tests;
+package university.domain.tests;
 
 import static org.junit.Assert.*;
 
@@ -6,7 +6,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import university.*;
+import university.domain.*;
 
 public class CourseTest {
 
@@ -39,27 +39,4 @@ public class CourseTest {
 		
 		assertTrue(course.isStudentGroupScheduled(studentGroup));
 	}
-
-	@Test
-	public void testExcludeStudent() {
-		Student student1 = new Student();
-		Student student2 = new Student();
-		StudentGroup studentGroup = new StudentGroup("Gr-101");
-		student1.setStudentGroup(studentGroup);
-		student2.setStudentGroup(studentGroup);
-
-		Course course = new Course("A");
-		Lecturer lecturer = new Lecturer();
-		course.create(lecturer, studentGroup);
-		student1.addMark(course, -1);
-		student2.addMark(course, -1);
-		assertEquals(1, course.getCourseSchedules().size());
-		
-		course.excludeStudent(student1);
-		assertEquals(1, course.getCourseSchedules().size());
-		
-		course.excludeStudent(student2);
-		assertTrue(course.getCourseSchedules().isEmpty());
-	}
-
 }

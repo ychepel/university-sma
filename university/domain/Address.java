@@ -1,4 +1,4 @@
-package university;
+package university.domain;
 
 import java.util.List;
 

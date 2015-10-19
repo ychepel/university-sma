@@ -81,5 +81,5 @@ public class UniversityTest {
 		assertEquals(1, facultyB.getStudentGroups().size());
 		
 	}
-
+	
 }

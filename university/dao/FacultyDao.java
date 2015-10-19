@@ -14,7 +14,7 @@ public class FacultyDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
 	
-	public Set<Faculty> getFaculties() throws DAOException {
+	public Set<Faculty> getFaculties() throws DaoException {
 		String sql = "select * from faculty";
 		
 		Set<Faculty> faculties = new HashSet<>(); 
@@ -36,7 +36,7 @@ public class FacultyDao {
 			}
 		}
 		catch (SQLException e) {
-			throw new DAOException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Faculty data", e);
 		}
 		finally {
 			try {
@@ -45,7 +45,7 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close result set", e);
+				throw new DaoException("Cannot close result set", e);
 			}
 			
 			try {
@@ -54,7 +54,7 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close statement", e);
+				throw new DaoException("Cannot close statement", e);
 			}
 			
 			try {
@@ -63,14 +63,14 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close connection", e);
+				throw new DaoException("Cannot close connection", e);
 			}
 		}
 		
 		return faculties;
 	}
 	
-	public Faculty getById(Integer id) throws DAOException {
+	public Faculty getById(Integer id) throws DaoException {
 		String sql = "select * from faculty where id=?";
 		
 		Faculty faculty = null; 
@@ -89,7 +89,7 @@ public class FacultyDao {
 			faculty.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DAOException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Faculty data", e);
 		}
 		finally {
 			try {
@@ -98,7 +98,7 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close result set", e);
+				throw new DaoException("Cannot close result set", e);
 			}
 			
 			try {
@@ -107,7 +107,7 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close statement", e);
+				throw new DaoException("Cannot close statement", e);
 			}
 			
 			try {
@@ -116,51 +116,41 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close connection", e);
+				throw new DaoException("Cannot close connection", e);
 			}
 		}
 		
 		return faculty;
 	}
 	
-	public Faculty updateFaculty(Integer id, String name) throws DAOException {
+	public Faculty updateFaculty(Integer id, String name) throws DaoException {
 		String sql = "update faculty set name=? where id=?";
 		
 		Faculty faculty = null; 
 		Connection connection = null;
 		PreparedStatement statement = null;
-		ResultSet resultSet = null;
 		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			statement.setString(1, name);
 			statement.setInt(2, id);
-			statement.execute();
+			statement.executeUpdate();
 			
 			faculty = new Faculty(name);
 			faculty.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DAOException("Cannot update Facultys data", e);
+			throw new DaoException("Cannot update Facultys data", e);
 		}
 		finally {
-			try {
-				if(resultSet != null) {
-					resultSet.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DAOException("Cannot close result set", e);
-			}
-			
 			try {
 				if(statement != null) {
 					statement.close();
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close statement", e);
+				throw new DaoException("Cannot close statement", e);
 			}
 			
 			try {
@@ -169,7 +159,62 @@ public class FacultyDao {
 				}
 			}
 			catch(SQLException e) {
-				throw new DAOException("Cannot close connection", e);
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+		
+		return faculty;
+	}
+	
+	public Faculty createFaculty(String name) throws DaoException {
+		String sql = "insert into faculty (name) values ('" + name + "')";
+		
+		Faculty faculty = null; 
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.createStatement();
+			resultSet = statement.executeQuery(sql);
+			
+			resultSet = statement.executeQuery("select last_insert_id() as last_id from faculty");
+			resultSet.next();
+			Integer id = resultSet.getInt("last_id");
+			
+			faculty = new Faculty(name);
+			faculty.setId(id);
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot create Facultys data", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
 			}
 		}
 		

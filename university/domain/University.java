@@ -6,10 +6,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import university.dao.DaoException;
+import university.dao.FacultyDao;
+
 public class University {
 	private String name;
 	private Address address;
 	private Set<Faculty> faculties;
+	private FacultyDao facultyDao;
 	
 	public Integer getLabourHour(Lecturer lecturer, Calendar period) {
 		Integer result = 0;
@@ -64,6 +68,7 @@ public class University {
 		this.name = name;
 		this.address = new Address();
 		this.faculties = new HashSet<>();
+		this.facultyDao = new FacultyDao();
 	}
 	
 	public void addFaculty(Faculty faculty) {
@@ -94,6 +99,16 @@ public class University {
 		return faculties;
 	}
 	
+	public void createFaculty(String name) throws DomainException {
+		Faculty faculty;
+		try {
+			faculty = facultyDao.createFaculty(name);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannnot create faculty", e); 
+		}
+		addFaculty(faculty);
+	}
 	
 	
 }

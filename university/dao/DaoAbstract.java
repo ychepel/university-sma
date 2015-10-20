@@ -13,11 +13,11 @@ public abstract class DaoAbstract {
 
 	private DaoFactory daoFactory = new DaoFactory();
 	
-	protected abstract String getAllSQL();
+	protected abstract String getSelectAllQuery();
 	protected abstract <T> Set<T> parseAllResultSet(ResultSet resultSet) throws SQLException;
 	
 	public <T> Set<T> getAll() throws DaoException {
-		String sql = getAllSQL();
+		String sql = getSelectAllQuery();
 		
 		Set<T> set = new HashSet<>(); 
 		Connection connection = null;
@@ -66,11 +66,11 @@ public abstract class DaoAbstract {
 		return set;
 	}
 	
-	protected abstract String getElementByIdSQL();
+	protected abstract String getSelectByIdQuery();
 	protected abstract <T> T parseOneResultSet(ResultSet resultSet) throws SQLException;
 	
 	public <T> T getById(Integer id) throws DaoException {
-		String sql = getElementByIdSQL();
+		String sql = getSelectByIdQuery();
 		
 		T element = null; 
 		Connection connection = null;
@@ -120,11 +120,11 @@ public abstract class DaoAbstract {
 		return element;
 	}
 	
-	protected abstract <T> String getInsertElementSQL(T preparedElement);
+	protected abstract <T> String getInsertQuery(T preparedElement);
 	protected abstract <T> T makeElement(T preparedElement, ResultSet resultSet) throws SQLException;
 	
 	public <T> T createRecord(T preparedElement) throws DaoException {
-		String sql = getInsertElementSQL(preparedElement);
+		String sql = getInsertQuery(preparedElement);
 		
 		T element = null; 
 		Connection connection = null;
@@ -175,10 +175,10 @@ public abstract class DaoAbstract {
 		return element;
 	}
 	
-	protected abstract String getDeleteSQL();
+	protected abstract String getDeleteQuery();
 	
 	public void dropById(Integer id) throws DaoException {
-		String sql = getDeleteSQL();
+		String sql = getDeleteQuery();
 		
 		Connection connection = null;
 		PreparedStatement statement = null;

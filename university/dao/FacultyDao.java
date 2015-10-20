@@ -10,7 +10,7 @@ import university.domain.Faculty;
 public class FacultyDao extends DaoAbstract {
 
 	@Override
-	protected String getAllSQL() {
+	protected String getSelectAllQuery() {
 		return "select * from faculty";
 	}
 
@@ -29,7 +29,7 @@ public class FacultyDao extends DaoAbstract {
 	}
 
 	@Override
-	protected String getElementByIdSQL() {
+	protected String getSelectByIdQuery() {
 		return "select * from faculty where id=?";
 	}
 
@@ -46,7 +46,7 @@ public class FacultyDao extends DaoAbstract {
 	}
 
 	@Override
-	protected <T> String getInsertElementSQL(T preparedElement) {
+	protected <T> String getInsertQuery(T preparedElement) {
 		Faculty preparedFaculty = (Faculty) preparedElement;
 		String name = preparedFaculty.getName();
 		String query = "insert into faculty (name) values ('" + name + "')"; 
@@ -70,7 +70,7 @@ public class FacultyDao extends DaoAbstract {
 	}
 
 	@Override
-	protected String getDeleteSQL() {
+	protected String getDeleteQuery() {
 		return "delete from faculty where id=?";
 	}
 	

@@ -11,7 +11,7 @@ public class FacultyDao extends DaoAbstract {
 
 	@Override
 	protected String getSelectAllQuery() {
-		return "select * from faculty";
+		return "SELECT * FROM FACULTY";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -19,8 +19,8 @@ public class FacultyDao extends DaoAbstract {
 	protected <T> Set<T> parseAllResultSet(ResultSet resultSet) throws SQLException {
 		Set<Faculty> faculties = new HashSet<>(); 
 		while(resultSet.next()) {
-			Faculty faculty = new Faculty(resultSet.getString("name"));
-			faculty.setId(resultSet.getInt("id"));
+			Faculty faculty = new Faculty(resultSet.getString("NAME"));
+			faculty.setId(resultSet.getInt("ID"));
 				
 			faculties.add(faculty);
 				
@@ -30,7 +30,7 @@ public class FacultyDao extends DaoAbstract {
 
 	@Override
 	protected String getSelectByIdQuery() {
-		return "select * from faculty where id=?";
+		return "SELECT * FROM FACULTY WHERE ID=?";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -38,8 +38,8 @@ public class FacultyDao extends DaoAbstract {
 	protected <T> T parseOneResultSet(ResultSet resultSet) throws SQLException {
 		resultSet.next();
 		Faculty faculty = null; 
-		faculty = new Faculty(resultSet.getString("name"));
-		Integer id = resultSet.getInt("id");
+		faculty = new Faculty(resultSet.getString("NAME"));
+		Integer id = resultSet.getInt("ID");
 		faculty.setId(id);
 		
 		return (T) faculty;
@@ -49,7 +49,7 @@ public class FacultyDao extends DaoAbstract {
 	protected <T> String getInsertQuery(T preparedElement) {
 		Faculty preparedFaculty = (Faculty) preparedElement;
 		String name = preparedFaculty.getName();
-		String query = "insert into faculty (name) values ('" + name + "')"; 
+		String query = "INSERT INTO FACULTY (NAME) VALUES ('" + name + "')"; 
 		
 		return query;
 	}
@@ -71,7 +71,7 @@ public class FacultyDao extends DaoAbstract {
 
 	@Override
 	protected String getDeleteQuery() {
-		return "delete from faculty where id=?";
+		return "DELETE FROM FACULTY WHERE ID=?";
 	}
 	
 }

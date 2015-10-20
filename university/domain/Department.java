@@ -7,6 +7,7 @@ public class Department {
 	private String name;
 	private Set<Lecturer> lecturers;
 	private Set<Course> courses;
+	private Integer id;
 	
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
 		Set<CourseSchedule> schedule = new HashSet<>();
@@ -70,5 +71,13 @@ public class Department {
 	
 	public String getName() {
 		return name;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	
+	public Integer getId() {
+		return id;
 	}
 }

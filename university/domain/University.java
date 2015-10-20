@@ -68,14 +68,33 @@ public class University {
 		this.name = name;
 		this.address = new Address();
 		this.faculties = new HashSet<>();
+		
 		this.facultyDao = new FacultyDao();
+	}
+	
+	public void createFaculty(String name) throws DomainException {
+		Faculty faculty;
+		try {
+			faculty = facultyDao.createFaculty(name);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannnot create faculty", e); 
+		}
+		addFaculty(faculty);
 	}
 	
 	public void addFaculty(Faculty faculty) {
 		this.faculties.add(faculty);
 	}
 	
-	public void removeFaculty(Faculty faculty) {
+	public void removeFaculty(Faculty faculty) throws DomainException {
+		Integer id = faculty.getId();
+		try {
+			facultyDao.dropFaculty(id);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot dtop the faculty", e);
+		}
 		this.faculties.remove(faculty);
 	}
 
@@ -98,17 +117,5 @@ public class University {
 	public Set<Faculty> getFaculties() {
 		return faculties;
 	}
-	
-	public void createFaculty(String name) throws DomainException {
-		Faculty faculty;
-		try {
-			faculty = facultyDao.createFaculty(name);
-		}
-		catch (DaoException e) {
-			throw new DomainException("Cannnot create faculty", e); 
-		}
-		addFaculty(faculty);
-	}
-	
-	
+
 }

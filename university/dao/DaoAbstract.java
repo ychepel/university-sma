@@ -8,16 +8,18 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-import university.domain.Faculty;
 
-public class FacultyDao {
+public abstract class DaoAbstract {
 
 	private DaoFactory daoFactory = new DaoFactory();
 	
-	public Set<Faculty> getFaculties() throws DaoException {
-		String sql = "select * from faculty";
+	protected abstract String getAllSQL();
+	protected abstract <T> Set<T> parseAllResultSet(ResultSet resultSet);
+	
+	public <T> Set<T> getAll() throws DaoException {
+		String sql = getAllSQL();
 		
-		Set<Faculty> faculties = new HashSet<>(); 
+		Set<T> set = new HashSet<>(); 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -27,16 +29,10 @@ public class FacultyDao {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 
-			while(resultSet.next()) {
-				Faculty faculty = new Faculty(resultSet.getString("name"));
-				faculty.setId(resultSet.getInt("id"));
-				
-				faculties.add(faculty);
-				
-			}
+			set = parseAllResultSet(resultSet);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot select all records", e);
 		}
 		finally {
 			try {
@@ -67,13 +63,16 @@ public class FacultyDao {
 			}
 		}
 		
-		return faculties;
+		return set;
 	}
 	
-	public Faculty getById(Integer id) throws DaoException {
-		String sql = "select * from faculty where id=?";
+	protected abstract String getElementByIdSQL();
+	protected abstract <T> T parseOneResultSet(ResultSet resultSet);
+	
+	public <T> T getById(Integer id) throws DaoException {
+		String sql = getElementByIdSQL();
 		
-		Faculty faculty = null; 
+		T element = null; 
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -84,12 +83,10 @@ public class FacultyDao {
 			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
 			
-			resultSet.next();
-			faculty = new Faculty(resultSet.getString("name"));
-			faculty.setId(id);
+			element = parseOneResultSet(resultSet);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get record by id", e);
 		}
 		finally {
 			try {
@@ -120,56 +117,16 @@ public class FacultyDao {
 			}
 		}
 		
-		return faculty;
+		return element;
 	}
 	
-	public Faculty updateFaculty(Integer id, String name) throws DaoException {
-		String sql = "update faculty set name=? where id=?";
-		
-		Faculty faculty = null; 
-		Connection connection = null;
-		PreparedStatement statement = null;
-		
-		try {
-			connection = daoFactory.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, name);
-			statement.setInt(2, id);
-			statement.executeUpdate();
-			
-			faculty = new Faculty(name);
-			faculty.setId(id);
-		}
-		catch (SQLException e) {
-			throw new DaoException("Cannot update Facultys data", e);
-		}
-		finally {
-			try {
-				if(statement != null) {
-					statement.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close statement", e);
-			}
-			
-			try {
-				if(connection != null) {
-					connection.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close connection", e);
-			}
-		}
-		
-		return faculty;
-	}
+	protected abstract <T> String getInsertElementSQL(T preparedElement);
+	protected abstract <T> T makeElement(T preparedElement, ResultSet resultSet);
 	
-	public Faculty createFaculty(String name) throws DaoException {
-		String sql = "insert into faculty (name) values ('" + name + "')";
+	public <T> T createRecord(T preparedElement) throws DaoException {
+		String sql = getInsertElementSQL(preparedElement);
 		
-		Faculty faculty = null; 
+		T element = null; 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -180,14 +137,11 @@ public class FacultyDao {
 			
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
-			resultSet.next();
-			Integer id = resultSet.getInt(1);
 			
-			faculty = new Faculty(name);
-			faculty.setId(id);
+			element = makeElement(preparedElement, resultSet);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Facultys data", e);
+			throw new DaoException("Cannot create record", e);
 		}
 		finally {
 			try {
@@ -218,11 +172,13 @@ public class FacultyDao {
 			}
 		}
 		
-		return faculty;
+		return element;
 	}
 	
-	public void dropFaculty(Integer id) throws DaoException {
-		String sql = "delete from faculty where id=?";
+	protected abstract String getDeleteSQL();
+	
+	public void dropById(Integer id) throws DaoException {
+		String sql = getDeleteSQL();
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -234,7 +190,7 @@ public class FacultyDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Facultys data", e);
+			throw new DaoException("Cannot delete the record by id", e);
 		}
 		finally {
 			try {

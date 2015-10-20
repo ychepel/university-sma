@@ -11,15 +11,14 @@ public class FacultyDaoTest {
 	@Test
 	public void testCreateFaculty() {
 		FacultyDao facultyDao = new FacultyDao();
-		Faculty faculty = null;
+
 		try {
-			faculty = facultyDao.createFaculty("Test");
+			facultyDao.dropFaculty(5);
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-		System.out.println(faculty.getId());
 		
 		fail("Not yet implemented");
 	}

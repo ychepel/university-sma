@@ -14,7 +14,7 @@ public abstract class DaoAbstract {
 	private DaoFactory daoFactory = new DaoFactory();
 	
 	protected abstract String getAllSQL();
-	protected abstract <T> Set<T> parseAllResultSet(ResultSet resultSet);
+	protected abstract <T> Set<T> parseAllResultSet(ResultSet resultSet) throws SQLException;
 	
 	public <T> Set<T> getAll() throws DaoException {
 		String sql = getAllSQL();
@@ -67,7 +67,7 @@ public abstract class DaoAbstract {
 	}
 	
 	protected abstract String getElementByIdSQL();
-	protected abstract <T> T parseOneResultSet(ResultSet resultSet);
+	protected abstract <T> T parseOneResultSet(ResultSet resultSet) throws SQLException;
 	
 	public <T> T getById(Integer id) throws DaoException {
 		String sql = getElementByIdSQL();
@@ -121,7 +121,7 @@ public abstract class DaoAbstract {
 	}
 	
 	protected abstract <T> String getInsertElementSQL(T preparedElement);
-	protected abstract <T> T makeElement(T preparedElement, ResultSet resultSet);
+	protected abstract <T> T makeElement(T preparedElement, ResultSet resultSet) throws SQLException;
 	
 	public <T> T createRecord(T preparedElement) throws DaoException {
 		String sql = getInsertElementSQL(preparedElement);

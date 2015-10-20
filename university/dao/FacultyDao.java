@@ -1,260 +1,77 @@
 package university.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
 import university.domain.Faculty;
 
-public class FacultyDao {
+public class FacultyDao extends DaoAbstract {
 
-	private DaoFactory daoFactory = new DaoFactory();
-	
-	public Set<Faculty> getFaculties() throws DaoException {
-		String sql = "select * from faculty";
-		
+	@Override
+	protected String getAllSQL() {
+		return "select * from faculty";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T> Set<T> parseAllResultSet(ResultSet resultSet) throws SQLException {
 		Set<Faculty> faculties = new HashSet<>(); 
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
-
-		try {
-			connection = daoFactory.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
-
-			while(resultSet.next()) {
-				Faculty faculty = new Faculty(resultSet.getString("name"));
-				faculty.setId(resultSet.getInt("id"));
+		while(resultSet.next()) {
+			Faculty faculty = new Faculty(resultSet.getString("name"));
+			faculty.setId(resultSet.getInt("id"));
 				
-				faculties.add(faculty);
+			faculties.add(faculty);
 				
-			}
 		}
-		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
-		}
-		finally {
-			try {
-				if(resultSet != null) {
-					resultSet.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close result set", e);
-			}
-			
-			try {
-				if(statement != null) {
-					statement.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close statement", e);
-			}
-			
-			try {
-				if(connection != null) {
-					connection.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close connection", e);
-			}
-		}
-		
-		return faculties;
+		return (Set<T>) faculties;
 	}
-	
-	public Faculty getById(Integer id) throws DaoException {
-		String sql = "select * from faculty where id=?";
-		
+
+	@Override
+	protected String getElementByIdSQL() {
+		return "select * from faculty where id=?";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T> T parseOneResultSet(ResultSet resultSet) throws SQLException {
+		resultSet.next();
 		Faculty faculty = null; 
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet resultSet = null;
+		faculty = new Faculty(resultSet.getString("name"));
+		Integer id = resultSet.getInt("id");
+		faculty.setId(id);
 		
-		try {
-			connection = daoFactory.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setInt(1, id);
-			resultSet = statement.executeQuery();
-			
-			resultSet.next();
-			faculty = new Faculty(resultSet.getString("name"));
-			faculty.setId(id);
-		}
-		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
-		}
-		finally {
-			try {
-				if(resultSet != null) {
-					resultSet.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close result set", e);
-			}
-			
-			try {
-				if(statement != null) {
-					statement.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close statement", e);
-			}
-			
-			try {
-				if(connection != null) {
-					connection.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close connection", e);
-			}
-		}
-		
-		return faculty;
+		return (T) faculty;
 	}
-	
-	public Faculty updateFaculty(Integer id, String name) throws DaoException {
-		String sql = "update faculty set name=? where id=?";
+
+	@Override
+	protected <T> String getInsertElementSQL(T preparedElement) {
+		Faculty preparedFaculty = (Faculty) preparedElement;
+		String name = preparedFaculty.getName();
+		String query = "insert into faculty (name) values ('" + name + "')"; 
 		
-		Faculty faculty = null; 
-		Connection connection = null;
-		PreparedStatement statement = null;
-		
-		try {
-			connection = daoFactory.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setString(1, name);
-			statement.setInt(2, id);
-			statement.executeUpdate();
-			
-			faculty = new Faculty(name);
-			faculty.setId(id);
-		}
-		catch (SQLException e) {
-			throw new DaoException("Cannot update Facultys data", e);
-		}
-		finally {
-			try {
-				if(statement != null) {
-					statement.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close statement", e);
-			}
-			
-			try {
-				if(connection != null) {
-					connection.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close connection", e);
-			}
-		}
-		
-		return faculty;
+		return query;
 	}
-	
-	public Faculty createFaculty(String name) throws DaoException {
-		String sql = "insert into faculty (name) values ('" + name + "')";
+
+	@SuppressWarnings("unchecked")
+	@Override
+	protected <T> T makeElement(T preparedElement, ResultSet resultSet) throws SQLException {
+		resultSet.next();
+		Integer id = resultSet.getInt(1);
 		
-		Faculty faculty = null; 
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet resultSet = null;
+		Faculty preparedFaculty = (Faculty) preparedElement;
+		String name = preparedFaculty.getName();
 		
-		try {
-			connection = daoFactory.getConnection();
-			statement = connection.createStatement();
-			
-			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-			resultSet = statement.getGeneratedKeys();
-			resultSet.next();
-			Integer id = resultSet.getInt(1);
-			
-			faculty = new Faculty(name);
-			faculty.setId(id);
-		}
-		catch (SQLException e) {
-			throw new DaoException("Cannot create Facultys data", e);
-		}
-		finally {
-			try {
-				if(resultSet != null) {
-					resultSet.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close resultset", e);
-			}
-			
-			try {
-				if(statement != null) {
-					statement.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close statement", e);
-			}
-			
-			try {
-				if(connection != null) {
-					connection.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close connection", e);
-			}
-		}
+		Faculty faculty = new Faculty(name);
+		faculty.setId(id);
 		
-		return faculty;
+		return (T) faculty;
 	}
-	
-	public void dropFaculty(Integer id) throws DaoException {
-		String sql = "delete from faculty where id=?";
-		
-		Connection connection = null;
-		PreparedStatement statement = null;
-		
-		try {
-			connection = daoFactory.getConnection();
-			statement = connection.prepareStatement(sql);
-			statement.setInt(1, id);
-			statement.executeUpdate();
-		}
-		catch (SQLException e) {
-			throw new DaoException("Cannot delete Facultys data", e);
-		}
-		finally {
-			try {
-				if(statement != null) {
-					statement.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close statement", e);
-			}
-			
-			try {
-				if(connection != null) {
-					connection.close();
-				}
-			}
-			catch(SQLException e) {
-				throw new DaoException("Cannot close connection", e);
-			}
-		}
+
+	@Override
+	protected String getDeleteSQL() {
+		return "delete from faculty where id=?";
 	}
 	
 }

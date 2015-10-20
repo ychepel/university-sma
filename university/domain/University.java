@@ -75,7 +75,8 @@ public class University {
 	public void createFaculty(String name) throws DomainException {
 		Faculty faculty;
 		try {
-			faculty = facultyDao.createFaculty(name);
+			Faculty preparedFaculty = new Faculty(name);
+			faculty = facultyDao.createRecord(preparedFaculty);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create faculty", e); 
@@ -90,7 +91,7 @@ public class University {
 	public void removeFaculty(Faculty faculty) throws DomainException {
 		Integer id = faculty.getId();
 		try {
-			facultyDao.dropFaculty(id);
+			facultyDao.dropById(id);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot dtop the faculty", e);

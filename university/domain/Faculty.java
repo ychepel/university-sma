@@ -3,6 +3,9 @@ package university.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import university.dao.DaoException;
+import university.dao.DepartmentDao;
+
 public class Faculty {
 	
 	private final Integer MAX_QUANTITY_IN_GROUP = 30;
@@ -12,6 +15,7 @@ public class Faculty {
 	private String name;
 	private Set<StudentGroup> studentGroups;
 	private Set<Department> departments;
+	private DepartmentDao departmentDao;
 	
 	public void addStudent(Student student) {
 		Integer studentGrade = student.getGrade();
@@ -112,6 +116,8 @@ public class Faculty {
 		this.name = name;
 		studentGroups = new HashSet<>();
 		departments = new HashSet<>();
+		
+		this.departmentDao = new DepartmentDao();
 	}
 
 	public void removeStudent(Student student) {
@@ -142,11 +148,30 @@ public class Faculty {
 		return UNDERACHIEVMENT_AVG_MARK_LEVEL;
 	}
 	
+	public void createDepartment(String name) throws DomainException {
+		Department department;
+		try {
+			Department preparedDepartment = new Department(name);
+			department = departmentDao.createRecord(preparedDepartment);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannnot create department", e); 
+		}
+		addDepartment(department);
+	}
+	
 	public void addDepartment(Department department) {
 		this.departments.add(department);
 	}
 	
-	public void removeDepartment(Department department) {
+	public void removeDepartment(Department department) throws DomainException {
+		Integer id = department.getId();
+		try {
+			departmentDao.dropById(id);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot dtop the department", e);
+		}
 		this.departments.remove(department);
 	}
 	

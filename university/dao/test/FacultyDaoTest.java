@@ -1,7 +1,11 @@
-package university.dao;
+package university.dao.test;
 
 import static org.junit.Assert.*;
+
 import org.junit.Test;
+
+import university.dao.DaoException;
+import university.dao.FacultyDao;
 import university.domain.Faculty;
 
 public class FacultyDaoTest {

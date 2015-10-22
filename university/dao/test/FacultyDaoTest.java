@@ -18,6 +18,7 @@ public class FacultyDaoTest {
 			faculty = facultyDao.getById(1);
 		}
 		catch(DaoException e) {
+			e.printStackTrace();
 		}
 			
 		String name = faculty.getName().trim();

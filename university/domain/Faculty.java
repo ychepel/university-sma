@@ -170,7 +170,7 @@ public class Faculty {
 			departmentDao.dropById(id);
 		}
 		catch (DaoException e) {
-			throw new DomainException("Cannot dtop the department", e);
+			throw new DomainException("Cannot drop the department", e);
 		}
 		this.departments.remove(department);
 	}

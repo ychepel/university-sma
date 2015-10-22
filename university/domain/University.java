@@ -94,7 +94,7 @@ public class University {
 			facultyDao.dropById(id);
 		}
 		catch (DaoException e) {
-			throw new DomainException("Cannot dtop the faculty", e);
+			throw new DomainException("Cannot drop the faculty", e);
 		}
 		this.faculties.remove(faculty);
 	}

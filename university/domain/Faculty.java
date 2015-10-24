@@ -151,8 +151,7 @@ public class Faculty {
 	public void createDepartment(String name) throws DomainException {
 		Department department;
 		try {
-			Department preparedDepartment = new Department(name);
-			department = departmentDao.createRecord(preparedDepartment);
+			department = departmentDao.createDepartment(name, this);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create department", e); 
@@ -167,7 +166,7 @@ public class Faculty {
 	public void removeDepartment(Department department) throws DomainException {
 		Integer id = department.getId();
 		try {
-			departmentDao.dropById(id);
+			departmentDao.dropDepartmentById(id);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop the department", e);

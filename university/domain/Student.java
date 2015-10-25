@@ -26,6 +26,11 @@ public class Student extends Person {
 		this.studentId = studentCount;
 	}
 	
+	public Student(Long studentId) {
+		super();
+		this.studentId = studentId;
+	}
+	
 	public Integer getAverageMark() {
 		Map<Course, Integer> marks = getMarks();
 		

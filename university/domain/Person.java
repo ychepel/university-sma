@@ -11,6 +11,7 @@ public abstract class Person {
 	private String passport;
 	private String nationality;
 	private Address address;
+	private Long personId;
 	
 	public Person() {
 		this.address = new Address();
@@ -72,6 +73,23 @@ public abstract class Person {
 		this.patronymicName = patronymicName;
 	}
 	
-	
+	public void setPersonId(Long personId) {
+		this.personId = personId;
+	}
+	public Long getPersonId() {
+		return personId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public String getPatronymicName() {
+		return patronymicName;
+	}
 	
 }

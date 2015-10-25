@@ -8,18 +8,16 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import university.domain.StudentGroup;
 
-public abstract class DaoAbstract {
+public class StudentGroupDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
 	
-	protected abstract String getSelectAllQuery();
-	protected abstract <T> Set<T> parseAllResultSet(ResultSet resultSet) throws SQLException;
-	
-	public <T> Set<T> getAll() throws DaoException {
-		String sql = getSelectAllQuery();
+	public Set<StudentGroup> getStudentGroups() throws DaoException {
+		String sql = "SELECT * FROM STUDENT_GROUP";
 		
-		Set<T> set = new HashSet<>(); 
+		Set<StudentGroup> set = new HashSet<>(); 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -29,10 +27,16 @@ public abstract class DaoAbstract {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 
-			set = parseAllResultSet(resultSet);
+			while(resultSet.next()) {
+				StudentGroup element = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
+				element.setId(resultSet.getInt("STUDENT_GROUP_ID"));
+				
+				set.add(element);
+				
+			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot select all records", e);
+			throw new DaoException("Cannot get Student Group data", e);
 		}
 		finally {
 			try {
@@ -66,13 +70,10 @@ public abstract class DaoAbstract {
 		return set;
 	}
 	
-	protected abstract String getSelectByIdQuery();
-	protected abstract <T> T parseOneResultSet(ResultSet resultSet) throws SQLException;
-	
-	public <T> T getById(Integer id) throws DaoException {
-		String sql = getSelectByIdQuery();
+	public StudentGroup getStudentGroupById(Integer id) throws DaoException {
+		String sql = "SELECT * FROM STUDENT_GROUP WHERE STUDENT_GROUP_ID=?";
 		
-		T element = null; 
+		StudentGroup result = null; 
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -83,10 +84,12 @@ public abstract class DaoAbstract {
 			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
 			
-			element = parseOneResultSet(resultSet);
+			resultSet.next();
+			result = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
+			result.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get record by id", e);
+			throw new DaoException("Cannot get Student Group data", e);
 		}
 		finally {
 			try {
@@ -117,16 +120,13 @@ public abstract class DaoAbstract {
 			}
 		}
 		
-		return element;
+		return result;
 	}
 	
-	protected abstract <T> String getInsertQuery(T preparedElement);
-	protected abstract <T> T makeElement(T preparedElement, ResultSet resultSet) throws SQLException;
-	
-	public <T> T createRecord(T preparedElement) throws DaoException {
-		String sql = getInsertQuery(preparedElement);
+	public StudentGroup createStudentGroup(String name) throws DaoException {
+		String sql = "INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME) VALUES ('" + name + "')";
 		
-		T element = null; 
+		StudentGroup result = null; 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -137,11 +137,14 @@ public abstract class DaoAbstract {
 			
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
+			resultSet.next();
+			Integer id = resultSet.getInt(1);
 			
-			element = makeElement(preparedElement, resultSet);
+			result = new StudentGroup(name);
+			result.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create record", e);
+			throw new DaoException("Cannot create Student Group data", e);
 		}
 		finally {
 			try {
@@ -172,13 +175,11 @@ public abstract class DaoAbstract {
 			}
 		}
 		
-		return element;
+		return result;
 	}
 	
-	protected abstract String getDeleteQuery();
-	
-	public void dropById(Integer id) throws DaoException {
-		String sql = getDeleteQuery();
+	public void dropStudentGroupById(Integer id) throws DaoException {
+		String sql = "DELETE FROM STUDENT_GROUP WHERE STUDENT_GROUP_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -190,7 +191,7 @@ public abstract class DaoAbstract {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete the record by id", e);
+			throw new DaoException("Cannot delete Student Group data", e);
 		}
 		finally {
 			try {
@@ -212,5 +213,4 @@ public abstract class DaoAbstract {
 			}
 		}
 	}
-	
 }

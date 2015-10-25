@@ -15,7 +15,7 @@ public class FacultyDaoTest {
 		Faculty faculty = null;
 			
 		try {
-			faculty = facultyDao.getById(1);
+			faculty = facultyDao.getFacultyById(1);
 		}
 		catch(DaoException e) {
 			e.printStackTrace();

@@ -9,6 +9,7 @@ public class CourseSchedule {
 	private Lecturer lecturer;
 	private Set<StudentGroup> studentGroups;
 	private Set<Calendar> timetables;
+	private Integer id;
 	
 	public CourseSchedule(Course course, Lecturer lecturer) {
 		this.course = course;
@@ -48,4 +49,22 @@ public class CourseSchedule {
 	public Course getCourse() {
 		return course;
 	}
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setStudentGroups(Set<StudentGroup> studentGroups) {
+		this.studentGroups = studentGroups;
+	}
+
+	public void setTimetables(Set<Calendar> timetables) {
+		this.timetables = timetables;
+	}
+	
+	
 }

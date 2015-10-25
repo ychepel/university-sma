@@ -1,25 +1,24 @@
 package university.domain;
 
-import java.util.List;
-
 public class Address {
 	private String province;
 	private String city;
 	private String street;
 	private String house;
 	private int flat;
-	private List<String> phones;
+	private String phone;
 	private String email;
+	private Long id;
 	
 	public String getFullAdress() {
 		return province + ", " + city + ", " + street + ", " + house + ", " + flat;
 	}
 	
-	public List<String> getPhones() {
-		return phones;
+	public String getPhone() {
+		return phone;
 	}
-	public void setPhones(List<String> phones) {
-		this.phones = phones;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 	public String getEmail() {
 		return email;
@@ -42,7 +41,32 @@ public class Address {
 	public void setFlat(int flat) {
 		this.flat = flat;
 	}
-	
-	
+	public void setId(Long id) {
+		this.id = id;		
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public String getProvince() {
+		return province;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public String getStreet() {
+		return street;
+	}
+
+	public String getHouse() {
+		return house;
+	}
+
+	public int getFlat() {
+		return flat;
+	}
 	
 }

@@ -8,6 +8,7 @@ public class Course {
 	private String name;
 	private int grade;
 	private Set<CourseSchedule> courseSchedules;
+	private Integer id; 
 	
 	public void create(Lecturer lecturer, StudentGroup studentGroup) {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
@@ -99,6 +100,13 @@ public class Course {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 	
 }

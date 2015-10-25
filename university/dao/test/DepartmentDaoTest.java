@@ -10,6 +10,7 @@ import org.junit.Test;
 import university.dao.DaoException;
 import university.dao.DepartmentDao;
 import university.domain.Department;
+import university.domain.Faculty;
 
 public class DepartmentDaoTest {
 
@@ -18,8 +19,8 @@ public class DepartmentDaoTest {
 		DepartmentDao departmentDao = new DepartmentDao();
 		Set<Department> departments = new HashSet<>();
 		try {
-			departmentDao.dropById(2);;
-			departments = departmentDao.getAll();
+			departmentDao.dropDepartmentById(2);;
+			departments = departmentDao.getDepartments(new Faculty(""));
 		}
 		catch (DaoException e) {
 			e.printStackTrace();

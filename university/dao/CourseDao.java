@@ -8,35 +8,38 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-import university.domain.Faculty;
+import university.domain.Course;
+import university.domain.Department;
 
-public class FacultyDao {
-
+public class CourseDao {
 	private DaoFactory daoFactory = new DaoFactory();
 	
-	public Set<Faculty> getFaculties() throws DaoException {
-		String sql = "SELECT * FROM FACULTY";
+	public Set<Course> getCourses(Department department) throws DaoException {
+		String sql = "SELECT * FROM COURSE WHERE DEPARTMENT_ID=?";
 		
-		Set<Faculty> set = new HashSet<>(); 
+		Set<Course> set = new HashSet<>(); 
 		Connection connection = null;
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		
+		Integer departmentId = department.getId();
 
 		try {
 			connection = daoFactory.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, departmentId);
+			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Faculty element = new Faculty(resultSet.getString("FACULTY_NAME"));
-				element.setId(resultSet.getInt("FACULTY_ID"));
-				
-				set.add(element);
+				Course course = new Course(resultSet.getString("COURSE_NAME"));
+				course.setId(resultSet.getInt("COURSE_ID"));
+				course.setGrade(resultSet.getInt("GRADE"));
+				set.add(course);
 				
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Course data", e);
 		}
 		finally {
 			try {
@@ -70,10 +73,10 @@ public class FacultyDao {
 		return set;
 	}
 	
-	public Faculty getFacultyById(Integer id) throws DaoException {
-		String sql = "SELECT * FROM FACULTY WHERE FACULTY_ID=?";
+	public Course getCourseById(Integer id) throws DaoException {
+		String sql = "SELECT * FROM COURSE WHERE COURSE_ID=?";
 		
-		Faculty result = null; 
+		Course result = null; 
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -85,11 +88,12 @@ public class FacultyDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			result = new Faculty(resultSet.getString("FACULTY_NAME"));
+			result = new Course(resultSet.getString("COURSE_NAME"));
+			result.setGrade(resultSet.getInt("GRADE"));
 			result.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Course data", e);
 		}
 		finally {
 			try {
@@ -123,10 +127,12 @@ public class FacultyDao {
 		return result;
 	}
 	
-	public Faculty createFaculty(String name) throws DaoException {
-		String sql = "INSERT INTO FACULTY (FACULTY_NAME) VALUES ('" + name + "')";
+	public Course createCourse(String name, Integer grade, Department department) throws DaoException {
+		Integer departmentId = department.getId();
+		String sql = "INSERT INTO COURSE (COURSE_NAME, GRADE, FACULTY_ID) VALUES ("
+				+ "'" + name + "', " + grade + ", " + departmentId + ")";
 		
-		Faculty result = null; 
+		Course result = null; 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -140,11 +146,12 @@ public class FacultyDao {
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
 			
-			result = new Faculty(name);
+			result = new Course(name);
+			result.setGrade(grade);
 			result.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Faculty data", e);
+			throw new DaoException("Cannot create Course data", e);
 		}
 		finally {
 			try {
@@ -178,8 +185,8 @@ public class FacultyDao {
 		return result;
 	}
 	
-	public void dropFacultyById(Integer id) throws DaoException {
-		String sql = "DELETE FROM FACULTY WHERE FACULTY_ID=?";
+	public void dropCourseById(Integer id) throws DaoException {
+		String sql = "DELETE FROM COURSE WHERE COURSE_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -191,7 +198,7 @@ public class FacultyDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Faculty data", e);
+			throw new DaoException("Cannot delete Course data", e);
 		}
 		finally {
 			try {
@@ -213,5 +220,4 @@ public class FacultyDao {
 			}
 		}
 	}
-	
 }

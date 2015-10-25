@@ -32,8 +32,8 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Department element = new Department(resultSet.getString("NAME"));
-				element.setId(resultSet.getInt("ID"));
+				Department element = new Department(resultSet.getString("DEPARTMENT_NAME"));
+				element.setId(resultSet.getInt("DEPARTMENT_ID"));
 				
 				set.add(element);
 				
@@ -75,7 +75,7 @@ public class DepartmentDao {
 	}
 	
 	public Department getDepartmentById(Integer id) throws DaoException {
-		String sql = "SELECT * FROM DEPARTMENT WHERE ID=?";
+		String sql = "SELECT * FROM DEPARTMENT WHERE DEPARTMENT_ID=?";
 		
 		Department result = null; 
 		Connection connection = null;
@@ -89,7 +89,7 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			result = new Department(resultSet.getString("NAME"));
+			result = new Department(resultSet.getString("DEPARTMENT_NAME"));
 			result.setId(id);
 		}
 		catch (SQLException e) {
@@ -129,7 +129,7 @@ public class DepartmentDao {
 	
 	public Department createDepartment(String name, Faculty faculty) throws DaoException {
 		Integer facultyId = faculty.getId();
-		String sql = "INSERT INTO DEPARTMENT (NAME, FACULTY_ID) VALUES ('" + name + "', " + facultyId + ")";
+		String sql = "INSERT INTO DEPARTMENT (DEPARTMENT_NAME, FACULTY_ID) VALUES ('" + name + "', " + facultyId + ")";
 		
 		Department result = null; 
 		Connection connection = null;
@@ -184,7 +184,7 @@ public class DepartmentDao {
 	}
 	
 	public void dropDepartmentById(Integer id) throws DaoException {
-		String sql = "DELETE FROM DEPARTMENT WHERE ID=?";
+		String sql = "DELETE FROM DEPARTMENT WHERE DEPARTMENT_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;

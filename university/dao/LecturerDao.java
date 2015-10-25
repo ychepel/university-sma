@@ -8,35 +8,38 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
-import university.domain.Faculty;
+import university.domain.Lecturer;
+import university.domain.Person;
 
-public class FacultyDao {
-
+public class LecturerDao {
 	private DaoFactory daoFactory = new DaoFactory();
+	private PersonDao personDao = new PersonDao();
 	
-	public Set<Faculty> getFaculties() throws DaoException {
-		String sql = "SELECT * FROM FACULTY";
+	public Set<Lecturer> getLecturers() throws DaoException {
+		String sql = "SELECT * FROM LECTURER";
 		
-		Set<Faculty> set = new HashSet<>(); 
+		Set<Lecturer> set = new HashSet<>(); 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
-
+		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 
 			while(resultSet.next()) {
-				Faculty element = new Faculty(resultSet.getString("FACULTY_NAME"));
-				element.setId(resultSet.getInt("FACULTY_ID"));
-				
-				set.add(element);
-				
+				Long personId = resultSet.getLong("PERSONAL_ID");
+				Lecturer lecturer = (Lecturer) personDao.getPersonById(personId, new Lecturer());
+				lecturer.setLecturerId(resultSet.getInt("LECTURER_ID"));
+				lecturer.setCurrentPosition(resultSet.getString("CURRENT_POSITION"));
+				lecturer.setScienceDegree(resultSet.getString("SCIENCE_DEGREE"));
+
+				set.add(lecturer);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Lecturer data", e);
 		}
 		finally {
 			try {
@@ -70,10 +73,10 @@ public class FacultyDao {
 		return set;
 	}
 	
-	public Faculty getFacultyById(Integer id) throws DaoException {
-		String sql = "SELECT * FROM FACULTY WHERE FACULTY_ID=?";
+	public Lecturer getLecturerById(Integer id) throws DaoException {
+		String sql = "SELECT * FROM LECTURER WHERE LECTURER_ID=?";
 		
-		Faculty result = null; 
+		Lecturer lecturer = null; 
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -85,11 +88,14 @@ public class FacultyDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			result = new Faculty(resultSet.getString("FACULTY_NAME"));
-			result.setId(id);
+			Long personId = resultSet.getLong("PERSONAL_ID");
+			lecturer = (Lecturer) personDao.getPersonById(personId, new Lecturer());
+			lecturer.setLecturerId(id);
+			lecturer.setCurrentPosition(resultSet.getString("CURRENT_POSITION"));
+			lecturer.setScienceDegree(resultSet.getString("SCIENCE_DEGREE"));
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Lecturer data", e);
 		}
 		finally {
 			try {
@@ -120,13 +126,19 @@ public class FacultyDao {
 			}
 		}
 		
-		return result;
+		return lecturer;
 	}
 	
-	public Faculty createFaculty(String name) throws DaoException {
-		String sql = "INSERT INTO FACULTY (FACULTY_NAME) VALUES ('" + name + "')";
+	public Lecturer createLecturer(Lecturer lecturer) throws DaoException {
+		String scienceDegree = lecturer.getScienceDegree();
+		String currentPosition = lecturer.getCurrentPosition();
 		
-		Faculty result = null; 
+		Person person = personDao.createPerson(lecturer);
+		Long personId = person.getPersonId();
+		
+		String sql = "INSERT INTO LECTURER (SCIENCE_DEGREE, CURRENT_POSITION, PERSON_ID) VALUES ("
+				+ "'" + scienceDegree + "', '" + currentPosition + "', " + personId + ")";
+		
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -139,12 +151,10 @@ public class FacultyDao {
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
-			
-			result = new Faculty(name);
-			result.setId(id);
+			lecturer.setLecturerId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Faculty data", e);
+			throw new DaoException("Cannot create Lecturer data", e);
 		}
 		finally {
 			try {
@@ -175,14 +185,18 @@ public class FacultyDao {
 			}
 		}
 		
-		return result;
+		return lecturer;
 	}
 	
-	public void dropFacultyById(Integer id) throws DaoException {
-		String sql = "DELETE FROM FACULTY WHERE FACULTY_ID=?";
+	public void dropLecturerById(Integer id) throws DaoException {
+		String sql = "DELETE FROM LECTURER WHERE LECTURER_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
+		
+		Lecturer lecturer = getLecturerById(id);
+		Long personId = lecturer.getPersonId();
+		personDao.dropPersonById(personId);
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -191,7 +205,7 @@ public class FacultyDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Faculty data", e);
+			throw new DaoException("Cannot delete Lecturer data", e);
 		}
 		finally {
 			try {
@@ -213,5 +227,4 @@ public class FacultyDao {
 			}
 		}
 	}
-	
 }

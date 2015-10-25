@@ -13,6 +13,7 @@ import java.util.Set;
 public class StudentGroup {
 	private String name;
 	private Set<Student> students;
+	private Integer id;
 	
 	public Map<Student, Integer> getSuccessRating(Course course) {
 		Map<Student, Integer> result = new HashMap<>();
@@ -91,5 +92,13 @@ public class StudentGroup {
 	public void removeStudent(Student student) {
 		this.students.remove(student);
 	}
-	
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+		
 }

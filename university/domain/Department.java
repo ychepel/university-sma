@@ -80,4 +80,11 @@ public class Department {
 	public Integer getId() {
 		return id;
 	}
+	
+	public void setCourses(Set<Course> courses) {
+		this.courses = courses;
+	}
+	public void setLecturers(Set<Lecturer> lecturers) {
+		this.lecturers = lecturers;
+	}
 }

@@ -10,26 +10,29 @@ import java.util.Set;
 
 import university.domain.Lecturer;
 import university.domain.Person;
+import university.domain.Department;
 
 public class LecturerDao {
 	private DaoFactory daoFactory = new DaoFactory();
 	private PersonDao personDao = new PersonDao();
 	
-	public Set<Lecturer> getLecturers() throws DaoException {
-		String sql = "SELECT * FROM LECTURER";
+	public Set<Lecturer> getLecturers(Department department) throws DaoException {
+		String sql = "SELECT * FROM LECTURER WHERE DEPARTMENT_ID=?";
 		
 		Set<Lecturer> set = new HashSet<>(); 
 		Connection connection = null;
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		Integer departmentId = department.getId();
 		
 		try {
 			connection = daoFactory.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, departmentId);
+			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Long personId = resultSet.getLong("PERSONAL_ID");
+				Long personId = resultSet.getLong("PERSON_ID");
 				Lecturer lecturer = (Lecturer) personDao.getPersonById(personId, new Lecturer());
 				lecturer.setLecturerId(resultSet.getInt("LECTURER_ID"));
 				lecturer.setCurrentPosition(resultSet.getString("CURRENT_POSITION"));
@@ -88,7 +91,7 @@ public class LecturerDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			Long personId = resultSet.getLong("PERSONAL_ID");
+			Long personId = resultSet.getLong("PERSON_ID");
 			lecturer = (Lecturer) personDao.getPersonById(personId, new Lecturer());
 			lecturer.setLecturerId(id);
 			lecturer.setCurrentPosition(resultSet.getString("CURRENT_POSITION"));
@@ -129,15 +132,17 @@ public class LecturerDao {
 		return lecturer;
 	}
 	
-	public Lecturer createLecturer(Lecturer lecturer) throws DaoException {
+	public Lecturer createLecturer(Lecturer lecturer, Department department) throws DaoException {
 		String scienceDegree = lecturer.getScienceDegree();
 		String currentPosition = lecturer.getCurrentPosition();
 		
 		Person person = personDao.createPerson(lecturer);
 		Long personId = person.getPersonId();
+		Integer departmentId = department.getId();
 		
-		String sql = "INSERT INTO LECTURER (SCIENCE_DEGREE, CURRENT_POSITION, PERSON_ID) VALUES ("
-				+ "'" + scienceDegree + "', '" + currentPosition + "', " + personId + ")";
+		String sql = "INSERT INTO LECTURER (SCIENCE_DEGREE, CURRENT_POSITION, PERSON_ID, DEPARTMENT_ID) "
+				+ "VALUES (" + "'" + scienceDegree + "', '" + currentPosition + "', " 
+				+ personId + ", " + departmentId + ")";
 		
 		Connection connection = null;
 		Statement statement = null;

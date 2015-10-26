@@ -10,9 +10,11 @@ import java.util.Set;
 
 import university.domain.Course;
 import university.domain.Department;
+import university.domain.CourseSchedule;
 
 public class CourseDao {
 	private DaoFactory daoFactory = new DaoFactory();
+	private CourseScheduleDao courseScheduleDao = new CourseScheduleDao();
 	
 	public Set<Course> getCourses(Department department) throws DaoException {
 		String sql = "SELECT * FROM COURSE WHERE DEPARTMENT_ID=?";
@@ -34,8 +36,11 @@ public class CourseDao {
 				Course course = new Course(resultSet.getString("COURSE_NAME"));
 				course.setId(resultSet.getInt("COURSE_ID"));
 				course.setGrade(resultSet.getInt("GRADE"));
-				set.add(course);
+
+				Set<CourseSchedule> courseSchedules = courseScheduleDao.getCourseSchedules(course);
+				course.setCourseSchedules(courseSchedules);
 				
+				set.add(course);
 			}
 		}
 		catch (SQLException e) {
@@ -91,6 +96,9 @@ public class CourseDao {
 			result = new Course(resultSet.getString("COURSE_NAME"));
 			result.setGrade(resultSet.getInt("GRADE"));
 			result.setId(id);
+			
+			Set<CourseSchedule> courseSchedules = courseScheduleDao.getCourseSchedules(result);
+			result.setCourseSchedules(courseSchedules);
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Course data", e);

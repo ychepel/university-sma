@@ -9,10 +9,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import university.domain.Faculty;
+import university.domain.Department;
+import university.domain.StudentGroup;
 
 public class FacultyDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
+	private StudentGroupDao studentGroupDao = new StudentGroupDao();
+	private DepartmentDao departmentDao = new DepartmentDao(); 
 	
 	public Set<Faculty> getFaculties() throws DaoException {
 		String sql = "SELECT * FROM FACULTY";
@@ -28,11 +32,15 @@ public class FacultyDao {
 			resultSet = statement.executeQuery(sql);
 
 			while(resultSet.next()) {
-				Faculty element = new Faculty(resultSet.getString("FACULTY_NAME"));
-				element.setId(resultSet.getInt("FACULTY_ID"));
+				Faculty faculty = new Faculty(resultSet.getString("FACULTY_NAME"));
+				faculty.setId(resultSet.getInt("FACULTY_ID"));
 				
-				set.add(element);
-				
+				Set<StudentGroup> studentGroups = studentGroupDao.getStudentGroups(faculty);
+				faculty.setStudentGroups(studentGroups);
+				Set<Department> departments = departmentDao.getDepartments(faculty);
+				faculty.setDepartments(departments);
+
+				set.add(faculty);
 			}
 		}
 		catch (SQLException e) {
@@ -87,6 +95,11 @@ public class FacultyDao {
 			resultSet.next();
 			result = new Faculty(resultSet.getString("FACULTY_NAME"));
 			result.setId(id);
+			
+			Set<StudentGroup> studentGroups = studentGroupDao.getStudentGroups(result);
+			result.setStudentGroups(studentGroups);
+			Set<Department> departments = departmentDao.getDepartments(result);
+			result.setDepartments(departments);
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Faculty data", e);

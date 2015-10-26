@@ -190,5 +190,11 @@ public class Faculty {
 		return id;
 	}
 	
+	public void setDepartments(Set<Department> departments) {
+		this.departments = departments;
+	}
 	
+	public void setStudentGroups(Set<StudentGroup> studentGroups) {
+		this.studentGroups = studentGroups;
+	}
 }

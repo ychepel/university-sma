@@ -33,7 +33,6 @@ public class Student extends Person {
 	
 	public Integer getAverageMark() {
 		Map<Course, Integer> marks = getMarks();
-		
 		if (marks.size() == 0) return NO_MARK_VALUE;
 	
 		Integer markSum = 0;
@@ -129,6 +128,8 @@ public class Student extends Person {
 		return entranceDate;
 	}
 	
-	
+	public void setMarks(Map<Course, Integer> marks) {
+		this.marks = marks;
+	}
 
 }

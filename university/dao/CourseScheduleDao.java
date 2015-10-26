@@ -5,8 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -159,9 +159,9 @@ public class CourseScheduleDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Date datetime = resultSet.getDate("DATETIME");
+				Timestamp timeStamp = resultSet.getTimestamp("DATETIME");
 				Calendar calendar = new GregorianCalendar();
-				calendar.setTime(datetime);
+				calendar.setTimeInMillis(timeStamp.getTime());
 				set.add(calendar);
 			}
 		}

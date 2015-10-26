@@ -10,10 +10,14 @@ import java.util.Set;
 
 import university.domain.Department;
 import university.domain.Faculty;
+import university.domain.Lecturer;
+import university.domain.Course;
 
 public class DepartmentDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
+	private LecturerDao lecturerDao = new LecturerDao();
+	private CourseDao courseDao = new CourseDao();
 	
 	public Set<Department> getDepartments(Faculty faculty) throws DaoException {
 		String sql = "SELECT * FROM DEPARTMENT WHERE FACULTY_ID=?";
@@ -32,11 +36,15 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Department element = new Department(resultSet.getString("DEPARTMENT_NAME"));
-				element.setId(resultSet.getInt("DEPARTMENT_ID"));
+				Department department = new Department(resultSet.getString("DEPARTMENT_NAME"));
+				department.setId(resultSet.getInt("DEPARTMENT_ID"));
 				
-				set.add(element);
+				Set<Lecturer> lecturers = lecturerDao.getLecturers(department);
+				department.setLecturers(lecturers);
+				Set<Course> courses = courseDao.getCourses(department);
+				department.setCourses(courses);
 				
+				set.add(department);
 			}
 		}
 		catch (SQLException e) {
@@ -91,6 +99,11 @@ public class DepartmentDao {
 			resultSet.next();
 			result = new Department(resultSet.getString("DEPARTMENT_NAME"));
 			result.setId(id);
+			
+			Set<Lecturer> lecturers = lecturerDao.getLecturers(result);
+			result.setLecturers(lecturers);
+			Set<Course> courses = courseDao.getCourses(result);
+			result.setCourses(courses);
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Department data", e);

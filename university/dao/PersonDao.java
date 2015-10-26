@@ -137,7 +137,7 @@ public class PersonDao {
 			result = resultSet.getLong("ADDRESS_ID");
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Person data", e);
 		}
 		finally {
 			try {
@@ -185,9 +185,9 @@ public class PersonDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			cleanPerson.setFirstName(resultSet.getString("FIRST_NAME"));
-			cleanPerson.setLastName(resultSet.getString("LAST_NAME"));
-			cleanPerson.setPatronymicName(resultSet.getString("PATRONYMIC_NAME"));
+			cleanPerson.setFirstName(resultSet.getString("FIRST_NAME").trim());
+			cleanPerson.setLastName(resultSet.getString("LAST_NAME").trim());
+			cleanPerson.setPatronymicName(resultSet.getString("PATRONYMIC_NAME").trim());
 			cleanPerson.setNationality(resultSet.getString("NATIONALITY"));
 			cleanPerson.setPassport(resultSet.getString("PASSPORT"));
 			cleanPerson.setBirthDate(resultSet.getDate("BIRTH_DATE"));
@@ -199,7 +199,7 @@ public class PersonDao {
 			cleanPerson.setAddress(address);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Person data", e);
 		}
 		finally {
 			try {

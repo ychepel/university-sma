@@ -9,34 +9,36 @@ import java.util.HashSet;
 import java.util.Set;
 
 import university.domain.StudentGroup;
+import university.domain.Faculty;
 
 public class StudentGroupDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
 	
-	public Set<StudentGroup> getStudentGroups() throws DaoException {
-		String sql = "SELECT * FROM STUDENT_GROUP";
+	public Set<StudentGroup> getStudentGroups(Faculty faculty) throws DaoException {
+		String sql = "SELECT * FROM STUDENT_GROUP WHERE FACULTY_ID=?";
 		
 		Set<StudentGroup> set = new HashSet<>(); 
 		Connection connection = null;
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		Integer facultyId = faculty.getId();
 
 		try {
 			connection = daoFactory.getConnection();
-			statement = connection.createStatement();
-			resultSet = statement.executeQuery(sql);
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, facultyId);
+			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				StudentGroup element = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
-				element.setId(resultSet.getInt("STUDENT_GROUP_ID"));
+				StudentGroup studentGroup = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
+				studentGroup.setId(resultSet.getInt("STUDENT_GROUP_ID"));
 				
-				set.add(element);
-				
+				set.add(studentGroup);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Student Group data", e);
+			throw new DaoException("Cannot get Student Groups data", e);
 		}
 		finally {
 			try {
@@ -123,8 +125,10 @@ public class StudentGroupDao {
 		return result;
 	}
 	
-	public StudentGroup createStudentGroup(String name) throws DaoException {
-		String sql = "INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME) VALUES ('" + name + "')";
+	public StudentGroup createStudentGroup(Faculty faculty, String name) throws DaoException {
+		Integer facultyId = faculty.getId();
+		String sql = "INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME, FACULTY_ID) "
+				+ "VALUES ('" + name + "', " + facultyId + ")";
 		
 		StudentGroup result = null; 
 		Connection connection = null;

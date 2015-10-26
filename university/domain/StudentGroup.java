@@ -100,5 +100,8 @@ public class StudentGroup {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-		
+	
+	public void setStudents(Set<Student> students) {
+		this.students = students;
+	}
 }

@@ -136,7 +136,8 @@ public class FacultyDao {
 		return result;
 	}
 	
-	public Faculty createFaculty(String name) throws DaoException {
+	public Faculty createFaculty(Faculty faculty) throws DaoException {
+		String name = faculty.getName();
 		String sql = "INSERT INTO FACULTY (FACULTY_NAME) VALUES ('" + name + "')";
 		
 		Faculty result = null; 

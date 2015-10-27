@@ -131,5 +131,8 @@ public class Student extends Person {
 	public void setMarks(Map<Course, Integer> marks) {
 		this.marks = marks;
 	}
-
+	
+	public void setStudentCount(Long studentCount) {
+		Student.studentCount = studentCount;
+	}
 }

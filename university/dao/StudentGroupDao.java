@@ -125,8 +125,9 @@ public class StudentGroupDao {
 		return result;
 	}
 	
-	public StudentGroup createStudentGroup(Faculty faculty, String name) throws DaoException {
+	public StudentGroup createStudentGroup(StudentGroup studentGroup, Faculty faculty) throws DaoException {
 		Integer facultyId = faculty.getId();
+		String name = studentGroup.getName();
 		String sql = "INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME, FACULTY_ID) "
 				+ "VALUES ('" + name + "', " + facultyId + ")";
 		

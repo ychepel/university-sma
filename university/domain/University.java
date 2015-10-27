@@ -73,9 +73,9 @@ public class University {
 	}
 	
 	public void createFaculty(String name) throws DomainException {
-		Faculty faculty;
+		Faculty faculty = new Faculty(name);
 		try {
-			faculty = facultyDao.createFaculty(name);
+			faculty = facultyDao.createFaculty(faculty);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create faculty", e); 

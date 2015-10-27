@@ -27,7 +27,7 @@ public class PersonDao {
 		addressDao.createAddress(address);
 		Long addressId = address.getId();
 	
-		String sql = "INSERT INTO PERSON (FIRST_NAME, LAST_NAME, PATRONYMIC_NAME, BIRTH_DATE, GENDER, PASSPORT, NATIONALITY, ADDRESS_D)"
+		String sql = "INSERT INTO PERSON (FIRST_NAME, LAST_NAME, PATRONYMIC_NAME, BIRTH_DATE, GENDER, PASSPORT, NATIONALITY, ADDRESS_ID)"
 				+ "VALUES ('" + firstName + "', '" + lastName + "', '" + patronymicName + "', '" + birthDate + "', "
 						+ "'" + gender + "', '" + passport + "', '" + nationality + "', " + addressId+ ")";
 		

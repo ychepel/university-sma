@@ -140,8 +140,9 @@ public class DepartmentDao {
 		return result;
 	}
 	
-	public Department createDepartment(String name, Faculty faculty) throws DaoException {
+	public Department createDepartment(Department department, Faculty faculty) throws DaoException {
 		Integer facultyId = faculty.getId();
+		String name = department.getName();
 		String sql = "INSERT INTO DEPARTMENT (DEPARTMENT_NAME, FACULTY_ID) VALUES ('" + name + "', " + facultyId + ")";
 		
 		Department result = null; 

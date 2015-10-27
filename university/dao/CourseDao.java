@@ -135,9 +135,11 @@ public class CourseDao {
 		return result;
 	}
 	
-	public Course createCourse(String name, Integer grade, Department department) throws DaoException {
+	public Course createCourse(Course course, Department department) throws DaoException {
 		Integer departmentId = department.getId();
-		String sql = "INSERT INTO COURSE (COURSE_NAME, GRADE, FACULTY_ID) VALUES ("
+		String name = course.getName();
+		Integer grade = course.getGrade();
+		String sql = "INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ("
 				+ "'" + name + "', " + grade + ", " + departmentId + ")";
 		
 		Course result = null; 

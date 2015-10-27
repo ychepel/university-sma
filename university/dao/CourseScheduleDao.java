@@ -200,10 +200,11 @@ public class CourseScheduleDao {
 		return set;
 	}
 	
-	public CourseSchedule createCourseSchedule(Course course, Lecturer lecturer) throws DaoException {
+	public CourseSchedule createCourseSchedule(CourseSchedule courseSchedule, Course course) throws DaoException {
 		Integer courseId = course.getId();
+		Lecturer lecturer = courseSchedule.getLecturer();
 		Integer lecturerId = lecturer.getLecturerId();
-		String sql = "INSERT INTO FACULTY (COURSE_ID, LECTURER_ID) VALUES (" + courseId + ", " + lecturerId + ")";
+		String sql = "INSERT INTO COURSE_SCHEDULE (COURSE_ID, LECTURER_ID) VALUES (" + courseId + ", " + lecturerId + ")";
 		
 		CourseSchedule result = null; 
 		Connection connection = null;

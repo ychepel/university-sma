@@ -14,13 +14,13 @@ public class Course {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			Lecturer courseLecturer = courseSchedule.getLecturer();
 			if(courseLecturer.equals(lecturer)) {
-				courseSchedule.add(studentGroup);
+				courseSchedule.addStudentGroup(studentGroup);
 				return;
 			}
 		}
 		
 		CourseSchedule newCourseSchedule = new CourseSchedule(this, lecturer);
-		newCourseSchedule.add(studentGroup);
+		newCourseSchedule.addStudentGroup(studentGroup);
 		this.add(newCourseSchedule);
 	}
 	

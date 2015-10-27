@@ -149,9 +149,9 @@ public class Faculty {
 	}
 	
 	public void createDepartment(String name) throws DomainException {
-		Department department;
+		Department department = new Department(name);
 		try {
-			department = departmentDao.createDepartment(name, this);
+			department = departmentDao.createDepartment(department, this);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create department", e); 

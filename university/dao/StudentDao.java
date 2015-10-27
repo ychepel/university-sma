@@ -273,7 +273,7 @@ public class StudentDao {
 	}
 	
 	public void createStudent(Student student) throws DaoException {
-		String sql = "INSERT INTO LECTURER (STUDENT_ID, GOVERNMENT_FINANCED, SCHOOL_CERTIFICATE, STUDENT_GROUP_ID, "
+		String sql = "INSERT INTO STUDENT (STUDENT_ID, GOVERNMENT_FINANCED, SCHOOL_CERTIFICATE, STUDENT_GROUP_ID, "
 				+ "ENTRANCE_DATE, COMPLETION_DATE, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
 		Person person = personDao.createPerson(student);
@@ -293,12 +293,12 @@ public class StudentDao {
 			StudentGroup studentGroup = student.getStudentGroup();
 			statement.setInt(4, studentGroup.getId());
 			Calendar entranceCalendar = student.getEntranceDate();
-			statement.setDate(5, (java.sql.Date) entranceCalendar.getTime());
+			statement.setDate(5, new java.sql.Date(entranceCalendar.getTimeInMillis()));
 			Calendar completionCalendar = student.getCompletionDate();
-			statement.setDate(6, (java.sql.Date) completionCalendar.getTime());
+			statement.setDate(6, new java.sql.Date(completionCalendar.getTimeInMillis()));
 			statement.setLong(7, personId);
 			
-			resultSet = statement.executeQuery();
+			statement.executeUpdate();
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot create Student", e);
@@ -386,10 +386,10 @@ public class StudentDao {
 			statement = connection.createStatement();
 			resultSet = statement.executeQuery(sql);
 			resultSet.next();
-			result = resultSet.getLong(0);
+			result = resultSet.getLong(1);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Student data", e);
+			throw new DaoException("Cannot get Max Student data", e);
 		}
 		finally {
 			try {

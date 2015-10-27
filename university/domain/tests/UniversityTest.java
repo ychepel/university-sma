@@ -28,18 +28,18 @@ public class UniversityTest {
 		
 		Course courseA1C1 = new Course("A1C1 Course");
 		CourseSchedule courseScheduleA1C1S = new CourseSchedule(courseA1C1, lecturer1);
-		courseScheduleA1C1S.add(new GregorianCalendar(2015, Calendar.NOVEMBER, 1, 2, 3, 4));
-		courseScheduleA1C1S.add(new GregorianCalendar(2016, Calendar.JANUARY, 1, 2, 3, 4));
+		courseScheduleA1C1S.addTimetable(new GregorianCalendar(2015, Calendar.NOVEMBER, 1, 2, 3, 4));
+		courseScheduleA1C1S.addTimetable(new GregorianCalendar(2016, Calendar.JANUARY, 1, 2, 3, 4));
 		courseA1C1.add(courseScheduleA1C1S);
 		departmentA1.addCourse(courseA1C1);
 		
 		Course courseA1C2 = new Course("A1C2 Course");
 		CourseSchedule courseScheduleA1C2S = new CourseSchedule(courseA1C2, lecturer1);
-		courseScheduleA1C2S.add(new GregorianCalendar(2015, Calendar.NOVEMBER, 2, 3, 4, 5));
+		courseScheduleA1C2S.addTimetable(new GregorianCalendar(2015, Calendar.NOVEMBER, 2, 3, 4, 5));
 		courseA1C2.add(courseScheduleA1C2S);
 		
 		CourseSchedule courseScheduleA1C2S2 = new CourseSchedule(courseA1C2, lecturer2);
-		courseScheduleA1C2S2.add(new GregorianCalendar(2015, Calendar.NOVEMBER, 3, 4, 5, 6));
+		courseScheduleA1C2S2.addTimetable(new GregorianCalendar(2015, Calendar.NOVEMBER, 3, 4, 5, 6));
 		courseA1C2.add(courseScheduleA1C2S2);
 		
 		departmentA1.addCourse(courseA1C2);

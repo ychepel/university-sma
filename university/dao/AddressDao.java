@@ -31,7 +31,6 @@ public class AddressDao {
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
-			
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();

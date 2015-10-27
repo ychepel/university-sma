@@ -18,7 +18,7 @@ public class CourseSchedule {
 		this.timetables = new HashSet<Calendar>();
 	}
 	
-	public void add(StudentGroup studentGroup) {
+	public void addStudentGroup(StudentGroup studentGroup) {
 		studentGroups.add(studentGroup);
 	}
 	
@@ -26,7 +26,7 @@ public class CourseSchedule {
 		studentGroups.remove(studentGroup);
 	}
 	
-	public void add(Calendar calendar) {
+	public void addTimetable(Calendar calendar) {
 		timetables.add(calendar);
 	}
 	
@@ -65,6 +65,8 @@ public class CourseSchedule {
 	public void setTimetables(Set<Calendar> timetables) {
 		this.timetables = timetables;
 	}
-	
+	public void setLecturer(Lecturer lecturer) {
+		this.lecturer = lecturer;
+	}
 	
 }

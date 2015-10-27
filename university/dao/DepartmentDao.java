@@ -197,6 +197,60 @@ public class DepartmentDao {
 		return result;
 	}
 	
+	public void updateDepartment(Department department, Faculty faculty) throws DaoException {
+		String sql = "UPDATE DEPARTMENT SET DEPARTMENT_NAME=?, FACULTY_ID=? WHERE DEPARTMENT_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Integer departmentId = department.getId();
+		Integer facultyId = faculty.getId();
+		String name = department.getName();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setString(1, name);
+			statement.setInt(2, facultyId);
+			statement.setInt(3, departmentId);
+			
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Department data", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
 	public void dropDepartmentById(Integer id) throws DaoException {
 		String sql = "DELETE FROM DEPARTMENT WHERE DEPARTMENT_ID=?";
 		

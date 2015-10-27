@@ -3,6 +3,8 @@ package university.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.dao.DaoException;
 import university.dao.DepartmentDao;
 
@@ -16,6 +18,8 @@ public class Faculty {
 	private Set<StudentGroup> studentGroups;
 	private Set<Department> departments;
 	private DepartmentDao departmentDao;
+	
+	private static Logger log = Logger.getLogger(Faculty.class);
 	
 	public void addStudent(Student student) {
 		Integer studentGrade = student.getGrade();
@@ -113,6 +117,7 @@ public class Faculty {
 	}
 	
 	public Faculty(String name) {
+		log.info("Create new Faculty '" + name + "'");
 		this.name = name;
 		studentGroups = new HashSet<>();
 		departments = new HashSet<>();

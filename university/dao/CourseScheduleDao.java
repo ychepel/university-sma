@@ -211,6 +211,9 @@ public class CourseScheduleDao {
 		Statement statement = null;
 		ResultSet resultSet = null;
 		
+		createCourseScheduleGroup(courseSchedule);
+		createCourseScheduleTimetable(courseSchedule);
+		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
@@ -256,6 +259,172 @@ public class CourseScheduleDao {
 		}
 		
 		return result;
+	}
+	
+	private void createCourseScheduleGroup(CourseSchedule courseSchedule) throws DaoException {
+		String sql = "INSERT INTO COURSE_SCHEDULE_GROUP (COURSE_SCHEDULE_ID, STUDENT_GROUP_ID) VALUES (?, ?)";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		Integer courseScheduleId = courseSchedule.getId();
+		Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, courseScheduleId);
+			
+			for(StudentGroup studentGroup : studentGroups) {
+				Integer studentGroupId = studentGroup.getId();
+				statement.setInt(2, studentGroupId);
+				statement.executeQuery();
+			}
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot create Course Schedule Student Group", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
+	private void createCourseScheduleTimetable(CourseSchedule courseSchedule) throws DaoException {
+		String sql = "INSERT INTO COURSE_SCHEDULE_TIMETABLE (COURSE_SCHEDULE_ID, DATETIME) VALUES (?, ?)";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		Integer courseScheduleId = courseSchedule.getId();
+		Set<Calendar> timetables = courseSchedule.getTimetables();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setInt(1, courseScheduleId);
+			
+			for(Calendar calendar : timetables) {
+				Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+				statement.setTimestamp(2, timestamp);
+				statement.executeQuery();
+			}
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot create Course Schedule Timetable", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
+	public void updateCourseSchedule(CourseSchedule courseSchedule, Course course) throws DaoException {
+		String sql = "UPDATE COURSE_SCHEDULE SET COURSE_ID=?, LECTURER_ID=? WHERE COURSE_SCHEDULE_DI=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Integer courseScheduleId = courseSchedule.getId(); 
+		Integer courseId = course.getId();
+		Lecturer lecturer = courseSchedule.getLecturer();
+		Integer lecturerId = lecturer.getLecturerId();
+		
+		dropCourseScheduleStudentGroups(courseScheduleId);
+		dropCourseScheduleTimetables(courseScheduleId);
+		createCourseScheduleGroup(courseSchedule);
+		createCourseScheduleTimetable(courseSchedule);
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setInt(1, courseId);
+			statement.setInt(2, lecturerId);
+			statement.setInt(3, courseScheduleId);
+			
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Course Schedule data", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
 	}
 	
 	public void dropCourseScheduleById(Integer id) throws DaoException {

@@ -71,6 +71,79 @@ public class AddressDao {
 		
 		return address;
 	}
+	
+	protected void updateAddress(Address address) throws DaoException {
+		String sql = "UPDATE ADDRESS "
+				+ "SET CITY=?, "
+				+ "EMAIL=?, "
+				+ "FLAT=?, "
+				+ "HOUSE=?, "
+				+ "PHONE=?, "
+				+ "PROVINCE=?, "
+				+ "STREET=?) "
+				+ "WHERE ADDRESS_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Long addressId = address.getId();
+		String city = address.getCity();
+		String email = address.getEmail();
+		Integer flat = address.getFlat();
+		String house = address.getHouse();
+		String phone = address.getPhone();
+		String province = address.getProvince();
+		String street = address.getStreet();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setString(1, city);
+			statement.setString(2, email);
+			statement.setInt(3, flat);
+			statement.setString(4, house);
+			statement.setString(5, phone);
+			statement.setString(6, province);
+			statement.setString(7, street);
+			statement.setLong(8, addressId);
+			
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Address", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+		
+	}
 
 	protected void dropAddressById(Long id) throws DaoException {
 		String sql = "DELETE FROM ADDRESS WHERE ADDRESS_ID=?";
@@ -111,7 +184,7 @@ public class AddressDao {
 	protected Address getAddressById(Long id) throws DaoException {
 		String sql = "SELECT * FROM ADDRESS WHERE ADDRESS_ID=?";
 		
-		Address result = new Address(); 
+		Address result = null; 
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
@@ -123,14 +196,7 @@ public class AddressDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			result.setCity(resultSet.getString("CITY"));
-			result.setEmail(resultSet.getString("EMAIL"));
-			result.setFlat(resultSet.getInt("FLAT"));
-			result.setHouse(resultSet.getString("HOUSE"));
-			result.setPhone(resultSet.getString("PHONE"));
-			result.setProvince(resultSet.getString("PROVINCE"));
-			result.setStreet(resultSet.getString("STREET"));
-			result.setId(id);
+			result = parseResultSet(resultSet);
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Faculty data", e);
@@ -163,6 +229,21 @@ public class AddressDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
+		
+		return result;
+	}
+	
+	private Address parseResultSet(ResultSet resultSet) throws SQLException {
+		Address result = new Address();
+		
+		result.setId(resultSet.getLong("ADDRESS_ID"));
+		result.setCity(resultSet.getString("CITY"));
+		result.setEmail(resultSet.getString("EMAIL"));
+		result.setFlat(resultSet.getInt("FLAT"));
+		result.setHouse(resultSet.getString("HOUSE"));
+		result.setPhone(resultSet.getString("PHONE"));
+		result.setProvince(resultSet.getString("PROVINCE"));
+		result.setStreet(resultSet.getString("STREET"));
 		
 		return result;
 	}

@@ -79,6 +79,81 @@ public class PersonDao {
 		
 		return person;
 	}
+	
+	protected void updatePerson(Person person) throws DaoException {
+		String sql = "UPDATE PERSON SET "
+				+ "FIRST_NAME=?, "
+				+ "LAST_NAME=?, "
+				+ "PATRONYMIC_NAME=?, "
+				+ "BIRTH_DATE=?, "
+				+ "GENDER=?, "
+				+ "PASSPORT=?, "
+				+ "NATIONALITY=? "
+				+ "WHERE PERSON_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		String firstName = person.getFirstName();
+		String lastName  =person.getLastName();
+		String patronymicName = person.getPatronymicName();
+		Date birthDate = person.getBirthDate();
+		char gender = person.getGender();
+		String passport = person.getPassport();
+		String nationality = person.getNationality();
+		Long personId = person.getPersonId();
+		
+		Address address = person.getAddress();
+		addressDao.updateAddress(address);
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setString(1, firstName);
+			statement.setString(2, lastName);
+			statement.setString(3, patronymicName);
+			statement.setDate(4, new java.sql.Date(birthDate.getTime()));
+			statement.setString(5, String.valueOf(gender));
+			statement.setString(6, passport);
+			statement.setString(7, nationality);
+			statement.setLong(8, personId);
+			
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot create Person", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
 
 	protected void dropPersonById(Long id) throws DaoException {
 		String sql = "DELETE FROM PERSON WHERE PERSON_ID=?";

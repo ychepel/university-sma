@@ -283,6 +283,8 @@ public class StudentDao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
+		createStudentMark(student);		
+		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -333,6 +335,62 @@ public class StudentDao {
 		}
 	}
 	
+	private void createStudentMark(Student student) throws DaoException {
+		String sql = "INSERT INTO STUDENT_MARK (STUDENT_ID, COURSE_ID, MARK) VALUES (?, ?, ?)";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		Long studentId = student.getStudentId();
+		Map<Course, Integer> marks = student.getMarks();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setLong(1, studentId);
+			
+			for(Map.Entry<Course, Integer> entry : marks.entrySet()) {
+				Course course = entry.getKey();
+				Integer courseId = course.getId();
+				statement.setInt(2, courseId);
+				Integer mark = entry.getValue();
+				statement.setInt(3, mark);
+				statement.executeQuery();
+			}
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot create Student Mark", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
 	public void dropStudentById(Long id) throws DaoException {
 		String sql = "DELETE FROM STUDENT WHERE STUDENT_ID=?";
 		
@@ -341,7 +399,9 @@ public class StudentDao {
 		
 		Student student = getStudentById(id);
 		Long personId = student.getPersonId();
+		
 		personDao.dropPersonById(personId);
+		dropStudentMarks(id);
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -351,6 +411,42 @@ public class StudentDao {
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot delete Student data", e);
+		}
+		finally {
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
+	private void dropStudentMarks(Long studentId) throws DaoException {
+		String sql = "DELETE FROM STUDENT_MARK WHERE STUDENT_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			statement.setLong(1, studentId);
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot delete Student Marks", e);
 		}
 		finally {
 			try {

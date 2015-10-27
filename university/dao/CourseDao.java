@@ -195,6 +195,68 @@ public class CourseDao {
 		return result;
 	}
 	
+	public void updateCourse(Course course, Department department) throws DaoException {
+		
+		String sql = "UPDATE COURSE SET "
+				+ "COURSE_NAME=?, "
+				+ "GRADE=?, "
+				+ "DEPARTMENT_ID=? "
+				+ "WHERE COURSE_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Integer courseId = course.getId();
+		String name = course.getName();
+		Integer grade = course.getGrade();
+		Integer departmentId = department.getId();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setString(1, name);
+			statement.setInt(2, grade);
+			statement.setInt(3, departmentId);
+			statement.setInt(4, courseId);
+			
+			statement.executeUpdate();
+
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Course data", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
 	public void dropCourseById(Integer id) throws DaoException {
 		String sql = "DELETE FROM COURSE WHERE COURSE_ID=?";
 		

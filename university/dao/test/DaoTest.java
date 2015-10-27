@@ -67,63 +67,63 @@ public class DaoTest {
 		Long maxId = studentDao.getMaxStudentId();
 		Student student = new Student(maxId+1);
 		student.setStudentCount(maxId+1);
-		student.setBirthDate((new GregorianCalendar(1996, Calendar.MAY, 2)).getTime());
-		student.setEntranceDate(new GregorianCalendar(2012, Calendar.SEPTEMBER, 1));
-		student.setFirstName("Petr");
-		student.setLastName("Petrov");
-		student.setPatronymicName("Petrovich");
+		student.setBirthDate((new GregorianCalendar(1993, Calendar.JUNE, 4)).getTime());
+		student.setEntranceDate(new GregorianCalendar(2013, Calendar.SEPTEMBER, 1));
+		student.setFirstName("Oleg");
+		student.setLastName("Olegov");
+		student.setPatronymicName("Olegovich");
 		student.setGender('m');
 		student.setGovernmentFinanced(false);
 		student.setNationality("ua");
-		student.setPassport("HR5743");
-		student.setSchoolGraduateSertificate("dhsajfhkdsa fda");
+		student.setPassport("DF53743");
+		student.setSchoolGraduateSertificate("423543543");
 		
 		Address address = new Address();
 		address.setCity("Odessa");
-		address.setEmail("c@c.com");
-		address.setFlat(34);
-		address.setHouse("46");
-		address.setPhone("5435-543-54");
+		address.setEmail("aaa@c.com");
+		address.setFlat(3);
+		address.setHouse("4");
+		address.setPhone("5-432-43-54");
 		address.setProvince("Odesska");
-		address.setStreet("Kutuzova");
+		address.setStreet("Nekrasova");
 		
 		student.setAddress(address);
 		
-		Faculty facultyA = new Faculty("AAA faculty");
+		Faculty facultyA = new Faculty("B faculty");
 		facultyA.addStudent(student);
 		
-		Department departmentA = new Department("AAAA department");
+		Department departmentA = new Department("BB department");
 		facultyA.addDepartment(departmentA);
 		
-		Course courseA = new Course("Course A");
-		Course courseB = new Course("Course B");
-		Course courseC = new Course("Course C");
+		Course courseA = new Course("Course B-A1");
+		Course courseB = new Course("Course B-B1");
+		Course courseC = new Course("Course B-C1");
 		
 		departmentA.addCourse(courseA);
-		courseA.setGrade(2);
+		courseA.setGrade(1);
 		departmentA.addCourse(courseB);
-		courseB.setGrade(2);
+		courseB.setGrade(1);
 		departmentA.addCourse(courseC);
-		courseA.setGrade(4);
+		courseC.setGrade(3);
 		
-		student.addMark(courseA, 34);
+		student.addMark(courseA, 22);
 		student.addMark(courseB, 0);
 		student.addMark(courseC, -1);
 		
 		Lecturer lecturer = new Lecturer();
-		lecturer.setBirthDate((new GregorianCalendar(1966, Calendar.APRIL, 22)).getTime());
+		lecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
 		lecturer.setCurrentPosition("Professor");
-		lecturer.setFirstName("Gadya");
+		lecturer.setFirstName("Mariya");
 		lecturer.setGender('f');
-		lecturer.setLastName("Hrenova");
-		lecturer.setNationality("kz");
-		lecturer.setPassport("GT47382");
-		lecturer.setPatronymicName("Petrovich");
+		lecturer.setLastName("Kozlova");
+		lecturer.setNationality("md");
+		lecturer.setPassport("FD47382");
+		lecturer.setPatronymicName("Nikolaevna");
 		lecturer.setScienceDegree("doctor");
 		
 		Address addressL = new Address();
 		addressL.setCity("Kiev");
-		addressL.setEmail("cas@cs.com");
+		addressL.setEmail("adds@cs.net");
 		addressL.setFlat(3);
 		addressL.setHouse("4a");
 		addressL.setPhone("5435-543-54");

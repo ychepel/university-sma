@@ -193,6 +193,68 @@ public class LecturerDao {
 		return lecturer;
 	}
 	
+	public void updateLecturer(Lecturer lecturer, Department department) throws DaoException {
+		String sql = "UPDATE LECTURER SET "
+				+ "SCIENCE_DEGREE=?, "
+				+ "CURRENT_POSITION=?, "
+				+ "DEPARTMENT_ID=? "
+				+ "WHERE LECTURER_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		String scienceDegree = lecturer.getScienceDegree();
+		String currentPosition = lecturer.getCurrentPosition();
+		Integer departmentId = department.getId();
+		Integer lecturerId = lecturer.getLecturerId();
+		
+		personDao.updatePerson(lecturer);
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setString(1, scienceDegree);
+			statement.setString(2, currentPosition);
+			statement.setInt(3, departmentId);
+			statement.setInt(4, lecturerId);
+			
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Lecturer data", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
 	public void dropLecturerById(Integer id) throws DaoException {
 		String sql = "DELETE FROM LECTURER WHERE LECTURER_ID=?";
 		

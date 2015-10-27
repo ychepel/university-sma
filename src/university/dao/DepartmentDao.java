@@ -10,14 +10,10 @@ import java.util.Set;
 
 import university.domain.Department;
 import university.domain.Faculty;
-import university.domain.Lecturer;
-import university.domain.Course;
 
 public class DepartmentDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
-	private LecturerDao lecturerDao = new LecturerDao();
-	private CourseDao courseDao = new CourseDao();
 	
 	public Set<Department> getDepartments(Faculty faculty) throws DaoException {
 		String sql = "SELECT * FROM DEPARTMENT WHERE FACULTY_ID=?";
@@ -38,11 +34,6 @@ public class DepartmentDao {
 			while(resultSet.next()) {
 				Department department = new Department(resultSet.getString("DEPARTMENT_NAME"));
 				department.setId(resultSet.getInt("DEPARTMENT_ID"));
-				
-				Set<Lecturer> lecturers = lecturerDao.getLecturers(department);
-				department.setLecturers(lecturers);
-				Set<Course> courses = courseDao.getCourses(department);
-				department.setCourses(courses);
 				
 				set.add(department);
 			}
@@ -100,10 +91,6 @@ public class DepartmentDao {
 			result = new Department(resultSet.getString("DEPARTMENT_NAME"));
 			result.setId(id);
 			
-			Set<Lecturer> lecturers = lecturerDao.getLecturers(result);
-			result.setLecturers(lecturers);
-			Set<Course> courses = courseDao.getCourses(result);
-			result.setCourses(courses);
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Department data", e);
@@ -197,15 +184,14 @@ public class DepartmentDao {
 		return result;
 	}
 	
-	public void updateDepartment(Department department, Faculty faculty) throws DaoException {
-		String sql = "UPDATE DEPARTMENT SET DEPARTMENT_NAME=?, FACULTY_ID=? WHERE DEPARTMENT_ID=?";
+	public void updateDepartment(Department department) throws DaoException {
+		String sql = "UPDATE DEPARTMENT SET DEPARTMENT_NAME=? WHERE DEPARTMENT_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
 		Integer departmentId = department.getId();
-		Integer facultyId = faculty.getId();
 		String name = department.getName();
 		
 		try {
@@ -213,8 +199,7 @@ public class DepartmentDao {
 			statement = connection.prepareStatement(sql);
 			
 			statement.setString(1, name);
-			statement.setInt(2, facultyId);
-			statement.setInt(3, departmentId);
+			statement.setInt(2, departmentId);
 			
 			statement.executeUpdate();
 		}

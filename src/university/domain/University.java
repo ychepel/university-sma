@@ -6,19 +6,21 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import university.dao.AddressDao;
 import university.dao.DaoException;
 import university.dao.FacultyDao;
 
 public class University {
 	private String name;
 	private Address address;
-	private Set<Faculty> faculties;
-	private FacultyDao facultyDao;
 	
-	public Integer getLabourHour(Lecturer lecturer, Calendar period) {
+	private FacultyDao facultyDao;
+	private AddressDao addressDao;
+	
+	public Integer getLabourHour(Lecturer lecturer, Calendar period) throws DomainException {
 		Integer result = 0;
 		Set<CourseSchedule> lecturerSchedule = new HashSet<>();
-		for(Faculty faculty : faculties) {
+		for(Faculty faculty : getFaculties()) {
 			Set<CourseSchedule> courseSchedules = faculty.getSchedule(lecturer); 
 			lecturerSchedule.addAll(courseSchedules);
 		}
@@ -34,9 +36,9 @@ public class University {
 		return result;
 	}
 	
-	public Map<Faculty, Set<CourseSchedule>> getSchedule() {
+	public Map<Faculty, Set<CourseSchedule>> getSchedule() throws DomainException {
 		Map<Faculty, Set<CourseSchedule>> schedule = new HashMap<>();
-		for(Faculty faculty : faculties) {
+		for(Faculty faculty : getFaculties()) {
 			Set<CourseSchedule> facultySchedule = new HashSet<>();
 			for(Lecturer lecturer : faculty.getLecturers()) {
 				Set<CourseSchedule> courseSchedules = faculty.getSchedule(lecturer);
@@ -47,10 +49,10 @@ public class University {
 		return schedule;
 	}
 	
-	public void removeToFaculty(Student student, Faculty newFaculty) {
+	public void removeStudentToFaculty(Student student, Faculty newFaculty) throws DomainException {
 		StudentGroup oldStudentGroup = student.getStudentGroup();
 		Faculty oldStudentFaculty = null;
-		for(Faculty faculty : faculties) {
+		for(Faculty faculty : getFaculties()) {
 			Set<StudentGroup> facultyStudentGroups = faculty.getStudentGroups();
 			if(facultyStudentGroups.contains(oldStudentGroup)) {
 				oldStudentFaculty = faculty;
@@ -66,13 +68,12 @@ public class University {
 	
 	public University(String name) {
 		this.name = name;
-		this.address = new Address();
-		this.faculties = new HashSet<>();
 		
 		this.facultyDao = new FacultyDao();
+		this.addressDao = new AddressDao();
 	}
 	
-	public void createFaculty(String name) throws DomainException {
+	public Faculty createFaculty(String name) throws DomainException {
 		Faculty faculty = new Faculty(name);
 		try {
 			faculty = facultyDao.createFaculty(faculty);
@@ -80,11 +81,7 @@ public class University {
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create faculty", e); 
 		}
-		addFaculty(faculty);
-	}
-	
-	public void addFaculty(Faculty faculty) {
-		this.faculties.add(faculty);
+		return faculty;
 	}
 	
 	public void removeFaculty(Faculty faculty) throws DomainException {
@@ -95,7 +92,6 @@ public class University {
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop the faculty", e);
 		}
-		this.faculties.remove(faculty);
 	}
 
 	public String getName() {
@@ -106,15 +102,37 @@ public class University {
 		this.name = name;
 	}
 
-	public Address getAddress() {
+	public Address getAddress() throws DomainException{
+		if(address == null) {
+			try {
+				this.address = addressDao.getAddressById(0L);
+			}
+			catch (DaoException e) {
+				throw new DomainException("Cannot get university address", e);
+			}
+		}
 		return address;
 	}
 
-	public void setAddress(Address address) {
+	public void setAddress(Address address) throws DomainException {
+		address.setId(0L);
 		this.address = address;
+		try {
+			addressDao.updateAddress(address);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot update university address", e);
+		}
 	}
 
-	public Set<Faculty> getFaculties() {
+	public Set<Faculty> getFaculties() throws DomainException {
+		Set<Faculty> faculties = new HashSet<>();
+		try {
+			faculties = facultyDao.getFaculties();
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot get faculties from db", e);
+		}
 		return faculties;
 	}
 

@@ -391,6 +391,77 @@ public class StudentDao {
 		}
 	}
 	
+	public void updateStudent(Student student) throws DaoException {
+		String sql = "UPDATE STUDENT SET "
+				+ "GOVERNMENT_FINANCED=?, "
+				+ "SCHOOL_CERTIFICATE=?, "
+				+ "STUDENT_GROUP_ID=?, "
+				+ "ENTRANCE_DATE=?, "
+				+ "COMPLETION_DATE=? "
+				+ "WHERE STUDENT_ID=?";
+		
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Long studentId = student.getStudentId();
+		Boolean governmentFinanced = student.getGovernmentFinanced();
+		String schoolGraduateSertificate = student.getSchoolGraduateSertificate();
+		StudentGroup studentGroup = student.getStudentGroup();
+		Integer studentGroupId = studentGroup.getId();
+		Calendar entranceCalendar = student.getEntranceDate();
+		Calendar completionCalendar = student.getCompletionDate();
+		
+		dropStudentMarks(studentId);
+		createStudentMark(student);
+		personDao.updatePerson(student);
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setBoolean(1, governmentFinanced);
+			statement.setString(2, schoolGraduateSertificate);
+			statement.setInt(3, studentGroupId);
+			statement.setDate(4, new java.sql.Date(entranceCalendar.getTimeInMillis()));
+			statement.setDate(5, new java.sql.Date(completionCalendar.getTimeInMillis()));
+			statement.setLong(6, student.getStudentId());
+			
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Student", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
 	public void dropStudentById(Long id) throws DaoException {
 		String sql = "DELETE FROM STUDENT WHERE STUDENT_ID=?";
 		

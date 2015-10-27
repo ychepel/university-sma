@@ -72,7 +72,7 @@ public class AddressDao {
 		return address;
 	}
 	
-	protected void updateAddress(Address address) throws DaoException {
+	public void updateAddress(Address address) throws DaoException {
 		String sql = "UPDATE ADDRESS "
 				+ "SET CITY=?, "
 				+ "EMAIL=?, "
@@ -80,7 +80,7 @@ public class AddressDao {
 				+ "HOUSE=?, "
 				+ "PHONE=?, "
 				+ "PROVINCE=?, "
-				+ "STREET=?) "
+				+ "STREET=? "
 				+ "WHERE ADDRESS_ID=?";
 		
 		Connection connection = null;
@@ -181,7 +181,7 @@ public class AddressDao {
 		}
 	}
 	
-	protected Address getAddressById(Long id) throws DaoException {
+	public Address getAddressById(Long id) throws DaoException {
 		String sql = "SELECT * FROM ADDRESS WHERE ADDRESS_ID=?";
 		
 		Address result = null; 
@@ -199,7 +199,7 @@ public class AddressDao {
 			result = parseResultSet(resultSet);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			throw new DaoException("Cannot get Address data", e);
 		}
 		finally {
 			try {

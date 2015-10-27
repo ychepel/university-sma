@@ -7,6 +7,8 @@ import org.apache.log4j.Logger;
 
 import university.dao.DaoException;
 import university.dao.DepartmentDao;
+import university.dao.FacultyDao;
+import university.dao.StudentGroupDao;
 
 public class Faculty {
 	
@@ -15,13 +17,14 @@ public class Faculty {
 	
 	private Integer id;
 	private String name;
-	private Set<StudentGroup> studentGroups;
-	private Set<Department> departments;
+	
 	private DepartmentDao departmentDao;
+	private StudentGroupDao studentGroupDao;
+	private FacultyDao facultyDao;
 	
 	private static Logger log = Logger.getLogger(Faculty.class);
 	
-	public void addStudent(Student student) {
+	public void addStudent(Student student) throws DomainException {
 		Integer studentGrade = student.getGrade();
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			if(studentGrade == studentGroup.getGrade()) {
@@ -34,11 +37,11 @@ public class Faculty {
 		
 		String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
 		StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
-		this.addStudentGroup(newStudentGroup);
+		this.createStudentGroup(newStudentGroup);
 		student.setStudentGroup(newStudentGroup);
 	}
 	
-	public Integer getGroupsQuantityOnGrade(Integer grade) {
+	public Integer getGroupsQuantityOnGrade(Integer grade) throws DomainException {
 		Integer quantity = 0;
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			if(grade == studentGroup.getGrade()) {
@@ -48,7 +51,7 @@ public class Faculty {
 		return quantity;
 	}
 	
-	public Set<Student> getUnderachievementStudent() {
+	public Set<Student> getUnderachievementStudent() throws DomainException {
 		Set<Student> students = new HashSet<>();
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			for(Student student : studentGroup.getStudents()) {
@@ -62,16 +65,16 @@ public class Faculty {
 		return students;
 	}
 	
-	public void addLecturer(Department department, Lecturer lecturer) {
+	public void addLecturer(Department department, Lecturer lecturer) throws DomainException {
 		department.addLecturer(lecturer);
 	}
 	
-	public void addCourse(Department department, Course course) {
+	public void addCourse(Department department, Course course) throws DomainException {
 		department.addCourse(course);
 	}
 	
-	public Boolean enrollStudent(Student person, Course course) {
-		for(Department department : departments) {
+	public Boolean enrollStudent(Student person, Course course) throws DomainException {
+		for(Department department : getDepartments()) {
 			if(department.enrollStudent(person, course)) {
 				return true;
 			}
@@ -79,10 +82,10 @@ public class Faculty {
 		return false;
 	}
 	
-	public Set<CourseSchedule> getSchedule(Student student) {
+	public Set<CourseSchedule> getSchedule(Student student) throws DomainException {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		StudentGroup studentGroup =  student.getStudentGroup();
-		for(Department department : departments) {
+		for(Department department : getDepartments()) {
 			for(Course course : department.getCourses()) {
 				Set<Student> students = studentGroup.getStudentsOnCourse(course);
 				if(students.contains(student)) {
@@ -94,38 +97,45 @@ public class Faculty {
 		return schedule;
 	}
 	
-	public Set<CourseSchedule> getSchedule(Lecturer lecturer) {
+	public Set<CourseSchedule> getSchedule(Lecturer lecturer) throws DomainException {
 		Set<CourseSchedule> schedule = new HashSet<>();
-		for(Department department :departments) {
+		for(Department department :getDepartments()) {
 			Set<CourseSchedule> courseSchedules = department.getSchedule(lecturer);
 			schedule.addAll(courseSchedules);
 		}
 		return schedule;
 	}
 	
-	public Set<Lecturer> getLecturers() {
+	public Set<Lecturer> getLecturers() throws DomainException {
 		Set<Lecturer> lecturers = new HashSet<>();
-		for(Department department :departments) {
+		for(Department department : getDepartments()) {
 			Set<Lecturer> departmentLecturers = department.getLecturers();
 			lecturers.addAll(departmentLecturers);
 		}
 		return lecturers;
 	}
 	
-	public Set<StudentGroup> getStudentGroups() {
-		return studentGroups;
+	public Set<StudentGroup> getStudentGroups() throws DomainException {
+		Set<StudentGroup> result = new HashSet<>();
+		try {
+			result = studentGroupDao.getStudentGroups(this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot receive Faculty Student Group", e);
+		}
+		return result;
 	}
 	
 	public Faculty(String name) {
 		log.info("Create new Faculty '" + name + "'");
 		this.name = name;
-		studentGroups = new HashSet<>();
-		departments = new HashSet<>();
 		
+		this.facultyDao = new FacultyDao();
 		this.departmentDao = new DepartmentDao();
+		this.studentGroupDao = new StudentGroupDao();
 	}
 
-	public void removeStudent(Student student) {
+	public void removeStudent(Student student) throws DomainException {
 		StudentGroup studentGroup = student.getStudentGroup();
 		student.setStudentGroup(null);
 		studentGroup.removeStudent(student);
@@ -134,15 +144,27 @@ public class Faculty {
 		}
 	}
 	
-	private void removeStudentGroup(StudentGroup studentGroup) {
-		this.studentGroups.remove(studentGroup);
-		for(Department department :departments) {
+	private void removeStudentGroup(StudentGroup studentGroup) throws DomainException {
+		Integer studentGroupId = studentGroup.getId();
+		try {
+			studentGroupDao.dropStudentGroupById(studentGroupId);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot drop Faculty Student Group", e);
+		}
+		
+		for(Department department : getDepartments()) {
 			department.excludeStudentGroup(studentGroup);
 		}
 	}
 
-	public void addStudentGroup(StudentGroup studentGroup) {
-		studentGroups.add(studentGroup);
+	public void createStudentGroup(StudentGroup studentGroup) throws DomainException {
+		try {
+			studentGroupDao.createStudentGroup(studentGroup, this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot create Faculty Student Group", e);
+		}
 	}
 	
 	public Integer getMaxQuantityInGroupParameter() {
@@ -161,11 +183,6 @@ public class Faculty {
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create department", e); 
 		}
-		addDepartment(department);
-	}
-	
-	public void addDepartment(Department department) {
-		this.departments.add(department);
 	}
 	
 	public void removeDepartment(Department department) throws DomainException {
@@ -176,15 +193,21 @@ public class Faculty {
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop the department", e);
 		}
-		this.departments.remove(department);
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public Set<Department> getDepartments() {
-		return departments;
+	public Set<Department> getDepartments() throws DomainException {
+		Set<Department> result = new HashSet<>();
+		try {
+			result = departmentDao.getDepartments(this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot receive Faculty Department", e);
+		}
+		return result;
 	}
 	
 	public void setId(Integer id) {
@@ -195,11 +218,14 @@ public class Faculty {
 		return id;
 	}
 	
-	public void setDepartments(Set<Department> departments) {
-		this.departments = departments;
+	public void setName(String name) throws DomainException {
+		this.name = name;
+		try {
+			facultyDao.updateFaculty(this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot update faculty", e);
+		}
 	}
 	
-	public void setStudentGroups(Set<StudentGroup> studentGroups) {
-		this.studentGroups = studentGroups;
-	}
 }

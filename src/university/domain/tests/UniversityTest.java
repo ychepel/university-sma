@@ -44,9 +44,8 @@ public class UniversityTest {
 		
 		departmentA1.addCourse(courseA1C2);
 		
-		Faculty facultyA = new Faculty("A Faculty");
+		Faculty facultyA = university.createFaculty("A Faculty");
 		facultyA.addDepartment(departmentA1);
-		university.addFaculty(facultyA);
 		
 		Integer expectedResult = 2;
 		assertEquals(expectedResult, university.getLabourHour(lecturer1, new GregorianCalendar(2015, Calendar.NOVEMBER, 1)));

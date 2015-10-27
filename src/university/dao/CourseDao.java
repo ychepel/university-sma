@@ -10,11 +10,10 @@ import java.util.Set;
 
 import university.domain.Course;
 import university.domain.Department;
-import university.domain.CourseSchedule;
+import university.domain.DomainException;
 
 public class CourseDao {
 	private DaoFactory daoFactory = new DaoFactory();
-	private CourseScheduleDao courseScheduleDao = new CourseScheduleDao();
 	
 	public Set<Course> getCourses(Department department) throws DaoException {
 		String sql = "SELECT * FROM COURSE WHERE DEPARTMENT_ID=?";
@@ -37,12 +36,10 @@ public class CourseDao {
 				course.setId(resultSet.getInt("COURSE_ID"));
 				course.setGrade(resultSet.getInt("GRADE"));
 
-				Set<CourseSchedule> courseSchedules = courseScheduleDao.getCourseSchedules(course);
-				course.setCourseSchedules(courseSchedules);
-				
 				set.add(course);
 			}
 		}
+		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Course data", e);
 		}
@@ -97,9 +94,8 @@ public class CourseDao {
 			result.setGrade(resultSet.getInt("GRADE"));
 			result.setId(id);
 			
-			Set<CourseSchedule> courseSchedules = courseScheduleDao.getCourseSchedules(result);
-			result.setCourseSchedules(courseSchedules);
 		}
+		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Course data", e);
 		}
@@ -160,6 +156,7 @@ public class CourseDao {
 			result.setGrade(grade);
 			result.setId(id);
 		}
+		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot create Course data", e);
 		}
@@ -195,12 +192,11 @@ public class CourseDao {
 		return result;
 	}
 	
-	public void updateCourse(Course course, Department department) throws DaoException {
+	public void updateCourse(Course course) throws DaoException {
 		
 		String sql = "UPDATE COURSE SET "
 				+ "COURSE_NAME=?, "
-				+ "GRADE=?, "
-				+ "DEPARTMENT_ID=? "
+				+ "GRADE=? "
 				+ "WHERE COURSE_ID=?";
 		
 		Connection connection = null;
@@ -210,7 +206,6 @@ public class CourseDao {
 		Integer courseId = course.getId();
 		String name = course.getName();
 		Integer grade = course.getGrade();
-		Integer departmentId = department.getId();
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -218,8 +213,7 @@ public class CourseDao {
 			
 			statement.setString(1, name);
 			statement.setInt(2, grade);
-			statement.setInt(3, departmentId);
-			statement.setInt(4, courseId);
+			statement.setInt(3, courseId);
 			
 			statement.executeUpdate();
 

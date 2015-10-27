@@ -183,6 +183,60 @@ public class StudentGroupDao {
 		return result;
 	}
 	
+	public void updateStudentGroup(StudentGroup studentGroup, Faculty faculty) throws DaoException {
+		String sql = "UPDATE STUDENT_GROUP SET STUDENT_GROUP_NAME=?, FACULTY_ID=? WHERE STUDENT_GROUP_ID=?";
+
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet resultSet = null;
+		
+		Integer studentGroupId = studentGroup.getId();
+		String name = studentGroup.getName();
+		Integer facultyId = faculty.getId();
+		
+		try {
+			connection = daoFactory.getConnection();
+			statement = connection.prepareStatement(sql);
+			
+			statement.setString(1, name);
+			statement.setInt(2, facultyId);
+			statement.setInt(3, studentGroupId);
+
+			statement.executeUpdate();
+		}
+		catch (SQLException e) {
+			throw new DaoException("Cannot update Student Group data", e);
+		}
+		finally {
+			try {
+				if(resultSet != null) {
+					resultSet.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close resultset", e);
+			}
+			
+			try {
+				if(statement != null) {
+					statement.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close statement", e);
+			}
+			
+			try {
+				if(connection != null) {
+					connection.close();
+				}
+			}
+			catch(SQLException e) {
+				throw new DaoException("Cannot close connection", e);
+			}
+		}
+	}
+	
 	public void dropStudentGroupById(Integer id) throws DaoException {
 		String sql = "DELETE FROM STUDENT_GROUP WHERE STUDENT_GROUP_ID=?";
 		

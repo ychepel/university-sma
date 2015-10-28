@@ -69,10 +69,6 @@ public class Faculty {
 		department.addLecturer(lecturer);
 	}
 	
-	public void addCourse(Department department, Course course) throws DomainException {
-		department.addCourse(course);
-	}
-	
 	public Boolean enrollStudent(Student person, Course course) throws DomainException {
 		for(Department department : getDepartments()) {
 			if(department.enrollStudent(person, course)) {
@@ -138,8 +134,7 @@ public class Faculty {
 	public void removeStudent(Student student) throws DomainException {
 		StudentGroup studentGroup = student.getStudentGroup();
 		student.setStudentGroup(null);
-		studentGroup.removeStudent(student);
-		if(studentGroup.getStudentQuantity() == 0) {
+			if(studentGroup.getStudentQuantity() == 0) {
 			this.removeStudentGroup(studentGroup);
 		}
 	}
@@ -175,7 +170,7 @@ public class Faculty {
 		return UNDERACHIEVMENT_AVG_MARK_LEVEL;
 	}
 	
-	public void createDepartment(String name) throws DomainException {
+	public Department createDepartment(String name) throws DomainException {
 		Department department = new Department(name);
 		try {
 			department = departmentDao.createDepartment(department, this);
@@ -183,6 +178,7 @@ public class Faculty {
 		catch (DaoException e) {
 			throw new DomainException("Cannnot create department", e); 
 		}
+		return department;
 	}
 	
 	public void removeDepartment(Department department) throws DomainException {

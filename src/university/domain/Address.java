@@ -1,13 +1,13 @@
 package university.domain;
 
 public class Address {
-	private String province;
-	private String city;
-	private String street;
-	private String house;
+	private String province = "";
+	private String city = "";
+	private String street = "";
+	private String house = "";
 	private int flat;
-	private String phone;
-	private String email;
+	private String phone = "";
+	private String email = "";
 	private Long id;
 	
 	public String getFullAdress() {

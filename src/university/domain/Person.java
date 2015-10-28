@@ -1,15 +1,17 @@
 package university.domain;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 public abstract class Person {
-	private String firstName;
-	private String lastName;
-	private String patronymicName;
-	private Date birthDate;
-	private char gender;
-	private String passport;
-	private String nationality;
+	private String firstName = "";
+	private String lastName = "";
+	private String patronymicName = "";
+	private Date birthDate = (new GregorianCalendar(1900, Calendar.JANUARY, 1)).getTime();
+	private char gender = ' ';
+	private String passport = "";
+	private String nationality = "";
 	private Address address;
 	private Long personId;
 	

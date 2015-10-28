@@ -4,6 +4,9 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import university.dao.CourseScheduleDao;
+import university.dao.DaoException;
+
 public class CourseSchedule {
 	private Course course;
 	private Lecturer lecturer;
@@ -11,27 +14,35 @@ public class CourseSchedule {
 	private Set<Calendar> timetables;
 	private Integer id;
 	
+	private CourseScheduleDao courseScheduleDao;
+	
 	public CourseSchedule(Course course, Lecturer lecturer) {
 		this.course = course;
 		this.lecturer = lecturer;
 		this.studentGroups = new HashSet<StudentGroup>();
 		this.timetables = new HashSet<Calendar>();
+		
+		courseScheduleDao = new CourseScheduleDao();
 	}
 	
-	public void addStudentGroup(StudentGroup studentGroup) {
+	public void addStudentGroup(StudentGroup studentGroup) throws DomainException {
 		studentGroups.add(studentGroup);
+		updateCourseScheduleDB();
 	}
 	
-	public void remove(StudentGroup studentGroup) {
+	public void remove(StudentGroup studentGroup) throws DomainException {
 		studentGroups.remove(studentGroup);
+		updateCourseScheduleDB();
 	}
 	
-	public void addTimetable(Calendar calendar) {
+	public void addTimetable(Calendar calendar) throws DomainException {
 		timetables.add(calendar);
+		updateCourseScheduleDB();
 	}
 	
-	public void remove(Calendar calendar) {
+	public void remove(Calendar calendar) throws DomainException {
 		timetables.remove(calendar);
+		updateCourseScheduleDB();
 	}
 	
 	public Lecturer getLecturer() {
@@ -65,8 +76,19 @@ public class CourseSchedule {
 	public void setTimetables(Set<Calendar> timetables) {
 		this.timetables = timetables;
 	}
-	public void setLecturer(Lecturer lecturer) {
+
+	public void setLecturer(Lecturer lecturer) throws DomainException {
 		this.lecturer = lecturer;
+		updateCourseScheduleDB();
+	}
+	
+	private void updateCourseScheduleDB() throws DomainException {
+		try {
+			courseScheduleDao.updateCourseSchedule(this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot update CourseSchedule", e);
+		}
 	}
 	
 }

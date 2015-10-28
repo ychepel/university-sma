@@ -138,7 +138,6 @@ public class CourseDao {
 		String sql = "INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ("
 				+ "'" + name + "', " + grade + ", " + departmentId + ")";
 		
-		Course result = null; 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -150,13 +149,9 @@ public class CourseDao {
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
-			Integer id = resultSet.getInt(1);
-			
-			result = new Course(name);
-			result.setGrade(grade);
-			result.setId(id);
+			Integer courseId = resultSet.getInt(1);
+			course.setId(courseId);
 		}
-		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot create Course data", e);
 		}
@@ -189,7 +184,7 @@ public class CourseDao {
 			}
 		}
 		
-		return result;
+		return course;
 	}
 	
 	public void updateCourse(Course course) throws DaoException {

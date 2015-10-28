@@ -28,9 +28,9 @@ public class PersonDao {
 		Long addressId = address.getId();
 	
 		String sql = "INSERT INTO PERSON (FIRST_NAME, LAST_NAME, PATRONYMIC_NAME, BIRTH_DATE, GENDER, PASSPORT, NATIONALITY, ADDRESS_ID)"
-				+ "VALUES ('" + firstName + "', '" + lastName + "', '" + patronymicName + "', '" + birthDate + "', "
+				+ " VALUES ('" + firstName + "', '" + lastName + "', '" + patronymicName + "', '" + birthDate + "', "
 						+ "'" + gender + "', '" + passport + "', '" + nationality + "', " + addressId+ ")";
-		
+
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -105,7 +105,9 @@ public class PersonDao {
 		Long personId = person.getPersonId();
 		
 		Address address = person.getAddress();
-		addressDao.updateAddress(address);
+		if(address != null) {
+			addressDao.updateAddress(address);
+		}
 		
 		try {
 			connection = daoFactory.getConnection();

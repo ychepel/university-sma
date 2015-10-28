@@ -10,7 +10,7 @@ import university.dao.DaoException;
 
 public class Course {
 	private String name;
-	private int grade;
+	private int grade = 0;
 	private Integer id; 
 	
 	private CourseDao courseDao;

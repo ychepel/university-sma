@@ -9,16 +9,11 @@ import university.domain.*;
 
 public class DaoTest {
 	
-	static CourseDao courseDao = new CourseDao();
-	static FacultyDao facultyDao = new FacultyDao();
-	static DepartmentDao departmentDao = new DepartmentDao();
-	static CourseScheduleDao courseScheduleDao = new CourseScheduleDao();
-	static StudentDao studentDao = new StudentDao();
-	static LecturerDao lecturerDao = new LecturerDao();
-	static StudentGroupDao studentGroupDao = new StudentGroupDao();
+	private static University university = new University("CAMBREDGE");
 
-	public static void printDBData() throws DaoException {
-		for(Faculty faculty : facultyDao.getFaculties()) {
+	public static void printDBData() throws DaoException, DomainException {
+		
+		for(Faculty faculty : university.getFaculties()) {
 			System.out.println(faculty.getName().trim() + ":");
 			for(Department department : faculty.getDepartments()) {
 				System.out.println("   D# " + department.getName().trim() + ":");
@@ -36,7 +31,6 @@ public class DaoTest {
 						}
 						for(StudentGroup studentGroup : courseSchedule.getStudentGroups()) {
 							System.out.println("         G# " + studentGroup.getName().trim() + ":");
-							studentGroup.setStudents(studentDao.getStudentsByGroup(studentGroup));
 							for(Student student : studentGroup.getStudents()) {
 								System.out.println("             S# " + student.getFullName() 
 									+ " (" + student.getBirthDate() + ", grade " + student.getGrade() 
@@ -47,123 +41,135 @@ public class DaoTest {
 					}
 				}	
 			}
-			for(StudentGroup studentGroup : faculty.getStudentGroups()) {
-				System.out.println("   G# " + studentGroup.getName().trim() + ":");
-				studentGroup.setStudents(studentDao.getStudentsByGroup(studentGroup));
-				for(Student student : studentGroup.getStudents()) {
-					System.out.println("       S# " + student.getFullName() 
-						+ " (" + student.getBirthDate() + ", grade " + student.getGrade() 
-						+ ", " + student.getAddress().getCity().trim() 
-						+ ", average mark - " + student.getAverageMark() + ")");
-				}
-			}
+//			for(StudentGroup studentGroup : faculty.getStudentGroups()) {
+//				System.out.println("   G# " + studentGroup.getName().trim() + ":");
+//				for(Student student : studentGroup.getStudents()) {
+//					System.out.println("       S# " + student.getFullName() 
+//						+ " (" + student.getBirthDate() + ", grade " + student.getGrade() 
+//						+ ", " + student.getAddress().getCity().trim() 
+//						+ ", average mark - " + student.getAverageMark() + ")");
+//				}
+//			}
 		}
 	}
 	
-	public static void main (String[] args) throws DaoException {
+	public static void main (String[] args) throws DaoException, DomainException {
 		
-		printDBData();
+		//printDBData();
+		
+		Faculty testFaculty = university.createFaculty("Testing Faculty");
+		Department testDepartment = testFaculty.createDepartment("Testing Department");
+		Course testCourse1 = new Course("Testing Course 1");
+		Course testCourse2 = new Course("Testing Course 2");
+		Course testCourse3 = new Course("Testing Course 3");
+		testDepartment.addCourse(testCourse1);
+		testDepartment.addCourse(testCourse2);
+		testDepartment.addCourse(testCourse3);
+		testCourse1.setGrade(1);
+		testCourse2.setGrade(2);
+		testCourse3.setGrade(3);
+		
+		Address testAddress = new Address();
+		testAddress.setCity("Odessa");
+		testAddress.setEmail("aaa@c.com");
+		testAddress.setFlat(3);
+		testAddress.setHouse("4");
+		testAddress.setPhone("5-432-43-54");
+		testAddress.setProvince("Odesska");
+		testAddress.setStreet("Nekrasova");
+		
+		Long maxId = (new StudentDao()).getMaxStudentId();
+		Student.setStudentCount(maxId+1);
+		Student testStudent = new Student();
+		testStudent.setBirthDate((new GregorianCalendar(1993, Calendar.JUNE, 4)).getTime());
+		testStudent.setEntranceDate(new GregorianCalendar(2013, Calendar.SEPTEMBER, 1));
+		testStudent.setFirstName("Oleg");
+		testStudent.setLastName("Olegov");
+		testStudent.setPatronymicName("Olegovich");
+		testStudent.setGender('m');
+		testStudent.setGovernmentFinanced(false);
+		testStudent.setNationality("ua");
+		testStudent.setPassport("DF53743");
+		testStudent.setSchoolGraduateSertificate("423543543");
+		testStudent.setAddress(testAddress);
+		
+		testFaculty.addStudent(testStudent);
+		testDepartment.enrollStudent(testStudent, testCourse1);
+		testDepartment.enrollStudent(testStudent, testCourse2);
+		testDepartment.enrollStudent(testStudent, testCourse3);
+		
+		testStudent.addMark(testCourse1, 22);
+		testStudent.addMark(testCourse2, 0);
+		testStudent.addMark(testCourse3, -1);
 	
-		Long maxId = studentDao.getMaxStudentId();
-		Student student = new Student(maxId+1);
-		student.setStudentCount(maxId+1);
-		student.setBirthDate((new GregorianCalendar(1993, Calendar.JUNE, 4)).getTime());
-		student.setEntranceDate(new GregorianCalendar(2013, Calendar.SEPTEMBER, 1));
-		student.setFirstName("Oleg");
-		student.setLastName("Olegov");
-		student.setPatronymicName("Olegovich");
-		student.setGender('m');
-		student.setGovernmentFinanced(false);
-		student.setNationality("ua");
-		student.setPassport("DF53743");
-		student.setSchoolGraduateSertificate("423543543");
-		
-		Address address = new Address();
-		address.setCity("Odessa");
-		address.setEmail("aaa@c.com");
-		address.setFlat(3);
-		address.setHouse("4");
-		address.setPhone("5-432-43-54");
-		address.setProvince("Odesska");
-		address.setStreet("Nekrasova");
-		
-		student.setAddress(address);
-		
-		Faculty facultyA = new Faculty("B faculty");
-		facultyA.addStudent(student);
-		
-		Department departmentA = new Department("BB department");
-		facultyA.addDepartment(departmentA);
-		
-		Course courseA = new Course("Course B-A1");
-		Course courseB = new Course("Course B-B1");
-		Course courseC = new Course("Course B-C1");
-		
-		departmentA.addCourse(courseA);
-		courseA.setGrade(1);
-		departmentA.addCourse(courseB);
-		courseB.setGrade(1);
-		departmentA.addCourse(courseC);
-		courseC.setGrade(3);
-		
-		student.addMark(courseA, 22);
-		student.addMark(courseB, 0);
-		student.addMark(courseC, -1);
-		
-		Lecturer lecturer = new Lecturer();
-		lecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
-		lecturer.setCurrentPosition("Professor");
-		lecturer.setFirstName("Mariya");
-		lecturer.setGender('f');
-		lecturer.setLastName("Kozlova");
-		lecturer.setNationality("md");
-		lecturer.setPassport("FD47382");
-		lecturer.setPatronymicName("Nikolaevna");
-		lecturer.setScienceDegree("doctor");
-		
-		Address addressL = new Address();
-		addressL.setCity("Kiev");
-		addressL.setEmail("adds@cs.net");
-		addressL.setFlat(3);
-		addressL.setHouse("4a");
-		addressL.setPhone("5435-543-54");
-		addressL.setProvince("Kievska");
-		addressL.setStreet("Getmana");
-		lecturer.setAddress(addressL);
-		
-		CourseSchedule courseScheduleA = new CourseSchedule(courseA, lecturer);
-		courseA.add(courseScheduleA);
-		courseScheduleA.addStudentGroup(student.getStudentGroup());
-		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
-		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
-		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
-		
-		System.out.println("********************************");
-		facultyA = facultyDao.createFaculty(facultyA);
-		StudentGroup studentGroup = studentGroupDao.createStudentGroup(student.getStudentGroup(), facultyA);
-		student.setStudentGroup(studentGroup);
-		studentDao.createStudent(student);
-		departmentA = departmentDao.createDepartment(departmentA, facultyA);
-		courseA = courseDao.createCourse(courseA, departmentA);
-		courseB = courseDao.createCourse(courseB, departmentA);
-		courseC = courseDao.createCourse(courseC, departmentA);
-		lecturer = lecturerDao.createLecturer(lecturer, departmentA);
-		courseScheduleA.setLecturer(lecturer);
-		courseScheduleA = courseScheduleDao.createCourseSchedule(courseScheduleA, courseA);
-		
+		System.out.println("************************************************");
 		printDBData();
 		
-		System.out.println("********************************");
-		studentDao.dropStudentById(student.getStudentId());
-		facultyDao.dropFacultyById(facultyA.getId());
-		departmentDao.dropDepartmentById(departmentA.getId());
-		courseDao.dropCourseById(courseA.getId());
-		courseDao.dropCourseById(courseB.getId());
-		courseDao.dropCourseById(courseC.getId());
-		courseScheduleDao.dropCourseScheduleById(courseScheduleA.getId());
-		studentGroupDao.dropStudentGroupById(student.getStudentGroup().getId());
-		lecturerDao.dropLecturerById(lecturer.getLecturerId());
+		testDepartment.removeCourse(testCourse1);
+		testDepartment.removeCourse(testCourse2);
+		testDepartment.removeCourse(testCourse3);
+		testFaculty.removeDepartment(testDepartment);
+		university.removeFaculty(testFaculty);
+		(new StudentDao()).dropStudentById(testStudent.getStudentId());
+		
+		System.out.println("************************************************");
 		printDBData();
+		
+		
+//		Lecturer lecturer = new Lecturer();
+//		lecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
+//		lecturer.setCurrentPosition("Professor");
+//		lecturer.setFirstName("Mariya");
+//		lecturer.setGender('f');
+//		lecturer.setLastName("Kozlova");
+//		lecturer.setNationality("md");
+//		lecturer.setPassport("FD47382");
+//		lecturer.setPatronymicName("Nikolaevna");
+//		lecturer.setScienceDegree("doctor");
+//		
+//		Address addressL = new Address();
+//		addressL.setCity("Kiev");
+//		addressL.setEmail("adds@cs.net");
+//		addressL.setFlat(3);
+//		addressL.setHouse("4a");
+//		addressL.setPhone("5435-543-54");
+//		addressL.setProvince("Kievska");
+//		addressL.setStreet("Getmana");
+//		lecturer.setAddress(addressL);
+//		
+//		CourseSchedule courseScheduleA = new CourseSchedule(courseA, lecturer);
+//		courseA.add(courseScheduleA);
+//		courseScheduleA.addStudentGroup(student.getStudentGroup());
+//		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
+//		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
+//		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
+//		
+//		System.out.println("********************************");
+//		facultyA = facultyDao.createFaculty(facultyA);
+//		StudentGroup studentGroup = studentGroupDao.createStudentGroup(student.getStudentGroup(), facultyA);
+//		student.setStudentGroup(studentGroup);
+//		studentDao.createStudent(student);
+//		departmentA = departmentDao.createDepartment(departmentA, facultyA);
+//		courseA = courseDao.createCourse(courseA, departmentA);
+//		courseB = courseDao.createCourse(courseB, departmentA);
+//		courseC = courseDao.createCourse(courseC, departmentA);
+//		lecturer = lecturerDao.createLecturer(lecturer, departmentA);
+//		courseScheduleA.setLecturer(lecturer);
+//		courseScheduleA = courseScheduleDao.createCourseSchedule(courseScheduleA, courseA);
+//		
+//		printDBData();
+//		
+//		System.out.println("********************************");
+//		studentDao.dropStudentById(student.getStudentId());
+//		facultyDao.dropFacultyById(facultyA.getId());
+//		departmentDao.dropDepartmentById(departmentA.getId());
+//		courseDao.dropCourseById(courseA.getId());
+//		courseDao.dropCourseById(courseB.getId());
+//		courseDao.dropCourseById(courseC.getId());
+//		courseScheduleDao.dropCourseScheduleById(courseScheduleA.getId());
+//		studentGroupDao.dropStudentGroupById(student.getStudentGroup().getId());
+//		lecturerDao.dropLecturerById(lecturer.getLecturerId());
+//		printDBData();
 		
 	}
 }

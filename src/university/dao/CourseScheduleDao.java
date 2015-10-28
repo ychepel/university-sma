@@ -367,15 +367,14 @@ public class CourseScheduleDao {
 		}
 	}
 	
-	public void updateCourseSchedule(CourseSchedule courseSchedule, Course course) throws DaoException {
-		String sql = "UPDATE COURSE_SCHEDULE SET COURSE_ID=?, LECTURER_ID=? WHERE COURSE_SCHEDULE_DI=?";
+	public void updateCourseSchedule(CourseSchedule courseSchedule) throws DaoException {
+		String sql = "UPDATE COURSE_SCHEDULE SET LECTURER_ID=? WHERE COURSE_SCHEDULE_DI=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
 		Integer courseScheduleId = courseSchedule.getId(); 
-		Integer courseId = course.getId();
 		Lecturer lecturer = courseSchedule.getLecturer();
 		Integer lecturerId = lecturer.getLecturerId();
 		
@@ -388,9 +387,8 @@ public class CourseScheduleDao {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			
-			statement.setInt(1, courseId);
-			statement.setInt(2, lecturerId);
-			statement.setInt(3, courseScheduleId);
+			statement.setInt(1, lecturerId);
+			statement.setInt(2, courseScheduleId);
 			
 			statement.executeUpdate();
 		}

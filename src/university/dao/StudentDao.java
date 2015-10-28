@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import university.domain.DomainException;
 import university.domain.Student;
 import university.domain.StudentGroup;
 import university.domain.Person;
@@ -24,7 +25,7 @@ public class StudentDao {
 	private StudentGroupDao studentGroupDao = new StudentGroupDao();
 	private CourseDao courseDao = new CourseDao();
 
-	private Student parseResultSet(ResultSet resultSet) throws SQLException, DaoException {
+	private Student parseResultSet(ResultSet resultSet) throws SQLException, DaoException, DomainException {
 		Student student = new Student(resultSet.getLong("STUDENT_ID"));
 		Long personId = resultSet.getLong("PERSON_ID");
 		student = (Student) personDao.getPersonById(personId, student);
@@ -125,6 +126,7 @@ public class StudentDao {
 				set.add(student);
 			}
 		}
+		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Student data", e);
 		}
@@ -168,7 +170,7 @@ public class StudentDao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Integer studentGroupId = studentGroup.getId();
-		
+	
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -183,6 +185,7 @@ public class StudentDao {
 				set.add(student);
 			}
 		}
+		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Student data", e);
 		}
@@ -237,6 +240,7 @@ public class StudentDao {
 			Map<Course, Integer> marks = getStudentMarks(id);
 			student.setMarks(marks);
 		}
+		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Lecturer data", e);
 		}
@@ -292,8 +296,17 @@ public class StudentDao {
 			statement.setLong(1, student.getStudentId());
 			statement.setBoolean(2, student.getGovernmentFinanced());
 			statement.setString(3, student.getSchoolGraduateSertificate());
+			
 			StudentGroup studentGroup = student.getStudentGroup();
-			statement.setInt(4, studentGroup.getId());
+			Integer studentGroupId;
+			if(studentGroup == null) {
+				studentGroupId = 0;
+			}
+			else {
+				studentGroupId = studentGroup.getId();
+			}
+			statement.setInt(4, studentGroupId);
+			
 			Calendar entranceCalendar = student.getEntranceDate();
 			statement.setDate(5, new java.sql.Date(entranceCalendar.getTimeInMillis()));
 			Calendar completionCalendar = student.getCompletionDate();
@@ -408,7 +421,11 @@ public class StudentDao {
 		Boolean governmentFinanced = student.getGovernmentFinanced();
 		String schoolGraduateSertificate = student.getSchoolGraduateSertificate();
 		StudentGroup studentGroup = student.getStudentGroup();
-		Integer studentGroupId = studentGroup.getId();
+		Integer studentGroupId;
+		if(studentGroup == null)
+			studentGroupId = 0;
+		else
+			studentGroupId = studentGroup.getId();
 		Calendar entranceCalendar = student.getEntranceDate();
 		Calendar completionCalendar = student.getCompletionDate();
 		

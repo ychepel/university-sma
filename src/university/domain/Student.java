@@ -5,6 +5,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import university.dao.DaoException;
+import university.dao.StudentDao;
+
 public class Student extends Person {
 	private final Integer NO_MARK_VALUE = -1;
 	private final Integer LAST_EDUCATION_MONTH = 5;
@@ -12,23 +15,26 @@ public class Student extends Person {
 	
 	private static Long studentCount = 0L; 
 	
-	private Boolean governmentFinanced;
-	private Calendar entranceDate;
-	private Calendar completionDate;
+	private Boolean governmentFinanced = false;
+	private Calendar entranceDate = new GregorianCalendar(1900, Calendar.JANUARY, 1);
 	private Long studentId;
-	private String schoolGraduateSertificate;
-	private StudentGroup studentGroup;
+	private String schoolGraduateSertificate = "";
+	private StudentGroup studentGroup = null;
+	private Calendar completionDate = new GregorianCalendar(1900, Calendar.JANUARY, 1);
 	private Map<Course, Integer> marks = new HashMap<>();
 	
-	public Student() {
+	private StudentDao studentDao = new StudentDao();
+	
+	public Student() throws DaoException {
 		super();
 		studentCount++;
-		this.studentId = studentCount;
+		setStudentId(studentCount);
+		studentDao.createStudent(this);
 	}
 	
-	public Student(Long studentId) {
+	public Student(Long studentId) throws DaoException {
 		super();
-		this.studentId = studentId;
+		setStudentId(studentId);
 	}
 	
 	public Integer getAverageMark() {
@@ -64,17 +70,20 @@ public class Student extends Person {
 		return Calendar.getInstance();
 	}
 	
-	public void setEntranceDate(Calendar entranceDate) {
+	public void setEntranceDate(Calendar entranceDate) throws DomainException {
 		this.entranceDate = entranceDate;
 		
 		Integer completionYear = entranceDate.get(Calendar.YEAR) + DEFAULT_EDUCATION_DURATION;
 		Calendar endDate = new GregorianCalendar(completionYear, LAST_EDUCATION_MONTH, 1);
 		endDate.add(Calendar.DATE, -1);
 		this.completionDate = endDate;
+
+		updateStudentInDB();
 	}
 	
-	public void addMark(Course course, Integer mark) {
+	public void addMark(Course course, Integer mark) throws DomainException {
 		this.marks.put(course, mark);
+		updateStudentInDB();
 	}
 	
 	public Map<Course, Integer> getMarks() {
@@ -85,15 +94,14 @@ public class Student extends Person {
 		return completionDate;
 	}
 
-	public void setCompletionDate(Calendar completionDate) {
+	public void setCompletionDate(Calendar completionDate) throws DomainException {
 		this.completionDate = completionDate;
+		updateStudentInDB();
 	}
 	
-	public void setStudentGroup(StudentGroup studentGroup) {
+	public void setStudentGroup(StudentGroup studentGroup) throws DomainException {
 		this.studentGroup = studentGroup;
-		if(studentGroup != null) {
-			studentGroup.addStudent(this);
-		}
+		updateStudentInDB();
 	}
 	
 	public StudentGroup getStudentGroup() {
@@ -112,16 +120,18 @@ public class Student extends Person {
 		return governmentFinanced;
 	}
 
-	public void setGovernmentFinanced(Boolean governmentFinanced) {
+	public void setGovernmentFinanced(Boolean governmentFinanced) throws DomainException {
 		this.governmentFinanced = governmentFinanced;
+		updateStudentInDB();
 	}
 
 	public String getSchoolGraduateSertificate() {
 		return schoolGraduateSertificate;
 	}
 
-	public void setSchoolGraduateSertificate(String schoolGraduateSertificate) {
+	public void setSchoolGraduateSertificate(String schoolGraduateSertificate) throws DomainException {
 		this.schoolGraduateSertificate = schoolGraduateSertificate;
+		updateStudentInDB();
 	}
 
 	public Calendar getEntranceDate() {
@@ -132,7 +142,20 @@ public class Student extends Person {
 		this.marks = marks;
 	}
 	
-	public void setStudentCount(Long studentCount) {
+	public static void setStudentCount(Long studentCount) {
 		Student.studentCount = studentCount;
+	}
+	
+	public void setStudentId(Long studentId) {
+		this.studentId = studentId;
+	}
+	
+	public void updateStudentInDB() throws DomainException {
+		try {
+			studentDao.updateStudent(this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot update Student information", e);
+		}
 	}
 }

@@ -86,9 +86,10 @@ public class StudentGroupDao {
 			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
 			
-			resultSet.next();
-			result = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
-			result.setId(id);
+			if(resultSet.next()) {
+				result = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
+				result.setId(id);
+			}
 		}
 		catch (SQLException e) {
 			throw new DaoException("Cannot get Student Group data", e);

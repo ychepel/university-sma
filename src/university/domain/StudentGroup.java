@@ -10,12 +10,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import university.dao.DaoException;
+import university.dao.StudentDao;
+
 public class StudentGroup {
 	private String name;
-	private Set<Student> students;
 	private Integer id;
 	
-	public Map<Student, Integer> getSuccessRating(Course course) {
+	private StudentDao studentDao;
+	
+	public Map<Student, Integer> getSuccessRating(Course course) throws DomainException {
 		Map<Student, Integer> result = new HashMap<>();
 		for(Student student : getStudents()) {
 			Map<Course, Integer> studentMarks = student.getMarks();
@@ -45,7 +49,7 @@ public class StudentGroup {
 		return result;
 	}
 	
-	public Integer getGrade() {
+	public Integer getGrade() throws DomainException {
 		for(Student student : getStudents()) {
 			if(!student.getGrade().equals(0)) {
 				return student.getGrade();
@@ -54,7 +58,7 @@ public class StudentGroup {
 		return 0;
 	}
 	
-	public Set<Student> getStudentsOnCourse(Course course) {
+	public Set<Student> getStudentsOnCourse(Course course) throws DomainException {
 		Set<Student> students = new HashSet<>();
 		for(Student student : getStudents()) {
 			Map<Course, Integer> marks = student.getMarks(); 
@@ -70,27 +74,31 @@ public class StudentGroup {
 	
 	public StudentGroup(String name) {
 		this.name = name;
-		this.students = new HashSet<Student>();
+
+		studentDao = new StudentDao();
 	}
 	
-	public void addStudent(Student student) {
-		students.add(student);
+	public void addStudent(Student student) throws DomainException {
+		student.setStudentGroup(this);
 	}
 
-	public Set<Student> getStudents() {
-		return students;
+	public Set<Student> getStudents() throws DomainException {
+		Set<Student> result = new HashSet<>();
+		try {
+			result = studentDao.getStudentsByGroup(this);
+		}
+		catch (DaoException e) {
+			throw new DomainException ("Cannot receive Students for Student Group", e);
+		}
+		return result;
 	}
 
 	public String getName() {
 		return name;
 	}
 	
-	public Integer getStudentQuantity() {
+	public Integer getStudentQuantity() throws DomainException {
 		return getStudents().size();
-	}
-
-	public void removeStudent(Student student) {
-		this.students.remove(student);
 	}
 
 	public Integer getId() {
@@ -99,9 +107,5 @@ public class StudentGroup {
 
 	public void setId(Integer id) {
 		this.id = id;
-	}
-	
-	public void setStudents(Set<Student> students) {
-		this.students = students;
 	}
 }

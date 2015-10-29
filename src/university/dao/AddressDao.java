@@ -6,10 +6,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.log4j.Logger;
+
 import university.domain.Address;
 
 public class AddressDao {
 	private DaoFactory daoFactory = new DaoFactory();
+	
+	private static Logger log = Logger.getLogger(AddressDao.class);
 	
 	protected Address createAddress(Address address) throws DaoException {
 		String city = address.getCity();
@@ -23,6 +27,7 @@ public class AddressDao {
 		String sql = "INSERT INTO ADDRESS (CITY, EMAIL, FLAT, HOUSE, PHONE, PROVINCE, STREET) VALUES "
 				+ "('" + city + "', '" + email + "', " + flat + ", '" + house + "', '" + phone + "', "
 						+ "'" + province + "', '" + street + "')";
+		log.debug(sql);
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -36,8 +41,10 @@ public class AddressDao {
 			resultSet.next();
 			Long id = resultSet.getLong(1);
 			address.setId(id);
+			log.warn("New Adress Id=" + id);
 		}
 		catch (SQLException e) {
+			log.error("Cannot create Address", e);
 			throw new DaoException("Cannot create Address", e);
 		}
 		finally {
@@ -68,7 +75,6 @@ public class AddressDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return address;
 	}
 	
@@ -96,6 +102,8 @@ public class AddressDao {
 		String province = address.getProvince();
 		String street = address.getStreet();
 		
+		log.debug("Address update info: addressId=" + addressId + "; city=" + city + "; street=" + street);
+		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -112,6 +120,7 @@ public class AddressDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot update Address", e);
 			throw new DaoException("Cannot update Address", e);
 		}
 		finally {
@@ -158,6 +167,7 @@ public class AddressDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Address data", e);
 			throw new DaoException("Cannot delete Address data", e);
 		}
 		finally {
@@ -189,6 +199,7 @@ public class AddressDao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
+		log.warn("Getting Affress by Id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -199,7 +210,8 @@ public class AddressDao {
 			result = parseResultSet(resultSet);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Address data", e);
+			log.error("Cannot get Address data by Id", e);
+			throw new DaoException("Cannot get Address data by Id", e);
 		}
 		finally {
 			try {
@@ -229,7 +241,6 @@ public class AddressDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return result;
 	}
 	
@@ -244,6 +255,8 @@ public class AddressDao {
 		result.setPhone(resultSet.getString("PHONE"));
 		result.setProvince(resultSet.getString("PROVINCE"));
 		result.setStreet(resultSet.getString("STREET"));
+		
+		log.debug("Slected Address: id=" + result.getId() + "; city=" + result.getCity() + "; falt=" + result.getFlat());
 		
 		return result;
 	}

@@ -8,12 +8,16 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.domain.Course;
 import university.domain.Department;
 import university.domain.DomainException;
 
 public class CourseDao {
 	private DaoFactory daoFactory = new DaoFactory();
+	
+	private static Logger log = Logger.getLogger(CourseDao.class);
 	
 	public Set<Course> getCourses(Department department) throws DaoException {
 		String sql = "SELECT * FROM COURSE WHERE DEPARTMENT_ID=?";
@@ -24,7 +28,7 @@ public class CourseDao {
 		ResultSet resultSet = null;
 		
 		Integer departmentId = department.getId();
-
+		log.debug("Getting Course for Department '" + department.getName() + "' (id=" + departmentId + ")");
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -35,13 +39,14 @@ public class CourseDao {
 				Course course = new Course(resultSet.getString("COURSE_NAME"));
 				course.setId(resultSet.getInt("COURSE_ID"));
 				course.setGrade(resultSet.getInt("GRADE"));
-
 				set.add(course);
+				log.debug("Selected Course: name=" + course.getName() + "; id=" + course.getId() + "; grade=" + course.getGrade());
 			}
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Course data", e);
+			log.error("Cannot get Course by Department", e);
+			throw new DaoException("Cannot get Course by Department", e);
 		}
 		finally {
 			try {
@@ -82,7 +87,7 @@ public class CourseDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
-		
+		log.debug("Getting Course by id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -91,13 +96,15 @@ public class CourseDao {
 			
 			resultSet.next();
 			result = new Course(resultSet.getString("COURSE_NAME"));
-			result.setGrade(resultSet.getInt("GRADE"));
 			result.setId(id);
+			result.setGrade(resultSet.getInt("GRADE"));
 			
+			log.debug("Selected Course: name=" + result.getName() + "; id=" + result.getId() + "; grade=" + result.getGrade());
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Course data", e);
+			log.error("Cannot get Course data by Id", e);
+			throw new DaoException("Cannot get Course data by Id", e);
 		}
 		finally {
 			try {
@@ -137,7 +144,7 @@ public class CourseDao {
 		Integer grade = course.getGrade();
 		String sql = "INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ("
 				+ "'" + name + "', " + grade + ", " + departmentId + ")";
-		
+		log.debug(sql);
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -151,8 +158,10 @@ public class CourseDao {
 			resultSet.next();
 			Integer courseId = resultSet.getInt(1);
 			course.setId(courseId);
+			log.debug("New Course Id=" + courseId);
 		}
 		catch (SQLException e) {
+			log.error("Cannot create Course data", e);
 			throw new DaoException("Cannot create Course data", e);
 		}
 		finally {
@@ -202,6 +211,7 @@ public class CourseDao {
 		String name = course.getName();
 		Integer grade = course.getGrade();
 		
+		log.debug("Course update info: courseId=" + courseId + "; name=" + name + "; grade=" + grade);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -214,6 +224,7 @@ public class CourseDao {
 
 		}
 		catch (SQLException e) {
+			log.error("Cannot update Course data", e);
 			throw new DaoException("Cannot update Course data", e);
 		}
 		finally {
@@ -259,6 +270,7 @@ public class CourseDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Course data", e);
 			throw new DaoException("Cannot delete Course data", e);
 		}
 		finally {

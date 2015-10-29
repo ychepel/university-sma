@@ -20,7 +20,7 @@ public class Course {
 	private CourseDao courseDao;
 	private CourseScheduleDao courseScheduleDao;
 	
-	public void createCourseSchedule(Lecturer lecturer, StudentGroup studentGroup) throws DomainException {
+	public CourseSchedule createCourseSchedule(Lecturer lecturer, StudentGroup studentGroup) throws DomainException {
 		log.info("Create schedule for Course '" + this.name + "' (id=" + this.id + "): "
 				+ "Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + "), "
 				+ "Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ")");
@@ -28,13 +28,14 @@ public class Course {
 			Lecturer courseLecturer = courseSchedule.getLecturer();
 			if(courseLecturer.equals(lecturer)) {
 				courseSchedule.addStudentGroup(studentGroup);
-				return;
+				return courseSchedule;
 			}
 		}
 		
 		CourseSchedule newCourseSchedule = new CourseSchedule(this, lecturer);
 		newCourseSchedule.addStudentGroup(studentGroup);
 		this.addCourseSchedule(newCourseSchedule);
+		return newCourseSchedule;
 	}
 	
 	public Set<CourseSchedule> getScheduleByLecturer(Lecturer person) throws DomainException {

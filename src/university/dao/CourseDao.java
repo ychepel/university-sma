@@ -213,7 +213,7 @@ public class CourseDao {
 		String name = course.getName();
 		Integer grade = course.getGrade();
 		
-		log.debug("Course update info: courseId=" + courseId + "; name=" + name + "; grade=" + grade);
+		log.debug("Course update info: id=" + courseId + "; name=" + name + "; grade=" + grade);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);

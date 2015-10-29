@@ -414,7 +414,7 @@ public class StudentDao {
 				log.debug("Create Student Mark: courseId=" + courseId + "; mark=" + mark);
 				statement.setInt(2, courseId);
 				statement.setInt(3, mark);
-				statement.executeQuery();
+				statement.executeUpdate();
 			}
 		}
 		catch (SQLException e) {
@@ -613,7 +613,7 @@ public class StudentDao {
 			resultSet = statement.executeQuery(sql);
 			resultSet.next();
 			result = resultSet.getLong(1);
-			log.debug("Max Student id = " + result);
+			log.debug("Max Student ID is " + result);
 		}
 		catch (SQLException e) {
 			log.error("Cannot get Max Student Id", e);

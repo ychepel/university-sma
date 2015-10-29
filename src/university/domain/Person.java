@@ -60,6 +60,10 @@ public abstract class Person {
 	}
 
 	public void setAddress(Address address) {
+		Long currentId = this.address.getId();
+		if(currentId != null) {
+			address.setId(currentId);
+		}
 		this.address = address;
 	}
 

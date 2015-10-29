@@ -43,6 +43,7 @@ public class Faculty {
 	}
 	
 	public Integer getGroupsQuantityOnGrade(Integer grade) throws DomainException {
+		log.info("Calculation Groups quantity on grade " + grade + " for Faculty '" + this.getName() + "' (id=" + this.getId() + ")");
 		Integer quantity = 0;
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			if(grade == studentGroup.getGrade()) {
@@ -157,7 +158,7 @@ public class Faculty {
 	}
 
 	public void createStudentGroup(StudentGroup studentGroup) throws DomainException {
-		log.info("Create Student Group '" + studentGroup.getName() + "'");
+		log.info("Create Student Group '" + studentGroup.getName() + "' on Faculty '" + this.getName() + "' (id=" + this.getId() + ")");
 		try {
 			studentGroupDao.createStudentGroup(studentGroup, this);
 		}

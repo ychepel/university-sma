@@ -219,7 +219,6 @@ public class CourseScheduleDao {
 		Integer lecturerId = lecturer.getLecturerId();
 		String sql = "INSERT INTO COURSE_SCHEDULE (COURSE_ID, LECTURER_ID) VALUES (" + courseId + ", " + lecturerId + ")";
 		log.debug(sql);
-		CourseSchedule result = null; 
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -236,8 +235,7 @@ public class CourseScheduleDao {
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
 			log.debug("New CourseSchedule.id=" + id);
-			result = new CourseSchedule(course, lecturer);
-			result.setId(id);
+			courseSchedule.setId(id);
 		}
 		catch (SQLException e) {
 			log.error("Cannot create Course Schedule for Course", e);
@@ -272,7 +270,7 @@ public class CourseScheduleDao {
 			}
 		}
 		
-		return result;
+		return courseSchedule;
 	}
 	
 	private void createCourseScheduleGroup(CourseSchedule courseSchedule) throws DaoException {
@@ -396,8 +394,11 @@ public class CourseScheduleDao {
 		Lecturer lecturer = courseSchedule.getLecturer();
 		Integer lecturerId = lecturer.getLecturerId();
 		log.warn("Updating of Course Schedule (id=" + courseScheduleId + "): Lecturer.id=" + lecturerId);
-		dropCourseScheduleStudentGroups(courseScheduleId);
-		dropCourseScheduleTimetables(courseScheduleId);
+		
+		if(courseScheduleId != null) {
+			dropCourseScheduleStudentGroups(courseScheduleId);
+			dropCourseScheduleTimetables(courseScheduleId);
+		}
 		createCourseScheduleGroup(courseSchedule);
 		createCourseScheduleTimetable(courseSchedule);
 		

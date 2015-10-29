@@ -145,7 +145,6 @@ public class FacultyDao {
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
 			log.warn("New Faculty Id=" + id);
-			faculty = new Faculty(name);
 			faculty.setId(id);
 		}
 		catch (SQLException e) {

@@ -41,15 +41,15 @@ public class DaoTest {
 					}
 				}	
 			}
-//			for(StudentGroup studentGroup : faculty.getStudentGroups()) {
-//				System.out.println("   G# " + studentGroup.getName().trim() + ":");
-//				for(Student student : studentGroup.getStudents()) {
-//					System.out.println("       S# " + student.getFullName() 
-//						+ " (" + student.getBirthDate() + ", grade " + student.getGrade() 
-//						+ ", " + student.getAddress().getCity().trim() 
-//						+ ", average mark - " + student.getAverageMark() + ")");
-//				}
-//			}
+			for(StudentGroup studentGroup : faculty.getStudentGroups()) {
+				System.out.println("   G# " + studentGroup.getName().trim() + ":");
+				for(Student student : studentGroup.getStudents()) {
+					System.out.println("       S# " + student.getFullName() 
+						+ " (" + student.getBirthDate() + ", grade " + student.getGrade() 
+						+ ", " + student.getAddress().getCity().trim() 
+						+ ", average mark - " + student.getAverageMark() + ")");
+				}
+			}
 		}
 	}
 	
@@ -79,7 +79,7 @@ public class DaoTest {
 		testAddress.setStreet("Nekrasova");
 		
 		Long maxId = (new StudentDao()).getMaxStudentId();
-		Student.setStudentCount(maxId+1);
+		Student.setStudentCount(maxId);
 		Student testStudent = new Student();
 		testStudent.setBirthDate((new GregorianCalendar(1993, Calendar.JUNE, 4)).getTime());
 		testStudent.setEntranceDate(new GregorianCalendar(2013, Calendar.SEPTEMBER, 1));
@@ -101,10 +101,39 @@ public class DaoTest {
 		testStudent.addMark(testCourse1, 22);
 		testStudent.addMark(testCourse2, 0);
 		testStudent.addMark(testCourse3, -1);
+		
+		Lecturer testLecturer = new Lecturer();
+		testLecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
+		testLecturer.setCurrentPosition("Professor");
+		testLecturer.setFirstName("Mariya");
+		testLecturer.setGender('f');
+		testLecturer.setLastName("Kozlova");
+		testLecturer.setNationality("md");
+		testLecturer.setPassport("FD47382");
+		testLecturer.setPatronymicName("Nikolaevna");
+		testLecturer.setScienceDegree("doctor");
+		
+		Address addressL = new Address();
+		addressL.setCity("Kiev");
+		addressL.setEmail("adds@cs.net");
+		addressL.setFlat(3);
+		addressL.setHouse("4a");
+		addressL.setPhone("5435-543-54");
+		addressL.setProvince("Kievska");
+		addressL.setStreet("Getmana");
+		testLecturer.setAddress(addressL);
+		testFaculty.addLecturer(testDepartment, testLecturer);
+		
+		CourseSchedule courseScheduleC1 = testCourse1.createCourseSchedule(testLecturer, testStudent.getStudentGroup());
+		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
+		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
+		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
 	
 		System.out.println("************************************************");
 		printDBData();
 		
+		testCourse1.excludeStudent(testStudent.getStudentGroup());
+		testDepartment.removeLecturer(testLecturer);
 		testDepartment.removeCourse(testCourse1);
 		testDepartment.removeCourse(testCourse2);
 		testDepartment.removeCourse(testCourse3);
@@ -114,62 +143,6 @@ public class DaoTest {
 		
 		System.out.println("************************************************");
 		printDBData();
-		
-		
-//		Lecturer lecturer = new Lecturer();
-//		lecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
-//		lecturer.setCurrentPosition("Professor");
-//		lecturer.setFirstName("Mariya");
-//		lecturer.setGender('f');
-//		lecturer.setLastName("Kozlova");
-//		lecturer.setNationality("md");
-//		lecturer.setPassport("FD47382");
-//		lecturer.setPatronymicName("Nikolaevna");
-//		lecturer.setScienceDegree("doctor");
-//		
-//		Address addressL = new Address();
-//		addressL.setCity("Kiev");
-//		addressL.setEmail("adds@cs.net");
-//		addressL.setFlat(3);
-//		addressL.setHouse("4a");
-//		addressL.setPhone("5435-543-54");
-//		addressL.setProvince("Kievska");
-//		addressL.setStreet("Getmana");
-//		lecturer.setAddress(addressL);
-//		
-//		CourseSchedule courseScheduleA = new CourseSchedule(courseA, lecturer);
-//		courseA.add(courseScheduleA);
-//		courseScheduleA.addStudentGroup(student.getStudentGroup());
-//		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
-//		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
-//		courseScheduleA.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
-//		
-//		System.out.println("********************************");
-//		facultyA = facultyDao.createFaculty(facultyA);
-//		StudentGroup studentGroup = studentGroupDao.createStudentGroup(student.getStudentGroup(), facultyA);
-//		student.setStudentGroup(studentGroup);
-//		studentDao.createStudent(student);
-//		departmentA = departmentDao.createDepartment(departmentA, facultyA);
-//		courseA = courseDao.createCourse(courseA, departmentA);
-//		courseB = courseDao.createCourse(courseB, departmentA);
-//		courseC = courseDao.createCourse(courseC, departmentA);
-//		lecturer = lecturerDao.createLecturer(lecturer, departmentA);
-//		courseScheduleA.setLecturer(lecturer);
-//		courseScheduleA = courseScheduleDao.createCourseSchedule(courseScheduleA, courseA);
-//		
-//		printDBData();
-//		
-//		System.out.println("********************************");
-//		studentDao.dropStudentById(student.getStudentId());
-//		facultyDao.dropFacultyById(facultyA.getId());
-//		departmentDao.dropDepartmentById(departmentA.getId());
-//		courseDao.dropCourseById(courseA.getId());
-//		courseDao.dropCourseById(courseB.getId());
-//		courseDao.dropCourseById(courseC.getId());
-//		courseScheduleDao.dropCourseScheduleById(courseScheduleA.getId());
-//		studentGroupDao.dropStudentGroupById(student.getStudentGroup().getId());
-//		lecturerDao.dropLecturerById(lecturer.getLecturerId());
-//		printDBData();
-		
+
 	}
 }

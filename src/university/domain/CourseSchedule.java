@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.dao.CourseScheduleDao;
 import university.dao.DaoException;
 
@@ -14,9 +16,13 @@ public class CourseSchedule {
 	private Set<Calendar> timetables;
 	private Integer id;
 	
+	private static Logger log = Logger.getLogger(CourseSchedule.class);
+	
 	private CourseScheduleDao courseScheduleDao;
 	
 	public CourseSchedule(Course course, Lecturer lecturer) {
+		log.info("Create new Course Schedule for Course '" + course.getName() + "' (id=" + course.getId() + ") "
+				+ "and Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + ")");
 		this.course = course;
 		this.lecturer = lecturer;
 		this.studentGroups = new HashSet<StudentGroup>();
@@ -83,6 +89,7 @@ public class CourseSchedule {
 	}
 	
 	private void updateCourseScheduleDB() throws DomainException {
+		log.info("Update Course Schedule information in DB: id=" + this.id);
 		try {
 			courseScheduleDao.updateCourseSchedule(this);
 		}

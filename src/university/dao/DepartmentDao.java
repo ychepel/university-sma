@@ -8,12 +8,16 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.domain.Department;
 import university.domain.Faculty;
 
 public class DepartmentDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
+	
+	private static Logger log = Logger.getLogger(DepartmentDao.class);
 	
 	public Set<Department> getDepartments(Faculty faculty) throws DaoException {
 		String sql = "SELECT * FROM DEPARTMENT WHERE FACULTY_ID=?";
@@ -24,7 +28,7 @@ public class DepartmentDao {
 		ResultSet resultSet = null;
 		
 		Integer facultyId = faculty.getId();
-
+		log.debug("Get Dpartment for Fculty.id=" + facultyId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -32,14 +36,17 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Department department = new Department(resultSet.getString("DEPARTMENT_NAME"));
-				department.setId(resultSet.getInt("DEPARTMENT_ID"));
-				
+				String departmentName = resultSet.getString("DEPARTMENT_NAME");
+				Integer departmentId = resultSet.getInt("DEPARTMENT_ID");
+				log.warn("Create Department name=" + departmentName + " with id=" + departmentId);
+				Department department = new Department(departmentName);
+				department.setId(departmentId);
 				set.add(department);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Department data", e);
+			log.error("Cannot get Departments for Faculty", e);
+			throw new DaoException("Cannot get Departments for Faculty", e);
 		}
 		finally {
 			try {
@@ -69,7 +76,6 @@ public class DepartmentDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
@@ -80,7 +86,7 @@ public class DepartmentDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
-		
+		log.debug("Get Dpartment with id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -88,12 +94,14 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			result = new Department(resultSet.getString("DEPARTMENT_NAME"));
+			String departmentName = resultSet.getString("DEPARTMENT_NAME");
+			log.debug("Selected Department.name=" + departmentName);
+			result = new Department(departmentName);
 			result.setId(id);
-			
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Department data", e);
+			log.error("Cannot get Department by Id", e);
+			throw new DaoException("Cannot get Department by Id", e);
 		}
 		finally {
 			try {
@@ -131,26 +139,24 @@ public class DepartmentDao {
 		Integer facultyId = faculty.getId();
 		String name = department.getName();
 		String sql = "INSERT INTO DEPARTMENT (DEPARTMENT_NAME, FACULTY_ID) VALUES ('" + name + "', " + facultyId + ")";
-		
-		Department result = null; 
+		log.debug(sql);
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
-		
+
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
-			
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
-			
-			result = new Department(name);
-			result.setId(id);
+			log.warn("New Department Id=" + id);
+			department.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Department data", e);
+			log.error("Cannot create Department", e);
+			throw new DaoException("Cannot create Department", e);
 		}
 		finally {
 			try {
@@ -180,8 +186,7 @@ public class DepartmentDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
-		return result;
+		return department;
 	}
 	
 	public void updateDepartment(Department department) throws DaoException {
@@ -193,18 +198,17 @@ public class DepartmentDao {
 		
 		Integer departmentId = department.getId();
 		String name = department.getName();
-		
+		log.debug("Updating Department id=" + departmentId + "; name=" + name);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
-			
 			statement.setString(1, name);
 			statement.setInt(2, departmentId);
-			
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot update Department data", e);
+			log.error("Cannot update Department", e);
+			throw new DaoException("Cannot update Department", e);
 		}
 		finally {
 			try {
@@ -249,6 +253,7 @@ public class DepartmentDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Department data", e);
 			throw new DaoException("Cannot delete Department data", e);
 		}
 		finally {

@@ -25,6 +25,7 @@ public class Faculty {
 	private static Logger log = Logger.getLogger(Faculty.class);
 	
 	public void addStudent(Student student) throws DomainException {
+		log.info("Add Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") to existing Student Group or create new Group");
 		Integer studentGrade = student.getGrade();
 		for(StudentGroup studentGroup : getStudentGroups()) {
 			if(studentGrade == studentGroup.getGrade()) {
@@ -132,6 +133,7 @@ public class Faculty {
 	}
 
 	public void removeStudent(Student student) throws DomainException {
+		log.info("Remove Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") from Student Groups");
 		StudentGroup studentGroup = student.getStudentGroup();
 		student.setStudentGroup(null);
 			if(studentGroup.getStudentQuantity() == 0) {
@@ -141,6 +143,7 @@ public class Faculty {
 	
 	private void removeStudentGroup(StudentGroup studentGroup) throws DomainException {
 		Integer studentGroupId = studentGroup.getId();
+		log.info("Remove Student Group '" + studentGroup.getName() + "' (id=" + studentGroupId);
 		try {
 			studentGroupDao.dropStudentGroupById(studentGroupId);
 		}
@@ -154,6 +157,7 @@ public class Faculty {
 	}
 
 	public void createStudentGroup(StudentGroup studentGroup) throws DomainException {
+		log.info("Create Student Group '" + studentGroup.getName() + "'");
 		try {
 			studentGroupDao.createStudentGroup(studentGroup, this);
 		}
@@ -171,6 +175,7 @@ public class Faculty {
 	}
 	
 	public Department createDepartment(String name) throws DomainException {
+		log.info("Create Department '" + name + "'");
 		Department department = new Department(name);
 		try {
 			department = departmentDao.createDepartment(department, this);
@@ -183,6 +188,7 @@ public class Faculty {
 	
 	public void removeDepartment(Department department) throws DomainException {
 		Integer id = department.getId();
+		log.info("Remove Department '" + department.getName() + "' (id=" + id + "'");
 		try {
 			departmentDao.dropDepartmentById(id);
 		}

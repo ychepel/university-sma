@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -12,6 +13,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import org.apache.log4j.Logger;
 
 import university.domain.DomainException;
 import university.domain.Student;
@@ -25,33 +28,79 @@ public class StudentDao {
 	private StudentGroupDao studentGroupDao = new StudentGroupDao();
 	private CourseDao courseDao = new CourseDao();
 
+	private static Logger log = Logger.getLogger(StudentDao.class);
+	
 	private Student parseResultSet(ResultSet resultSet) throws SQLException, DaoException, DomainException {
-		Student student = new Student(resultSet.getLong("STUDENT_ID"));
+		Long studentId = resultSet.getLong("STUDENT_ID");
+		log.warn("Student id=" + studentId);
+		
+		Student student = new Student(studentId);
 		Long personId = resultSet.getLong("PERSON_ID");
+		log.warn("Student person.id=" + personId);
+		
 		student = (Student) personDao.getPersonById(personId, student);
 		student.setGovernmentFinanced(resultSet.getBoolean("GOVERNMENT_FINANCED"));
 		student.setSchoolGraduateSertificate(resultSet.getString("SCHOOL_CERTIFICATE"));
 		
 		Integer studentGroupId = resultSet.getInt("STUDENT_GROUP_ID");
+		log.warn("Student StudentGroup.id=" + studentGroupId);
 		StudentGroup studentGroup = studentGroupDao.getStudentGroupById(studentGroupId);
+		log.debug("Student StudentGroup=" + studentGroup);
 		student.setStudentGroup(studentGroup);
 		
 		Date entranceDate = resultSet.getDate("ENTRANCE_DATE");
 		Calendar entranceCalendar = new GregorianCalendar();
 		entranceCalendar.setTime(entranceDate);
+		log.debug("Student Entrance Date=" + entranceCalendar);
 		student.setEntranceDate(entranceCalendar);
 		
 		Date completionDate = resultSet.getDate("COMPLETION_DATE");
 		Calendar completionCalendar = new GregorianCalendar();
 		completionCalendar.setTime(completionDate);
+		log.debug("Student Completion Date=" + completionCalendar);
 		student.setCompletionDate(completionCalendar);
 		
 		return student;
 	}
 	
+	private Map<String, Object> parseStudent(Student student) {
+		Map<String, Object> result = new HashMap<>();
+		
+		Boolean governmentFinanced = student.getGovernmentFinanced();
+		result.put("governmentFinanced", governmentFinanced);
+		
+		String schoolGraduateSertificate = student.getSchoolGraduateSertificate();
+		result.put("schoolGraduateSertificate", schoolGraduateSertificate);
+		
+		StudentGroup studentGroup = student.getStudentGroup();
+		Integer studentGroupId;
+		if(studentGroup == null) {
+			studentGroupId = 0;
+		}
+		else {
+			studentGroupId = studentGroup.getId();
+		}
+		result.put("studentGroupId", studentGroupId);
+		
+		SimpleDateFormat formatCalendar = new SimpleDateFormat("yyyy-MM-dd");   
+		Calendar entranceCalendar = student.getEntranceDate();
+		java.sql.Date entranceDate = new java.sql.Date(entranceCalendar.getTimeInMillis());
+		result.put("entranceDate", entranceDate);
+		
+		Calendar completionCalendar = student.getCompletionDate();
+		java.sql.Date completioDate = new java.sql.Date(completionCalendar.getTimeInMillis());
+		result.put("completioDate", completioDate);
+		
+		log.debug("Parse Student: studentGroupId=" + studentGroupId 
+				+ "; entranceCalendar=" + formatCalendar.format(entranceDate)
+				+ "; completioDate=" + formatCalendar.format(completioDate));
+		
+		return result;
+	}
+	
 	private Map<Course, Integer> getStudentMarks(Long studentId) throws DaoException {
 		String sql = "SELECT * FROM STUDENT_MARK WHERE STUDENT_ID = ?";
-		
+		log.debug("Selecting Student Marks for Student.id=" + studentId);
 		Map<Course, Integer> map = new HashMap<>(); 
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -65,13 +114,17 @@ public class StudentDao {
 
 			while(resultSet.next()) {
 				Integer courseId = resultSet.getInt("COURSE_ID");
+				log.warn("Selected Course.id=" + courseId);
 				Course course = courseDao.getCourseById(courseId);
+				log.warn("Selected Course=" + course);
 				Integer mark = resultSet.getInt("MARK");
+				log.debug("Student mark: " + course.getName() + " = " + mark);
 				map.put(course, mark);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Course Schedule Student Groups", e);
+			log.error("Cannot get Student Marks", e);
+			throw new DaoException("Cannot get Student Marks", e);
 		}
 		finally {
 			try {
@@ -128,7 +181,8 @@ public class StudentDao {
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Student data", e);
+			log.error("Cannot get Students", e);
+			throw new DaoException("Cannot get Students", e);
 		}
 		finally {
 			try {
@@ -158,7 +212,6 @@ public class StudentDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
@@ -170,7 +223,7 @@ public class StudentDao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Integer studentGroupId = studentGroup.getId();
-	
+		log.warn("Get Students for StudentGroup with id=" + studentGroupId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -187,7 +240,8 @@ public class StudentDao {
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Student data", e);
+			log.error("Cannot get Students for StudentGroup", e);
+			throw new DaoException("Cannot get Students for StudentGroup", e);
 		}
 		finally {
 			try {
@@ -217,7 +271,6 @@ public class StudentDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
@@ -228,13 +281,12 @@ public class StudentDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
-		
+		log.warn("Select Student with id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);
 			resultSet = statement.executeQuery();
-			
 			resultSet.next();
 			student = parseResultSet(resultSet);
 			Map<Course, Integer> marks = getStudentMarks(id);
@@ -242,7 +294,8 @@ public class StudentDao {
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Lecturer data", e);
+			log.error("Cannot get Student by Id", e);
+			throw new DaoException("Cannot get Student by Id", e);
 		}
 		finally {
 			try {
@@ -272,7 +325,6 @@ public class StudentDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return student;
 	}
 	
@@ -280,42 +332,33 @@ public class StudentDao {
 		String sql = "INSERT INTO STUDENT (STUDENT_ID, GOVERNMENT_FINANCED, SCHOOL_CERTIFICATE, STUDENT_GROUP_ID, "
 				+ "ENTRANCE_DATE, COMPLETION_DATE, PERSON_ID) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		
-		Person person = personDao.createPerson(student);
-		Long personId = person.getPersonId();
-		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
+		Person person = personDao.createPerson(student);
+		Long personId = person.getPersonId();
+		Long studentId = student.getStudentId();
+		log.warn("Create Student with id=" + studentId + " and person.id=" + personId);
+		
+		Map<String, Object> sqlParameters = parseStudent(student);
 		createStudentMark(student);		
 		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			
-			statement.setLong(1, student.getStudentId());
-			statement.setBoolean(2, student.getGovernmentFinanced());
-			statement.setString(3, student.getSchoolGraduateSertificate());
-			
-			StudentGroup studentGroup = student.getStudentGroup();
-			Integer studentGroupId;
-			if(studentGroup == null) {
-				studentGroupId = 0;
-			}
-			else {
-				studentGroupId = studentGroup.getId();
-			}
-			statement.setInt(4, studentGroupId);
-			
-			Calendar entranceCalendar = student.getEntranceDate();
-			statement.setDate(5, new java.sql.Date(entranceCalendar.getTimeInMillis()));
-			Calendar completionCalendar = student.getCompletionDate();
-			statement.setDate(6, new java.sql.Date(completionCalendar.getTimeInMillis()));
+			statement.setLong(1, studentId);
+			statement.setBoolean(2, (Boolean) sqlParameters.get("governmentFinanced"));
+			statement.setString(3, (String) sqlParameters.get("schoolGraduateSertificate"));
+			statement.setInt(4, (Integer) sqlParameters.get("studentGroupId"));
+			statement.setDate(5, (java.sql.Date) sqlParameters.get("entranceDate"));
+			statement.setDate(6, (java.sql.Date) sqlParameters.get("completioDate"));
 			statement.setLong(7, personId);
-			
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot create Student", e);
 			throw new DaoException("Cannot create Student", e);
 		}
 		finally {
@@ -354,8 +397,10 @@ public class StudentDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		
 		Long studentId = student.getStudentId();
 		Map<Course, Integer> marks = student.getMarks();
+		log.warn("Create Student Mark for Student.id=" + studentId);
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -365,13 +410,15 @@ public class StudentDao {
 			for(Map.Entry<Course, Integer> entry : marks.entrySet()) {
 				Course course = entry.getKey();
 				Integer courseId = course.getId();
-				statement.setInt(2, courseId);
 				Integer mark = entry.getValue();
+				log.debug("Create Student Mark: courseId=" + courseId + "; mark=" + mark);
+				statement.setInt(2, courseId);
 				statement.setInt(3, mark);
 				statement.executeQuery();
 			}
 		}
 		catch (SQLException e) {
+			log.error("Cannot create Student Mark", e);
 			throw new DaoException("Cannot create Student Mark", e);
 		}
 		finally {
@@ -418,35 +465,28 @@ public class StudentDao {
 		ResultSet resultSet = null;
 		
 		Long studentId = student.getStudentId();
-		Boolean governmentFinanced = student.getGovernmentFinanced();
-		String schoolGraduateSertificate = student.getSchoolGraduateSertificate();
-		StudentGroup studentGroup = student.getStudentGroup();
-		Integer studentGroupId;
-		if(studentGroup == null)
-			studentGroupId = 0;
-		else
-			studentGroupId = studentGroup.getId();
-		Calendar entranceCalendar = student.getEntranceDate();
-		Calendar completionCalendar = student.getCompletionDate();
+		log.warn("Update Student with id=" + studentId);
+		log.debug("Updating Student: Address=" + student.getAddress() + "; Address.id=" + student.getAddress().getId());
+		Map<String, Object> sqlParameters = parseStudent(student);
 		
 		dropStudentMarks(studentId);
 		createStudentMark(student);
+		
 		personDao.updatePerson(student);
 		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
-			
-			statement.setBoolean(1, governmentFinanced);
-			statement.setString(2, schoolGraduateSertificate);
-			statement.setInt(3, studentGroupId);
-			statement.setDate(4, new java.sql.Date(entranceCalendar.getTimeInMillis()));
-			statement.setDate(5, new java.sql.Date(completionCalendar.getTimeInMillis()));
-			statement.setLong(6, student.getStudentId());
-			
+			statement.setBoolean(1, (Boolean) sqlParameters.get("governmentFinanced"));
+			statement.setString(2, (String) sqlParameters.get("schoolGraduateSertificate"));
+			statement.setInt(3, (Integer) sqlParameters.get("studentGroupId"));
+			statement.setDate(4, (java.sql.Date) sqlParameters.get("entranceDate"));
+			statement.setDate(5, (java.sql.Date) sqlParameters.get("completioDate"));
+			statement.setLong(6, studentId);
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot update Student", e);
 			throw new DaoException("Cannot update Student", e);
 		}
 		finally {
@@ -498,7 +538,8 @@ public class StudentDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Student data", e);
+			log.error("Cannot delete Student", e);
+			throw new DaoException("Cannot delete Student", e);
 		}
 		finally {
 			try {
@@ -534,6 +575,7 @@ public class StudentDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Student Marks", e);
 			throw new DaoException("Cannot delete Student Marks", e);
 		}
 		finally {
@@ -571,9 +613,11 @@ public class StudentDao {
 			resultSet = statement.executeQuery(sql);
 			resultSet.next();
 			result = resultSet.getLong(1);
+			log.debug("Max Student id = " + result);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Max Student data", e);
+			log.error("Cannot get Max Student Id", e);
+			throw new DaoException("Cannot get Max Student Id", e);
 		}
 		finally {
 			try {
@@ -603,7 +647,6 @@ public class StudentDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return result;
 	}
 }

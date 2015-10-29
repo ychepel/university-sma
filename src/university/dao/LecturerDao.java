@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.domain.Lecturer;
 import university.domain.Person;
 import university.domain.Department;
@@ -15,6 +17,8 @@ import university.domain.Department;
 public class LecturerDao {
 	private DaoFactory daoFactory = new DaoFactory();
 	private PersonDao personDao = new PersonDao();
+	
+	private static Logger log = Logger.getLogger(LecturerDao.class);
 	
 	public Set<Lecturer> getLecturers(Department department) throws DaoException {
 		String sql = "SELECT * FROM LECTURER WHERE DEPARTMENT_ID=?";
@@ -33,16 +37,20 @@ public class LecturerDao {
 
 			while(resultSet.next()) {
 				Long personId = resultSet.getLong("PERSON_ID");
+				Integer lecturerId = resultSet.getInt("LECTURER_ID");
+				String currentPosition = resultSet.getString("CURRENT_POSITION");
+				String scienceDegree = resultSet.getString("SCIENCE_DEGREE");
+				log.warn("Get Lecturer with lecturer.id=" + lecturerId + " and person.id=" + personId);
 				Lecturer lecturer = (Lecturer) personDao.getPersonById(personId, new Lecturer());
-				lecturer.setLecturerId(resultSet.getInt("LECTURER_ID"));
-				lecturer.setCurrentPosition(resultSet.getString("CURRENT_POSITION"));
-				lecturer.setScienceDegree(resultSet.getString("SCIENCE_DEGREE"));
-
+				lecturer.setLecturerId(lecturerId);
+				lecturer.setCurrentPosition(currentPosition);
+				lecturer.setScienceDegree(scienceDegree);
 				set.add(lecturer);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Lecturer data", e);
+			log.error("Cannot get Lecturers", e);
+			throw new DaoException("Cannot get Lecturers", e);
 		}
 		finally {
 			try {
@@ -72,7 +80,6 @@ public class LecturerDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
@@ -83,22 +90,25 @@ public class LecturerDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
-		
+		log.warn("Select Lecturer with id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
-			
 			resultSet.next();
 			Long personId = resultSet.getLong("PERSON_ID");
+			String currentPosition = resultSet.getString("CURRENT_POSITION");
+			String scienceDegree = resultSet.getString("SCIENCE_DEGREE");
+			log.warn("Lecturer person.id=" + personId);
 			lecturer = (Lecturer) personDao.getPersonById(personId, new Lecturer());
 			lecturer.setLecturerId(id);
-			lecturer.setCurrentPosition(resultSet.getString("CURRENT_POSITION"));
-			lecturer.setScienceDegree(resultSet.getString("SCIENCE_DEGREE"));
+			lecturer.setCurrentPosition(currentPosition);
+			lecturer.setScienceDegree(scienceDegree);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Lecturer data", e);
+			log.error("Cannot get Lecturer", e);
+			throw new DaoException("Cannot get Lecturer", e);
 		}
 		finally {
 			try {
@@ -128,7 +138,6 @@ public class LecturerDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return lecturer;
 	}
 	
@@ -143,6 +152,7 @@ public class LecturerDao {
 		String sql = "INSERT INTO LECTURER (SCIENCE_DEGREE, CURRENT_POSITION, PERSON_ID, DEPARTMENT_ID) "
 				+ "VALUES (" + "'" + scienceDegree + "', '" + currentPosition + "', " 
 				+ personId + ", " + departmentId + ")";
+		log.debug(sql);
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -151,15 +161,16 @@ public class LecturerDao {
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
-			
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
+			log.warn("New Lecturer Id=" + id);
 			lecturer.setLecturerId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Lecturer data", e);
+			log.error("Cannot create Lecturer", e);
+			throw new DaoException("Cannot create Lecturer", e);
 		}
 		finally {
 			try {
@@ -189,7 +200,6 @@ public class LecturerDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return lecturer;
 	}
 	
@@ -208,6 +218,7 @@ public class LecturerDao {
 		String currentPosition = lecturer.getCurrentPosition();
 		Integer departmentId = department.getId();
 		Integer lecturerId = lecturer.getLecturerId();
+		log.debug("Updating Lecturer with id=" + lecturerId + "; departmentId=" + departmentId);
 		
 		personDao.updatePerson(lecturer);
 		
@@ -223,7 +234,8 @@ public class LecturerDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot update Lecturer data", e);
+			log.error("Cannot update Lecturer", e);
+			throw new DaoException("Cannot update Lecturer", e);
 		}
 		finally {
 			try {
@@ -272,7 +284,8 @@ public class LecturerDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Lecturer data", e);
+			log.error("Cannot delete Lecturer", e);
+			throw new DaoException("Cannot delete Lecturer", e);
 		}
 		finally {
 			try {

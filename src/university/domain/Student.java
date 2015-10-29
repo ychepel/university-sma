@@ -5,6 +5,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import university.dao.DaoException;
 import university.dao.StudentDao;
 
@@ -16,28 +18,33 @@ public class Student extends Person {
 	private static Long studentCount = 0L; 
 	
 	private Boolean governmentFinanced = false;
-	private Calendar entranceDate = new GregorianCalendar(1900, Calendar.JANUARY, 1);
+	private Calendar entranceDate = new GregorianCalendar(1990, Calendar.JANUARY, 1);
 	private Long studentId;
 	private String schoolGraduateSertificate = "";
 	private StudentGroup studentGroup = null;
-	private Calendar completionDate = new GregorianCalendar(1900, Calendar.JANUARY, 1);
+	private Calendar completionDate = new GregorianCalendar(1990, Calendar.JANUARY, 1);
 	private Map<Course, Integer> marks = new HashMap<>();
 	
 	private StudentDao studentDao = new StudentDao();
+	
+	private static Logger log = Logger.getLogger(Student.class);
 	
 	public Student() throws DaoException {
 		super();
 		studentCount++;
 		setStudentId(studentCount);
+		log.info("Create new Student with id=" + this.getStudentId());
 		studentDao.createStudent(this);
 	}
 	
 	public Student(Long studentId) throws DaoException {
 		super();
 		setStudentId(studentId);
+		log.info("Create new Student with id=" + studentId);
 	}
 	
 	public Integer getAverageMark() {
+		log.info("Calculation average mark for Student '" + this.getFullName() + "' (id=" + this.getStudentId() + ")");
 		Map<Course, Integer> marks = getMarks();
 		if (marks.size() == 0) return NO_MARK_VALUE;
 	
@@ -55,6 +62,7 @@ public class Student extends Person {
 	}
 	
 	public Integer getGrade() {
+		log.info("Calculation grade for Student '" + this.getFullName() + "' (id=" + this.getStudentId() + ")");
 		Integer completionYear = getCompletionDate().get(Calendar.YEAR);
 		Integer currentYear = getCalendar().get(Calendar.YEAR);
 		Integer currentMonth = getCalendar().get(Calendar.MONTH);
@@ -151,6 +159,7 @@ public class Student extends Person {
 	}
 	
 	public void updateStudentInDB() throws DomainException {
+		log.info("Update DB information for Student '" + this.getFullName() + "' (id=" + this.getStudentId() + ")");
 		try {
 			studentDao.updateStudent(this);
 		}

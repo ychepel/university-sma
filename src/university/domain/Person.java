@@ -8,7 +8,7 @@ public abstract class Person {
 	private String firstName = "";
 	private String lastName = "";
 	private String patronymicName = "";
-	private Date birthDate = (new GregorianCalendar(1900, Calendar.JANUARY, 1)).getTime();
+	private Date birthDate = (new GregorianCalendar(1990, Calendar.JANUARY, 1)).getTime();
 	private char gender = ' ';
 	private String passport = "";
 	private String nationality = "";

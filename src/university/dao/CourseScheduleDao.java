@@ -11,6 +11,8 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.domain.Course;
 import university.domain.CourseSchedule;
 import university.domain.Lecturer;
@@ -21,6 +23,8 @@ public class CourseScheduleDao {
 	private LecturerDao lecturerDao = new LecturerDao();
 	private StudentGroupDao studentGroupDao = new StudentGroupDao();
 	
+	private static Logger log = Logger.getLogger(CourseScheduleDao.class); 
+	
 	public Set<CourseSchedule> getCourseSchedules(Course course) throws DaoException {
 		String sql = "SELECT * FROM COURSE_SCHEDULE WHERE COURSE_ID = ?";
 		
@@ -30,6 +34,8 @@ public class CourseScheduleDao {
 		ResultSet resultSet = null;
 		
 		Integer courseId = course.getId();
+		
+		log.debug("Get Course Schedules for Course.id=" + courseId + "; name=" + course.getName());
 
 		try {
 			connection = daoFactory.getConnection();
@@ -39,23 +45,26 @@ public class CourseScheduleDao {
 
 			while(resultSet.next()) {
 				Integer lecturerId = resultSet.getInt("LECTURER_ID");
+				log.warn("Course Schedule Lecturer.id=" + lecturerId);
 				Lecturer lecturer = lecturerDao.getLecturerById(lecturerId);
+				log.debug("Course Schedule Lecturer.name=" + lecturer.getFullName());
 				
-				CourseSchedule element = new CourseSchedule(course, lecturer);
+				CourseSchedule courseSchedule = new CourseSchedule(course, lecturer);
 				Integer courseScheduleId = resultSet.getInt("COURSE_SCHEDULE_ID");
-				element.setId(courseScheduleId);
+				log.debug("Course Schedule id=" + courseScheduleId);
+				courseSchedule.setId(courseScheduleId);
 				
 				Set<StudentGroup> studentGroups = getStudentGroups(courseScheduleId);
-				element.setStudentGroups(studentGroups);
+				courseSchedule.setStudentGroups(studentGroups);
 				Set<Calendar> timetables = getTimetables(courseScheduleId);
-				element.setTimetables(timetables);
+				courseSchedule.setTimetables(timetables);
 				
-				set.add(element);
-				
+				set.add(courseSchedule);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Course Schedule data", e);
+			log.error("Cannot get Course Schedule by Course", e);
+			throw new DaoException("Cannot get Course Schedule by Course", e);
 		}
 		finally {
 			try {
@@ -85,13 +94,12 @@ public class CourseScheduleDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
 	private Set<StudentGroup> getStudentGroups(Integer courseScheduleId) throws DaoException {
 		String sql = "SELECT * FROM COURSE_SCHEDULE_GROUP WHERE COURSE_SCHEDULE_ID = ?";
-		
+		log.debug("Selecting Student Groups for CourseSchedule.id=" + courseScheduleId);
 		Set<StudentGroup> set = new HashSet<>(); 
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -105,11 +113,14 @@ public class CourseScheduleDao {
 
 			while(resultSet.next()) {
 				Integer studentGroupId = resultSet.getInt("STUDENT_GROUP_ID");
+				log.warn("Selected StudentGroup.id=" + studentGroupId);
 				StudentGroup studentGroup = studentGroupDao.getStudentGroupById(studentGroupId);
+				log.debug("Selected StudentGroup.name=" + studentGroup.getName());
 				set.add(studentGroup);
 			}
 		}
 		catch (SQLException e) {
+			log.error("Cannot get Course Schedule Student Groups", e);
 			throw new DaoException("Cannot get Course Schedule Student Groups", e);
 		}
 		finally {
@@ -146,7 +157,7 @@ public class CourseScheduleDao {
 	
 	private Set<Calendar> getTimetables(Integer courseScheduleId) throws DaoException {
 		String sql = "SELECT * FROM COURSE_SCHEDULE_TIMETABLE WHERE COURSE_SCHEDULE_ID = ?";
-		
+		log.debug("Selecting Timetable for CourseSchedule.id=" + courseScheduleId);
 		Set<Calendar> set = new HashSet<>(); 
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -160,12 +171,14 @@ public class CourseScheduleDao {
 
 			while(resultSet.next()) {
 				Timestamp timeStamp = resultSet.getTimestamp("DATETIME");
+				log.warn("Selected Timetable.timeStamp=" + timeStamp);
 				Calendar calendar = new GregorianCalendar();
 				calendar.setTimeInMillis(timeStamp.getTime());
 				set.add(calendar);
 			}
 		}
 		catch (SQLException e) {
+			log.error("Cannot get Course Schedule Timetables", e);
 			throw new DaoException("Cannot get Course Schedule Timetables", e);
 		}
 		finally {
@@ -205,7 +218,7 @@ public class CourseScheduleDao {
 		Lecturer lecturer = courseSchedule.getLecturer();
 		Integer lecturerId = lecturer.getLecturerId();
 		String sql = "INSERT INTO COURSE_SCHEDULE (COURSE_ID, LECTURER_ID) VALUES (" + courseId + ", " + lecturerId + ")";
-		
+		log.debug(sql);
 		CourseSchedule result = null; 
 		Connection connection = null;
 		Statement statement = null;
@@ -222,12 +235,13 @@ public class CourseScheduleDao {
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
-			
+			log.debug("New CourseSchedule.id=" + id);
 			result = new CourseSchedule(course, lecturer);
 			result.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Course Schedule data", e);
+			log.error("Cannot create Course Schedule for Course", e);
+			throw new DaoException("Cannot create Course Schedule for Course", e);
 		}
 		finally {
 			try {
@@ -269,7 +283,7 @@ public class CourseScheduleDao {
 		ResultSet resultSet = null;
 		Integer courseScheduleId = courseSchedule.getId();
 		Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
-		
+		log.warn("Inserting StudentGroups for CourseSchedule.Id=" + courseScheduleId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -277,12 +291,14 @@ public class CourseScheduleDao {
 			
 			for(StudentGroup studentGroup : studentGroups) {
 				Integer studentGroupId = studentGroup.getId();
+				log.debug("Inserting StudentGroup.Id=" + studentGroupId);
 				statement.setInt(2, studentGroupId);
 				statement.executeQuery();
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Course Schedule Student Group", e);
+			log.error("Cannot create Course Schedule Student Groups", e);
+			throw new DaoException("Cannot create Course Schedule Student Groups", e);
 		}
 		finally {
 			try {
@@ -322,7 +338,7 @@ public class CourseScheduleDao {
 		ResultSet resultSet = null;
 		Integer courseScheduleId = courseSchedule.getId();
 		Set<Calendar> timetables = courseSchedule.getTimetables();
-		
+		log.warn("Inserting Timetables for CourseSchedule.Id=" + courseScheduleId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -330,12 +346,14 @@ public class CourseScheduleDao {
 			
 			for(Calendar calendar : timetables) {
 				Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
+				log.debug("Inserting StudentGroup timestamp=" + timestamp);
 				statement.setTimestamp(2, timestamp);
 				statement.executeQuery();
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Course Schedule Timetable", e);
+			log.error("Cannot create Course Schedule Timetables", e);
+			throw new DaoException("Cannot create Course Schedule Timetables", e);
 		}
 		finally {
 			try {
@@ -377,7 +395,7 @@ public class CourseScheduleDao {
 		Integer courseScheduleId = courseSchedule.getId(); 
 		Lecturer lecturer = courseSchedule.getLecturer();
 		Integer lecturerId = lecturer.getLecturerId();
-		
+		log.warn("Updating of Course Schedule (id=" + courseScheduleId + "): Lecturer.id=" + lecturerId);
 		dropCourseScheduleStudentGroups(courseScheduleId);
 		dropCourseScheduleTimetables(courseScheduleId);
 		createCourseScheduleGroup(courseSchedule);
@@ -393,6 +411,7 @@ public class CourseScheduleDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot update Course Schedule data", e);
 			throw new DaoException("Cannot update Course Schedule data", e);
 		}
 		finally {
@@ -441,6 +460,7 @@ public class CourseScheduleDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Course Schedule data", e);
 			throw new DaoException("Cannot delete Course Schedule data", e);
 		}
 		finally {
@@ -477,6 +497,7 @@ public class CourseScheduleDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Course Schedule Student Groups", e);
 			throw new DaoException("Cannot delete Course Schedule Student Groups", e);
 		}
 		finally {
@@ -513,6 +534,7 @@ public class CourseScheduleDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
+			log.error("Cannot delete Course Schedule Timetables", e);
 			throw new DaoException("Cannot delete Course Schedule Timetables", e);
 		}
 		finally {

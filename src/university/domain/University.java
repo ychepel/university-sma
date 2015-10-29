@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.dao.AddressDao;
 import university.dao.DaoException;
 import university.dao.FacultyDao;
@@ -17,7 +19,11 @@ public class University {
 	private FacultyDao facultyDao;
 	private AddressDao addressDao;
 	
+	private static Logger log = Logger.getLogger(University.class);
+	
 	public Integer getLabourHour(Lecturer lecturer, Calendar period) throws DomainException {
+		log.info("Calculation Labor hour count "
+				+ "for Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + ") ");
 		Integer result = 0;
 		Set<CourseSchedule> lecturerSchedule = new HashSet<>();
 		for(Faculty faculty : getFaculties()) {
@@ -49,7 +55,9 @@ public class University {
 		return schedule;
 	}
 	
-	public void removeStudentToFaculty(Student student, Faculty newFaculty) throws DomainException {
+	public void moveStudentToFaculty(Student student, Faculty newFaculty) throws DomainException {
+		log.info("Remove Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") "
+				+ "to Faculty '" + newFaculty.getName() + "' (id=" + newFaculty.getId() + ")");
 		StudentGroup oldStudentGroup = student.getStudentGroup();
 		Faculty oldStudentFaculty = null;
 		for(Faculty faculty : getFaculties()) {
@@ -67,6 +75,7 @@ public class University {
 	}
 	
 	public University(String name) {
+		log.info("Create new University '" + name + "'");
 		this.name = name;
 		
 		this.facultyDao = new FacultyDao();
@@ -74,6 +83,7 @@ public class University {
 	}
 	
 	public Faculty createFaculty(String name) throws DomainException {
+		log.info("Create new Faculty '" + name + "'");
 		Faculty faculty = new Faculty(name);
 		try {
 			faculty = facultyDao.createFaculty(faculty);
@@ -86,6 +96,7 @@ public class University {
 	
 	public void removeFaculty(Faculty faculty) throws DomainException {
 		Integer id = faculty.getId();
+		log.info("Remove Faculty '" + name + "' (id=" + id + ")");
 		try {
 			facultyDao.dropFacultyById(id);
 		}

@@ -224,3 +224,229 @@
 14:51:09,264  INFO main Faculty:<init>:126 - Create new Faculty 'Testing Faculty'
 14:53:58,355  INFO main Faculty:<init>:126 - Create new Faculty 'Testing Faculty'
 14:53:58,502  INFO main Faculty:<init>:126 - Create new Faculty 'Testing Faculty'
+12:46:53,467  INFO main Faculty:<init>:126 - Create new Faculty 'Testing Faculty'
+12:46:53,475 DEBUG main FacultyDao:createFaculty:134 - INSERT INTO FACULTY (FACULTY_NAME) VALUES ('Testing Faculty')
+12:46:54,326  WARN main FacultyDao:createFaculty:147 - New Faculty Id=20
+12:46:54,327  INFO main Faculty:<init>:126 - Create new Faculty 'Testing Faculty'
+12:46:54,335 DEBUG main DepartmentDao:createDepartment:142 - INSERT INTO DEPARTMENT (DEPARTMENT_NAME, FACULTY_ID) VALUES ('Testing Department', 20)
+12:46:54,442  WARN main DepartmentDao:createDepartment:154 - New Department Id=8
+12:46:54,447 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=8)
+12:46:54,671 DEBUG main CourseDao:createCourse:147 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 1', 0, 8)
+12:46:54,854 DEBUG main CourseDao:createCourse:161 - New Course Id=10
+12:46:54,854 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=8)
+12:46:54,908 DEBUG main CourseDao:updateCourse:214 - Course update info: courseId=10; name=Testing Course 1                                                                                    ; grade=0
+12:46:55,138 DEBUG main CourseDao:getCourses:43 - Selected Course: name=Testing Course 1                                                                                    ; id=10; grade=0
+12:46:55,138 DEBUG main CourseDao:createCourse:147 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 2', 0, 8)
+12:46:55,207 DEBUG main CourseDao:createCourse:161 - New Course Id=11
+12:46:55,207 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=8)
+12:46:55,251 DEBUG main CourseDao:updateCourse:214 - Course update info: courseId=10; name=Testing Course 1                                                                                    ; grade=0
+12:46:55,298 DEBUG main CourseDao:getCourses:43 - Selected Course: name=Testing Course 1                                                                                    ; id=10; grade=0
+12:46:55,298 DEBUG main CourseDao:updateCourse:214 - Course update info: courseId=11; name=Testing Course 2                                                                                    ; grade=0
+12:46:55,345 DEBUG main CourseDao:getCourses:43 - Selected Course: name=Testing Course 2                                                                                    ; id=11; grade=0
+12:46:55,345 DEBUG main CourseDao:createCourse:147 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 3', 0, 8)
+12:46:55,391 DEBUG main CourseDao:createCourse:161 - New Course Id=12
+12:46:55,391 DEBUG main CourseDao:updateCourse:214 - Course update info: courseId=10; name=Testing Course 1; grade=1
+12:46:55,438 DEBUG main CourseDao:updateCourse:214 - Course update info: courseId=11; name=Testing Course 2; grade=2
+12:46:55,483 DEBUG main CourseDao:updateCourse:214 - Course update info: courseId=12; name=Testing Course 3; grade=3
+12:46:55,661 DEBUG main StudentDao:getMaxStudentId:612 - Max Student id = 2
+12:46:55,662 DEBUG main AddressDao:createAddress:30 - INSERT INTO ADDRESS (CITY, EMAIL, FLAT, HOUSE, PHONE, PROVINCE, STREET) VALUES ('', '', 0, '', '', '', '')
+12:46:55,763  WARN main AddressDao:createAddress:44 - New Adress Id=21
+12:46:55,766 DEBUG main PersonDao:createPerson:37 - INSERT INTO PERSON (FIRST_NAME, LAST_NAME, PATRONYMIC_NAME, BIRTH_DATE, GENDER, PASSPORT, NATIONALITY, ADDRESS_ID) VALUES ('', '', '', 'Mon Jan 01 00:00:00 EET 1900', ' ', '', '', 21)
+12:46:55,899  WARN main PersonDao:createPerson:49 - New Person Id=21
+12:46:55,900  WARN main StudentDao:createStudent:339 - Create Student with id=4 and person.id=21
+12:46:55,901 DEBUG main StudentDao:parseStudent:92 - Parse Student: studentGroupId=0; entranceCalendar=java.util.GregorianCalendar[time=-2208996000000,areFieldsSet=true,areAllFieldsSet=false,lenient=true,zone=sun.util.calendar.ZoneInfo[id="Europe/Helsinki",offset=7200000,dstSavings=3600000,useDaylight=true,transitions=118,lastRule=java.util.SimpleTimeZone[id=Europe/Helsinki,offset=7200000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=2,startMonth=2,startDay=-1,startDayOfWeek=1,startTime=3600000,startTimeMode=2,endMode=2,endMonth=9,endDay=-1,endDayOfWeek=1,endTime=3600000,endTimeMode=2]],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=?,YEAR=1900,MONTH=0,WEEK_OF_YEAR=?,WEEK_OF_MONTH=?,DAY_OF_MONTH=1,DAY_OF_YEAR=?,DAY_OF_WEEK=?,DAY_OF_WEEK_IN_MONTH=?,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=?,ZONE_OFFSET=?,DST_OFFSET=?]; completioDate=1900-01-01
+12:46:55,901  WARN main StudentDao:createStudentMark:400 - Create Student Mark for Student.id=4
+12:46:56,001  WARN main StudentDao:updateStudent:465 - Update Student with id=4
+12:46:56,002 DEBUG main StudentDao:parseStudent:92 - Parse Student: studentGroupId=0; entranceCalendar=java.util.GregorianCalendar[time=1377982800000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="Europe/Helsinki",offset=7200000,dstSavings=3600000,useDaylight=true,transitions=118,lastRule=java.util.SimpleTimeZone[id=Europe/Helsinki,offset=7200000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=2,startMonth=2,startDay=-1,startDayOfWeek=1,startTime=3600000,startTimeMode=2,endMode=2,endMonth=9,endDay=-1,endDayOfWeek=1,endTime=3600000,endTimeMode=2]],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=1,YEAR=2013,MONTH=8,WEEK_OF_YEAR=35,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=244,DAY_OF_WEEK=1,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=7200000,DST_OFFSET=3600000]; completioDate=2018-05-31
+12:46:56,089  WARN main StudentDao:createStudentMark:400 - Create Student Mark for Student.id=4
+12:46:56,140 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=21; birthDate=Fri Jun 04 00:00:00 EEST 1993
+12:46:56,140  WARN main PersonDao:updatePerson:113 - Updating Person address=university.domain.Address@2147545b
+12:46:56,140 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=21 and full address, , , , 0
+12:46:56,140 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=21; city=; street=
+12:46:56,277  WARN main StudentDao:updateStudent:465 - Update Student with id=4
+12:46:56,277 DEBUG main StudentDao:parseStudent:92 - Parse Student: studentGroupId=0; entranceCalendar=java.util.GregorianCalendar[time=1377982800000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="Europe/Helsinki",offset=7200000,dstSavings=3600000,useDaylight=true,transitions=118,lastRule=java.util.SimpleTimeZone[id=Europe/Helsinki,offset=7200000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=2,startMonth=2,startDay=-1,startDayOfWeek=1,startTime=3600000,startTimeMode=2,endMode=2,endMonth=9,endDay=-1,endDayOfWeek=1,endTime=3600000,endTimeMode=2]],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=1,YEAR=2013,MONTH=8,WEEK_OF_YEAR=35,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=244,DAY_OF_WEEK=1,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=7200000,DST_OFFSET=3600000]; completioDate=2018-05-31
+12:46:56,318  WARN main StudentDao:createStudentMark:400 - Create Student Mark for Student.id=4
+12:46:56,359 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=21; birthDate=Fri Jun 04 00:00:00 EEST 1993
+12:46:56,359  WARN main PersonDao:updatePerson:113 - Updating Person address=university.domain.Address@2147545b
+12:46:56,359 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=21 and full address, , , , 0
+12:46:56,359 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=21; city=; street=
+12:46:56,496  WARN main StudentDao:updateStudent:465 - Update Student with id=4
+12:46:56,496 DEBUG main StudentDao:parseStudent:92 - Parse Student: studentGroupId=0; entranceCalendar=java.util.GregorianCalendar[time=1377982800000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="Europe/Helsinki",offset=7200000,dstSavings=3600000,useDaylight=true,transitions=118,lastRule=java.util.SimpleTimeZone[id=Europe/Helsinki,offset=7200000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=2,startMonth=2,startDay=-1,startDayOfWeek=1,startTime=3600000,startTimeMode=2,endMode=2,endMonth=9,endDay=-1,endDayOfWeek=1,endTime=3600000,endTimeMode=2]],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=1,YEAR=2013,MONTH=8,WEEK_OF_YEAR=35,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=244,DAY_OF_WEEK=1,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=7200000,DST_OFFSET=3600000]; completioDate=2018-05-31
+12:46:56,537  WARN main StudentDao:createStudentMark:400 - Create Student Mark for Student.id=4
+12:46:56,578 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=21; birthDate=Fri Jun 04 00:00:00 EEST 1993
+12:46:56,578  WARN main PersonDao:updatePerson:113 - Updating Person address=university.domain.Address@2147545b
+12:46:56,579 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=21 and full address, , , , 0
+12:46:56,579 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=21; city=; street=
+12:46:56,714 DEBUG main StudentGroupDao:getStudentGroups:30 - Get Student Groups for faculty.id=20; name=Testing Faculty
+12:46:56,842 DEBUG main StudentGroupDao:getStudentGroups:30 - Get Student Groups for faculty.id=20; name=Testing Faculty
+12:46:56,906 DEBUG main StudentGroupDao:createStudentGroup:145 - INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME, FACULTY_ID) VALUES ('G3-1', 20)
+12:46:56,952  WARN main StudentGroupDao:createStudentGroup:158 - New StudentGroup Id=19
+12:46:56,952  WARN main StudentDao:updateStudent:465 - Update Student with id=4
+12:46:56,952 DEBUG main StudentDao:parseStudent:92 - Parse Student: studentGroupId=19; entranceCalendar=java.util.GregorianCalendar[time=1377982800000,areFieldsSet=true,areAllFieldsSet=true,lenient=true,zone=sun.util.calendar.ZoneInfo[id="Europe/Helsinki",offset=7200000,dstSavings=3600000,useDaylight=true,transitions=118,lastRule=java.util.SimpleTimeZone[id=Europe/Helsinki,offset=7200000,dstSavings=3600000,useDaylight=true,startYear=0,startMode=2,startMonth=2,startDay=-1,startDayOfWeek=1,startTime=3600000,startTimeMode=2,endMode=2,endMonth=9,endDay=-1,endDayOfWeek=1,endTime=3600000,endTimeMode=2]],firstDayOfWeek=2,minimalDaysInFirstWeek=1,ERA=1,YEAR=2013,MONTH=8,WEEK_OF_YEAR=35,WEEK_OF_MONTH=1,DAY_OF_MONTH=1,DAY_OF_YEAR=244,DAY_OF_WEEK=1,DAY_OF_WEEK_IN_MONTH=1,AM_PM=0,HOUR=0,HOUR_OF_DAY=0,MINUTE=0,SECOND=0,MILLISECOND=0,ZONE_OFFSET=7200000,DST_OFFSET=3600000]; completioDate=2018-05-31
+12:46:56,993  WARN main StudentDao:createStudentMark:400 - Create Student Mark for Student.id=4
+12:46:57,033 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=21; birthDate=Fri Jun 04 00:00:00 EEST 1993
+12:46:57,034  WARN main PersonDao:updatePerson:113 - Updating Person address=university.domain.Address@69acd952
+12:46:57,034 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=null and full addressOdesska, Odessa, Nekrasova, 4, 3
+12:46:57,034 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=null; city=Odessa; street=Nekrasova
+15:37:04,631 DEBUG main FacultyDao:createFaculty:134 - INSERT INTO FACULTY (FACULTY_NAME) VALUES ('Testing Faculty')
+15:37:05,125  WARN main FacultyDao:createFaculty:147 - New Faculty Id=21
+15:37:05,133 DEBUG main DepartmentDao:createDepartment:142 - INSERT INTO DEPARTMENT (DEPARTMENT_NAME, FACULTY_ID) VALUES ('Testing Department', 21)
+15:37:05,191  WARN main DepartmentDao:createDepartment:154 - New Department Id=9
+15:37:05,196 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=9)
+15:37:05,358 DEBUG main CourseDao:createCourse:149 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 1', 0, 9)
+15:37:05,441 DEBUG main CourseDao:createCourse:163 - New Course Id=13
+15:37:05,441 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=9)
+15:37:05,483 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=13; name=Testing Course 1; grade=0
+15:37:05,542 DEBUG main CourseDao:getCourses:44 - Selected Course: name=Testing Course 1; id=13; grade=0
+15:37:05,543 DEBUG main CourseDao:createCourse:149 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 2', 0, 9)
+15:37:05,593 DEBUG main CourseDao:createCourse:163 - New Course Id=14
+15:37:05,594 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=9)
+15:37:05,636 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=13; name=Testing Course 1; grade=0
+15:37:05,683 DEBUG main CourseDao:getCourses:44 - Selected Course: name=Testing Course 1; id=13; grade=0
+15:37:05,683 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=14; name=Testing Course 2; grade=0
+15:37:05,730 DEBUG main CourseDao:getCourses:44 - Selected Course: name=Testing Course 2; id=14; grade=0
+15:37:05,730 DEBUG main CourseDao:createCourse:149 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 3', 0, 9)
+15:37:05,793 DEBUG main CourseDao:createCourse:163 - New Course Id=15
+15:37:05,793 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=13; name=Testing Course 1; grade=1
+15:37:05,841 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=14; name=Testing Course 2; grade=2
+15:37:05,887 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=15; name=Testing Course 3; grade=3
+15:37:06,057 DEBUG main StudentDao:getMaxStudentId:616 - Max Student id = 4
+15:37:06,058 DEBUG main AddressDao:createAddress:30 - INSERT INTO ADDRESS (CITY, EMAIL, FLAT, HOUSE, PHONE, PROVINCE, STREET) VALUES ('', '', 0, '', '', '', '')
+15:37:06,129  WARN main AddressDao:createAddress:44 - New Adress Id=22
+15:37:06,133 DEBUG main PersonDao:createPerson:37 - INSERT INTO PERSON (FIRST_NAME, LAST_NAME, PATRONYMIC_NAME, BIRTH_DATE, GENDER, PASSPORT, NATIONALITY, ADDRESS_ID) VALUES ('', '', '', 'Mon Jan 01 00:00:00 EET 1900', ' ', '', '', 22)
+15:37:06,239  WARN main PersonDao:createPerson:49 - New Person Id=22
+15:37:06,240  WARN main StudentDao:createStudent:342 - Create Student with id=6 and person.id=22
+15:37:06,241 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=1900-01-01; completioDate=1900-01-01
+15:37:06,241  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=6
+15:37:06,334  WARN main StudentDao:updateStudent:468 - Update Student with id=6
+15:37:06,334 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@46abb50a; Address.id=22
+15:37:06,335 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=2013-09-01; completioDate=2018-05-31
+15:37:06,406  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=6
+15:37:06,474 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=22; birthDate=Fri Jun 04 00:00:00 EEST 1993
+15:37:06,475  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@46abb50a; Address.id=22
+15:37:06,475 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=22 and full address=, , , , 0
+15:37:06,475 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=22; city=; street=
+15:37:06,650  WARN main StudentDao:updateStudent:468 - Update Student with id=6
+15:37:06,651 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@46abb50a; Address.id=22
+15:37:06,651 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=2013-09-01; completioDate=2018-05-31
+15:37:06,694  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=6
+15:37:06,735 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=22; birthDate=Fri Jun 04 00:00:00 EEST 1993
+15:37:06,735  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@46abb50a; Address.id=22
+15:37:06,735 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=22 and full address=, , , , 0
+15:37:06,736 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=22; city=; street=
+15:37:06,874  WARN main StudentDao:updateStudent:468 - Update Student with id=6
+15:37:06,875 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@46abb50a; Address.id=22
+15:37:06,875 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=2013-09-01; completioDate=2018-05-31
+15:37:06,917  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=6
+15:37:06,960 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=22; birthDate=Fri Jun 04 00:00:00 EEST 1993
+15:37:06,960  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@46abb50a; Address.id=22
+15:37:06,960 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=22 and full address=, , , , 0
+15:37:06,960 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=22; city=; street=
+15:37:07,100 DEBUG main StudentGroupDao:getStudentGroups:30 - Get Student Groups for faculty.id=21; name=Testing Faculty
+15:37:07,180 DEBUG main StudentGroupDao:getStudentGroups:30 - Get Student Groups for faculty.id=21; name=Testing Faculty
+15:37:07,242 DEBUG main StudentGroupDao:createStudentGroup:145 - INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME, FACULTY_ID) VALUES ('G3-1', 21)
+15:37:07,305  WARN main StudentGroupDao:createStudentGroup:158 - New StudentGroup Id=20
+15:37:07,305  WARN main StudentDao:updateStudent:468 - Update Student with id=6
+15:37:07,305 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@521ed8c3; Address.id=null
+15:37:07,306 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=20; entranceCalendar=2013-09-01; completioDate=2018-05-31
+15:37:07,351  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=6
+15:37:07,392 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=22; birthDate=Fri Jun 04 00:00:00 EEST 1993
+15:37:07,392  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@521ed8c3; Address.id=null
+15:37:07,392 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=null and full address=Odesska, Odessa, Nekrasova, 4, 3
+15:37:07,392 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=null; city=Odessa; street=Nekrasova
+16:57:52,281  INFO main University:<init>:78 - Create new University 'CAMBREDGE'
+16:57:52,297  INFO main University:createFaculty:86 - Create new Faculty 'Testing Faculty'
+16:57:52,299  INFO main Faculty:<init>:127 - Create new Faculty 'Testing Faculty'
+16:57:52,301 DEBUG main FacultyDao:createFaculty:134 - INSERT INTO FACULTY (FACULTY_NAME) VALUES ('Testing Faculty')
+16:57:52,425  WARN main FacultyDao:createFaculty:147 - New Faculty Id=22
+16:57:52,426  INFO main Faculty:<init>:127 - Create new Faculty 'Testing Faculty'
+16:57:52,427  INFO main Faculty:createDepartment:178 - Create Department 'Testing Department'
+16:57:52,428  INFO main Department:<init>:127 - Create new Department 'Testing Department'
+16:57:52,432 DEBUG main DepartmentDao:createDepartment:142 - INSERT INTO DEPARTMENT (DEPARTMENT_NAME, FACULTY_ID) VALUES ('Testing Department', 22)
+16:57:52,477  WARN main DepartmentDao:createDepartment:154 - New Department Id=10
+16:57:52,479  INFO main Course:<init>:107 - Create new Course 'Testing Course 1'
+16:57:52,481  INFO main Course:<init>:107 - Create new Course 'Testing Course 2'
+16:57:52,481  INFO main Course:<init>:107 - Create new Course 'Testing Course 3'
+16:57:52,481  INFO main Department:addCourse:61 - Add Course 'Testing Course 1' (id=null) to Department 'Testing Department' (id=10)
+16:57:52,481 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=10)
+16:57:52,523 DEBUG main CourseDao:createCourse:149 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 1', 0, 10)
+16:57:52,578 DEBUG main CourseDao:createCourse:163 - New Course Id=16
+16:57:52,578  INFO main Department:addCourse:61 - Add Course 'Testing Course 2' (id=null) to Department 'Testing Department' (id=10)
+16:57:52,579 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=10)
+16:57:52,620  INFO main Course:<init>:107 - Create new Course 'Testing Course 1'
+16:57:52,621  INFO main Course:updateCourseDB:133 - Update Course information in DB: 'Testing Course 1' (id=16)
+16:57:52,621 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=16; name=Testing Course 1; grade=0
+16:57:52,770 DEBUG main CourseDao:getCourses:44 - Selected Course: name=Testing Course 1; id=16; grade=0
+16:57:52,771 DEBUG main CourseDao:createCourse:149 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 2', 0, 10)
+16:57:52,913 DEBUG main CourseDao:createCourse:163 - New Course Id=17
+16:57:52,914  INFO main Department:addCourse:61 - Add Course 'Testing Course 3' (id=null) to Department 'Testing Department' (id=10)
+16:57:52,914 DEBUG main CourseDao:getCourses:31 - Getting Course for Department 'Testing Department' (id=10)
+16:57:52,974  INFO main Course:<init>:107 - Create new Course 'Testing Course 1'
+16:57:52,975  INFO main Course:updateCourseDB:133 - Update Course information in DB: 'Testing Course 1' (id=16)
+16:57:52,975 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=16; name=Testing Course 1; grade=0
+16:57:53,019 DEBUG main CourseDao:getCourses:44 - Selected Course: name=Testing Course 1; id=16; grade=0
+16:57:53,019  INFO main Course:<init>:107 - Create new Course 'Testing Course 2'
+16:57:53,020  INFO main Course:updateCourseDB:133 - Update Course information in DB: 'Testing Course 2' (id=17)
+16:57:53,020 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=17; name=Testing Course 2; grade=0
+16:57:53,063 DEBUG main CourseDao:getCourses:44 - Selected Course: name=Testing Course 2; id=17; grade=0
+16:57:53,064 DEBUG main CourseDao:createCourse:149 - INSERT INTO COURSE (COURSE_NAME, GRADE, DEPARTMENT_ID) VALUES ('Testing Course 3', 0, 10)
+16:57:53,109 DEBUG main CourseDao:createCourse:163 - New Course Id=18
+16:57:53,109  INFO main Course:updateCourseDB:133 - Update Course information in DB: 'Testing Course 1' (id=16)
+16:57:53,109 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=16; name=Testing Course 1; grade=1
+16:57:53,154  INFO main Course:updateCourseDB:133 - Update Course information in DB: 'Testing Course 2' (id=17)
+16:57:53,155 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=17; name=Testing Course 2; grade=2
+16:57:53,199  INFO main Course:updateCourseDB:133 - Update Course information in DB: 'Testing Course 3' (id=18)
+16:57:53,199 DEBUG main CourseDao:updateCourse:216 - Course update info: courseId=18; name=Testing Course 3; grade=3
+16:57:53,288 DEBUG main StudentDao:getMaxStudentId:616 - Max Student id = 6
+16:57:53,289  INFO main Student:<init>:36 - Create new Student with id=8
+16:57:53,289 DEBUG main AddressDao:createAddress:30 - INSERT INTO ADDRESS (CITY, EMAIL, FLAT, HOUSE, PHONE, PROVINCE, STREET) VALUES ('', '', 0, '', '', '', '')
+16:57:53,334  WARN main AddressDao:createAddress:44 - New Adress Id=23
+16:57:53,337 DEBUG main PersonDao:createPerson:37 - INSERT INTO PERSON (FIRST_NAME, LAST_NAME, PATRONYMIC_NAME, BIRTH_DATE, GENDER, PASSPORT, NATIONALITY, ADDRESS_ID) VALUES ('', '', '', 'Mon Jan 01 00:00:00 EET 1990', ' ', '', '', 23)
+16:57:53,383  WARN main PersonDao:createPerson:49 - New Person Id=23
+16:57:53,383  WARN main StudentDao:createStudent:342 - Create Student with id=8 and person.id=23
+16:57:53,383 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=1990-01-01; completioDate=1990-01-01
+16:57:53,384  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=8
+16:57:53,469  INFO main Student:updateStudentInDB:162 - Update DB information for Student '  ' (id=8)
+16:57:53,469  WARN main StudentDao:updateStudent:468 - Update Student with id=8
+16:57:53,470 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@7535942c; Address.id=23
+16:57:53,470 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=2013-09-01; completioDate=2018-05-31
+16:57:53,511  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=8
+16:57:53,551 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=23; birthDate=Fri Jun 04 00:00:00 EEST 1993
+16:57:53,552  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@7535942c; Address.id=23
+16:57:53,552 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=23 and full address=, , , , 0
+16:57:53,552 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=23; city=; street=
+16:57:53,686  INFO main Student:updateStudentInDB:162 - Update DB information for Student 'Olegov Oleg Olegovich' (id=8)
+16:57:53,686  WARN main StudentDao:updateStudent:468 - Update Student with id=8
+16:57:53,686 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@7535942c; Address.id=23
+16:57:53,687 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=2013-09-01; completioDate=2018-05-31
+16:57:53,727  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=8
+16:57:53,768 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=23; birthDate=Fri Jun 04 00:00:00 EEST 1993
+16:57:53,768  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@7535942c; Address.id=23
+16:57:53,768 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=23 and full address=, , , , 0
+16:57:53,768 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=23; city=; street=
+16:57:53,902  INFO main Student:updateStudentInDB:162 - Update DB information for Student 'Olegov Oleg Olegovich' (id=8)
+16:57:53,902  WARN main StudentDao:updateStudent:468 - Update Student with id=8
+16:57:53,903 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@7535942c; Address.id=23
+16:57:53,903 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=0; entranceCalendar=2013-09-01; completioDate=2018-05-31
+16:57:53,944  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=8
+16:57:53,984 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=23; birthDate=Fri Jun 04 00:00:00 EEST 1993
+16:57:53,984  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@7535942c; Address.id=23
+16:57:53,984 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=23 and full address=, , , , 0
+16:57:53,984 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=23; city=; street=
+16:57:54,117  INFO main Faculty:addStudent:28 - Add Student 'Olegov Oleg Olegovich' (id=8) to existing Student Group or create new Group
+16:57:54,117  INFO main Student:getGrade:65 - Calculation grade for Student 'Olegov Oleg Olegovich' (id=8)
+16:57:54,118 DEBUG main StudentGroupDao:getStudentGroups:30 - Get Student Groups for faculty.id=22; name=Testing Faculty
+16:57:54,158 DEBUG main StudentGroupDao:getStudentGroups:30 - Get Student Groups for faculty.id=22; name=Testing Faculty
+16:57:54,200  INFO main StudentGroup:<init>:80 - Create new Student Group 'G3-1'
+16:57:54,200  INFO main Faculty:createStudentGroup:160 - Create Student Group 'G3-1'
+16:57:54,200 DEBUG main StudentGroupDao:createStudentGroup:145 - INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME, FACULTY_ID) VALUES ('G3-1', 22)
+16:57:54,255  WARN main StudentGroupDao:createStudentGroup:157 - New StudentGroup Id=21
+16:57:54,255  INFO main Student:updateStudentInDB:162 - Update DB information for Student 'Olegov Oleg Olegovich' (id=8)
+16:57:54,255  WARN main StudentDao:updateStudent:468 - Update Student with id=8
+16:57:54,255 DEBUG main StudentDao:updateStudent:469 - Updating Student: Address=university.domain.Address@6e038230; Address.id=null
+16:57:54,256 DEBUG main StudentDao:parseStudent:94 - Parse Student: studentGroupId=21; entranceCalendar=2013-09-01; completioDate=2018-05-31
+16:57:54,296  WARN main StudentDao:createStudentMark:403 - Create Student Mark for Student.id=8
+16:57:54,337 DEBUG main PersonDao:updatePerson:110 - Updating Person with person.id=23; birthDate=Fri Jun 04 00:00:00 EEST 1993
+16:57:54,337  WARN main PersonDao:updatePerson:113 - Updating Person Address=university.domain.Address@6e038230; Address.id=null
+16:57:54,337 DEBUG main PersonDao:updatePerson:115 - Updating Person with address.id=null and full address=Odesska, Odessa, Nekrasova, 4, 3
+16:57:54,337 DEBUG main AddressDao:updateAddress:105 - Address update info: addressId=null; city=Odessa; street=Nekrasova

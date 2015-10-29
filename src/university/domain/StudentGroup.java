@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.dao.DaoException;
 import university.dao.StudentDao;
 
@@ -18,6 +20,8 @@ public class StudentGroup {
 	private Integer id;
 	
 	private StudentDao studentDao;
+	
+	private static Logger log = Logger.getLogger(StudentGroup.class);
 	
 	public Map<Student, Integer> getSuccessRating(Course course) throws DomainException {
 		Map<Student, Integer> result = new HashMap<>();
@@ -73,6 +77,7 @@ public class StudentGroup {
 	}
 	
 	public StudentGroup(String name) {
+		log.info("Create new Student Group '" + name + "'");
 		this.name = name;
 
 		studentDao = new StudentDao();

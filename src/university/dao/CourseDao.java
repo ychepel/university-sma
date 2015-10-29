@@ -36,7 +36,8 @@ public class CourseDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				Course course = new Course(resultSet.getString("COURSE_NAME"));
+				String courseName = resultSet.getString("COURSE_NAME").trim();
+				Course course = new Course(courseName);
 				course.setId(resultSet.getInt("COURSE_ID"));
 				course.setGrade(resultSet.getInt("GRADE"));
 				set.add(course);
@@ -95,11 +96,12 @@ public class CourseDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			result = new Course(resultSet.getString("COURSE_NAME"));
+			String courseName = resultSet.getString("COURSE_NAME").trim();
+			result = new Course(courseName);
 			result.setId(id);
 			result.setGrade(resultSet.getInt("GRADE"));
 			
-			log.debug("Selected Course: name=" + result.getName() + "; id=" + result.getId() + "; grade=" + result.getGrade());
+			log.debug("Selected Course: name=" + courseName + "; id=" + result.getId() + "; grade=" + result.getGrade());
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {

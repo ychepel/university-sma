@@ -1,9 +1,13 @@
 package university.domain;
 
+import org.apache.log4j.Logger;
+
 public class Lecturer extends Person {
 	private String scienceDegree;
 	private String currentPosition;
 	private Integer lecturerId;
+	
+	private static Logger log = Logger.getLogger(Lecturer.class);
 	
 	public String getScienceDegree() {
 		return scienceDegree;
@@ -23,4 +27,10 @@ public class Lecturer extends Person {
 	public Integer getLecturerId() {
 		return lecturerId;
 	}
+	public Lecturer() {
+		super();
+		log.info("Create new Lecturer");
+	}
+	
+	
 }

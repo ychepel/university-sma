@@ -8,12 +8,16 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.domain.StudentGroup;
 import university.domain.Faculty;
 
 public class StudentGroupDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
+	
+	private static Logger log = Logger.getLogger(StudentGroupDao.class);
 	
 	public Set<StudentGroup> getStudentGroups(Faculty faculty) throws DaoException {
 		String sql = "SELECT * FROM STUDENT_GROUP WHERE FACULTY_ID=?";
@@ -23,6 +27,7 @@ public class StudentGroupDao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		Integer facultyId = faculty.getId();
+		log.debug("Get Student Groups for faculty.id=" + facultyId + "; name=" + faculty.getName());
 
 		try {
 			connection = daoFactory.getConnection();
@@ -31,14 +36,17 @@ public class StudentGroupDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				StudentGroup studentGroup = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
-				studentGroup.setId(resultSet.getInt("STUDENT_GROUP_ID"));
-				
+				String studentGroupName = resultSet.getString("STUDENT_GROUP_NAME");
+				Integer studentGroupId = resultSet.getInt("STUDENT_GROUP_ID");
+				log.debug("Student Group id=" + studentGroupId + "; name=" + studentGroupName);
+				StudentGroup studentGroup = new StudentGroup(studentGroupName);
+				studentGroup.setId(studentGroupId);
 				set.add(studentGroup);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Student Groups data", e);
+			log.error("Cannot get Student Groups", e);;
+			throw new DaoException("Cannot get Student Groups", e);
 		}
 		finally {
 			try {
@@ -68,7 +76,6 @@ public class StudentGroupDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
@@ -79,6 +86,7 @@ public class StudentGroupDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		log.debug("Get StudentGroup with id=" + id);
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -87,12 +95,15 @@ public class StudentGroupDao {
 			resultSet = statement.executeQuery();
 			
 			if(resultSet.next()) {
-				result = new StudentGroup(resultSet.getString("STUDENT_GROUP_NAME"));
+				String studentGroupName = resultSet.getString("STUDENT_GROUP_NAME");
+				log.debug("Selected StudentGroup.name=" + studentGroupName);
+				result = new StudentGroup(studentGroupName);
 				result.setId(id);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Student Group data", e);
+			log.error("Cannot get Student Group by Id", e);
+			throw new DaoException("Cannot get Student Group by Id", e);
 		}
 		finally {
 			try {
@@ -131,8 +142,7 @@ public class StudentGroupDao {
 		String name = studentGroup.getName();
 		String sql = "INSERT INTO STUDENT_GROUP (STUDENT_GROUP_NAME, FACULTY_ID) "
 				+ "VALUES ('" + name + "', " + facultyId + ")";
-		
-		StudentGroup result = null; 
+		log.debug(sql);
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -140,17 +150,16 @@ public class StudentGroupDao {
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.createStatement();
-			
 			statement.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
-			
-			result = new StudentGroup(name);
-			result.setId(id);
+			log.warn("New StudentGroup Id=" + id);
+			studentGroup.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Student Group data", e);
+			log.error("Cannot create Student Group", e);
+			throw new DaoException("Cannot create Student Group", e);
 		}
 		finally {
 			try {
@@ -181,7 +190,7 @@ public class StudentGroupDao {
 			}
 		}
 		
-		return result;
+		return studentGroup;
 	}
 	
 	public void updateStudentGroup(StudentGroup studentGroup, Faculty faculty) throws DaoException {
@@ -194,19 +203,18 @@ public class StudentGroupDao {
 		Integer studentGroupId = studentGroup.getId();
 		String name = studentGroup.getName();
 		Integer facultyId = faculty.getId();
-		
+		log.debug("Updating StudentGroup id=" + studentGroupId + "; name=" + name + " for Faculty with id=" + facultyId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
-			
 			statement.setString(1, name);
 			statement.setInt(2, facultyId);
 			statement.setInt(3, studentGroupId);
-
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot update Student Group data", e);
+			log.error("Cannot update Student Group", e);
+			throw new DaoException("Cannot update Student Group", e);
 		}
 		finally {
 			try {
@@ -251,7 +259,8 @@ public class StudentGroupDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Student Group data", e);
+			log.error("Cannot delete Student Group", e);
+			throw new DaoException("Cannot delete Student Group", e);
 		}
 		finally {
 			try {

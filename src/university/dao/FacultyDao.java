@@ -8,11 +8,14 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.domain.Faculty;
 
 public class FacultyDao {
 
 	private DaoFactory daoFactory = new DaoFactory();
+	private static Logger log = Logger.getLogger(FacultyDao.class);
 	
 	public Set<Faculty> getFaculties() throws DaoException {
 		String sql = "SELECT * FROM FACULTY";
@@ -28,14 +31,17 @@ public class FacultyDao {
 			resultSet = statement.executeQuery(sql);
 
 			while(resultSet.next()) {
-				Faculty faculty = new Faculty(resultSet.getString("FACULTY_NAME"));
-				faculty.setId(resultSet.getInt("FACULTY_ID"));
-				
+				String facultyName = resultSet.getString("FACULTY_NAME");
+				Integer facultyId = resultSet.getInt("FACULTY_ID");
+				log.warn("Get Faculty with id=" + facultyId + " and name=" + facultyName);
+				Faculty faculty = new Faculty(facultyName);
+				faculty.setId(facultyId);
 				set.add(faculty);
 			}
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			log.error("Cannot get Faculties", e);
+			throw new DaoException("Cannot get Faculties", e);
 		}
 		finally {
 			try {
@@ -65,7 +71,6 @@ public class FacultyDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return set;
 	}
 	
@@ -76,20 +81,21 @@ public class FacultyDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
-		
+		log.warn("Select Faculty with id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
 			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
-			
 			resultSet.next();
-			result = new Faculty(resultSet.getString("FACULTY_NAME"));
+			String facultyName = resultSet.getString("FACULTY_NAME");
+			log.debug("Selected Faculty.name=" + facultyName);
+			result = new Faculty(facultyName);
 			result.setId(id);
-			
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot get Faculty data", e);
+			log.error("Cannot get Faculty", e);
+			throw new DaoException("Cannot get Faculty", e);
 		}
 		finally {
 			try {
@@ -119,15 +125,13 @@ public class FacultyDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
 		return result;
 	}
 	
 	public Faculty createFaculty(Faculty faculty) throws DaoException {
 		String name = faculty.getName();
 		String sql = "INSERT INTO FACULTY (FACULTY_NAME) VALUES ('" + name + "')";
-		
-		Faculty result = null; 
+		log.debug(sql);
 		Connection connection = null;
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -140,12 +144,13 @@ public class FacultyDao {
 			resultSet = statement.getGeneratedKeys();
 			resultSet.next();
 			Integer id = resultSet.getInt(1);
-			
-			result = new Faculty(name);
-			result.setId(id);
+			log.warn("New Faculty Id=" + id);
+			faculty = new Faculty(name);
+			faculty.setId(id);
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot create Faculty data", e);
+			log.error("Cannot create Faculty", e);
+			throw new DaoException("Cannot create Faculty", e);
 		}
 		finally {
 			try {
@@ -175,8 +180,7 @@ public class FacultyDao {
 				throw new DaoException("Cannot close connection", e);
 			}
 		}
-		
-		return result;
+		return faculty;
 	}
 	
 	public void updateFaculty(Faculty faculty) throws DaoException {
@@ -188,7 +192,7 @@ public class FacultyDao {
 		
 		Integer facultyId = faculty.getId();
 		String name = faculty.getName();
-		
+		log.debug("Updating Faculty id=" + facultyId + "; name=" + name);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -199,7 +203,8 @@ public class FacultyDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot update Faculty data", e);
+			log.error("Cannot update Faculty", e);
+			throw new DaoException("Cannot update Faculty", e);
 		}
 		finally {
 			try {
@@ -244,7 +249,8 @@ public class FacultyDao {
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {
-			throw new DaoException("Cannot delete Faculty data", e);
+			log.error("Cannot delete Faculty", e);
+			throw new DaoException("Cannot delete Faculty", e);
 		}
 		finally {
 			try {

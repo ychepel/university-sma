@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.dao.CourseDao;
 import university.dao.CourseScheduleDao;
 import university.dao.DaoException;
@@ -13,10 +15,15 @@ public class Course {
 	private int grade = 0;
 	private Integer id; 
 	
+	private static Logger log = Logger.getLogger(Course.class);
+	
 	private CourseDao courseDao;
 	private CourseScheduleDao courseScheduleDao;
 	
-	public void create(Lecturer lecturer, StudentGroup studentGroup) throws DomainException {
+	public void createCourseSchedule(Lecturer lecturer, StudentGroup studentGroup) throws DomainException {
+		log.info("Create schedule for Course '" + this.name + "' (id=" + this.id + "): "
+				+ "Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + "), "
+				+ "Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ")");
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			Lecturer courseLecturer = courseSchedule.getLecturer();
 			if(courseLecturer.equals(lecturer)) {
@@ -87,6 +94,7 @@ public class Course {
 	}
 	
 	public void addCourseSchedule(CourseSchedule courseSchedule) throws DomainException {
+		log.info("Add new Course Schedule");
 		try {
 			courseScheduleDao.createCourseSchedule(courseSchedule, this);
 		}
@@ -96,6 +104,7 @@ public class Course {
 	}
 	
 	public Course(String name) {
+		log.info("Create new Course '" +  name + "'");
 		this.name = name;
 		
 		courseDao = new CourseDao();
@@ -112,15 +121,16 @@ public class Course {
 
 	public void setGrade(int grade) throws DomainException {
 		this.grade = grade;
-		updateCourseDao();
+		updateCourseDB();
 	}
 
 	public void setName(String name) throws DomainException {
 		this.name = name;
-		updateCourseDao();
+		updateCourseDB();
 	}
 	
-	private void updateCourseDao() throws DomainException {
+	private void updateCourseDB() throws DomainException {
+		log.info("Update Course information in DB: '" + this.name + "' (id=" + this.id + ")");
 		try {
 			courseDao.updateCourse(this);
 		}

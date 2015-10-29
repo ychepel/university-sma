@@ -107,7 +107,6 @@ public class AddressDao {
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
-			
 			statement.setString(1, city);
 			statement.setString(2, email);
 			statement.setInt(3, flat);
@@ -116,7 +115,6 @@ public class AddressDao {
 			statement.setString(6, province);
 			statement.setString(7, street);
 			statement.setLong(8, addressId);
-			
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {

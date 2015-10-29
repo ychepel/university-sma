@@ -3,6 +3,8 @@ package university.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
+
 import university.dao.CourseDao;
 import university.dao.DaoException;
 import university.dao.DepartmentDao;
@@ -16,6 +18,8 @@ public class Department {
 	private CourseDao courseDao;
 	private LecturerDao lecturerDao;
 	
+	private static Logger log = Logger.getLogger(Department.class);
+	
 	public Set<CourseSchedule> getSchedule(Lecturer lecturer) throws DomainException {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Course course : getCourses()) {
@@ -26,6 +30,8 @@ public class Department {
 	}
 	
 	public Boolean enrollStudent(Student student, Course course) throws DomainException {
+		log.info("Enroll Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") "
+				+ "to Course '" + course.getName() + "' (id=" + course.getId() + ")");
 		Set<Course> courses = getCourses();
 		if(!courses.contains(course)) return false;
 		
@@ -38,6 +44,8 @@ public class Department {
 	}
 	
 	public void addLecturer(Lecturer lecturer) throws DomainException {
+		log.info("Add Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + ") "
+				+ "to Department '" + this.name + "' (id=" + this.id + ")");
 		Set<Lecturer> lecturers = getLecturers();
 		if(!lecturers.contains(lecturer)) {
 			try {
@@ -50,6 +58,8 @@ public class Department {
 	}
 	
 	public void addCourse(Course course) throws DomainException {
+		log.info("Add Course '" + course.getName() + "' (id=" + course.getId() + ") "
+				+ "to Department '" + this.name + "' (id=" + this.id + ")");
 		Set<Course> courses = getCourses();
 		if(!courses.contains(course)) {
 			try {
@@ -62,6 +72,8 @@ public class Department {
 	}
 	
 	public void removeLecturer(Lecturer lecturer) throws DomainException {
+		log.info("Remove Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + ") "
+				+ "from Department '" + this.name + "' (id=" + this.id + ")");
 		Integer lecturerId = lecturer.getLecturerId();
 		try {
 			lecturerDao.dropLecturerById(lecturerId);
@@ -72,6 +84,8 @@ public class Department {
 	}
 	
 	public void removeCourse(Course course) throws DomainException {
+		log.info("Remove Course '" + course.getName() + "' (id=" + course.getId() + ") "
+				+ "from Department '" + this.name + "' (id=" + this.id + ")");
 		Integer courseId = course.getId();
 		try {
 			courseDao.dropCourseById(courseId);
@@ -110,6 +124,7 @@ public class Department {
 	}
 	
 	public Department(String name) {
+		log.info("Create new Department '" +  name + "'");
 		this.name = name;
 		
 		this.departmentDao = new DepartmentDao();

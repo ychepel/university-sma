@@ -290,7 +290,7 @@ public class PersonDao {
 			cleanPerson.setPersonId(id);
 			
 			Long addressId = resultSet.getLong("ADDRESS_ID");
-			log.warn("Parson Address.id=" +  addressId);
+			log.warn("Person Address.id=" +  addressId);
 			Address address = addressDao.getAddressById(addressId);
 			log.debug("Get Person with address.id=" + address.getId() + " and full address" + address.getFullAdress());
 			cleanPerson.setAddress(address);

@@ -97,13 +97,24 @@ public class StudentGroup {
 		}
 		return result;
 	}
+	
+	public void removeStudent(Student student) throws DomainException {
+		log.info("Remove Student '" + student.getFullName() + "' + (id=" + student.getStudentId() + ")");
+		try {
+			studentDao.dropStudent(student);
+		}
+		catch (DaoException e) {
+			throw new DomainException ("Cannot remove Student", e);
+		}
+	}
 
 	public String getName() {
 		return name;
 	}
 	
 	public Integer getStudentQuantity() throws DomainException {
-		return getStudents().size();
+		Set<Student> students = getStudents();
+		return students.size();
 	}
 
 	public Integer getId() {

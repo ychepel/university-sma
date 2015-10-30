@@ -36,7 +36,7 @@ public class StudentGroupDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				String studentGroupName = resultSet.getString("STUDENT_GROUP_NAME");
+				String studentGroupName = resultSet.getString("STUDENT_GROUP_NAME").trim();
 				Integer studentGroupId = resultSet.getInt("STUDENT_GROUP_ID");
 				log.debug("Student Group id=" + studentGroupId + "; name=" + studentGroupName);
 				StudentGroup studentGroup = new StudentGroup(studentGroupName);
@@ -95,7 +95,7 @@ public class StudentGroupDao {
 			resultSet = statement.executeQuery();
 			
 			if(resultSet.next()) {
-				String studentGroupName = resultSet.getString("STUDENT_GROUP_NAME");
+				String studentGroupName = resultSet.getString("STUDENT_GROUP_NAME").trim();
 				log.debug("Selected StudentGroup.name=" + studentGroupName);
 				result = new StudentGroup(studentGroupName);
 				result.setId(id);
@@ -251,7 +251,7 @@ public class StudentGroupDao {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
-		
+		log.debug("Delete StudentGroup with id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);

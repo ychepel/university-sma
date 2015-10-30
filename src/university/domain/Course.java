@@ -67,17 +67,50 @@ public class Course {
 		return schedule;
 	}
 	
-	public Boolean isStudentGroupScheduled(StudentGroup studentGroup) throws DomainException {
+	public void clearCourseSchedules() throws DomainException {
+		log.info("Delete all schedules for Course '" + this.name + "' (id=" + this.id + ")");
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
-			if(studentGroups.contains(studentGroup)) {
-				return true;
+			Integer courseScheduleId = courseSchedule.getId();
+			log.debug("Delete CourseSchedule with id=" + courseScheduleId);
+			try {
+				courseScheduleDao.dropCourseScheduleById(courseScheduleId);
+			}
+			catch (DaoException e) {
+				throw new DomainException("Cannot delete all CourseSchedules for Course", e);
 			}
 		}
+	}
+	
+	public void removeCourseSchedule(CourseSchedule courseSchedule) throws DomainException {
+		Integer courseScheduleId = courseSchedule.getId();
+		log.debug("Delete Schedule (id=" + courseScheduleId + ") for Course '" + this.name + "' (id=" + this.id + ")");
+		try {
+			courseScheduleDao.dropCourseScheduleById(courseScheduleId);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot delete CourseSchedule for Course", e);
+		}
+	}
+	
+	public Boolean isStudentGroupScheduled(StudentGroup studentGroup) throws DomainException {
+		Integer searchingStudentGroupId = studentGroup.getId();
+		for(CourseSchedule courseSchedule : getCourseSchedules()) {
+			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
+			for(StudentGroup stGroup : studentGroups) {
+				Integer basicStudentGroupId = stGroup.getId();
+				if(searchingStudentGroupId.equals(basicStudentGroupId)) {
+					log.debug("Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ") scheduled");
+					return true;
+				}
+			}
+		}
+		log.debug("Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ") didn't scheduled");
 		return false;
 	}
 	
-	public void excludeStudent(StudentGroup studentGroup) throws DomainException {
+	public void excludeStudentGroup(StudentGroup studentGroup) throws DomainException {
+		log.debug("Removing Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ") "
+				+ "from Course '" + this.name + "' (id=" + this.id + ")");
 		Set<CourseSchedule> courseSchedules = getCourseSchedules();
 		Iterator<CourseSchedule> iterator = courseSchedules.iterator();
 		while(iterator.hasNext()) {
@@ -85,7 +118,8 @@ public class Course {
 			courseSchedule.remove(studentGroup);
 			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups(); 
 			if(studentGroups.size() == 0) {
-				courseSchedules.remove(courseSchedule);
+				log.info("Removing empty Course Schedule");
+				removeCourseSchedule(courseSchedule);
 			}
 		}
 	}
@@ -139,6 +173,10 @@ public class Course {
 	
 	private void updateCourseDB() throws DomainException {
 		log.info("Update Course information in DB: '" + this.name + "' (id=" + this.id + ")");
+		if(this.getId() == null) {
+			log.warn("Cannot update Course because it have not been created yet");
+			return;
+		}
 		try {
 			courseDao.updateCourse(this);
 		}
@@ -154,5 +192,4 @@ public class Course {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
 }

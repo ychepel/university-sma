@@ -51,16 +51,18 @@ public class StudentDao {
 		log.debug("Student StudentGroup=" + studentGroup);
 		student.setStudentGroup(studentGroup);
 		
+		SimpleDateFormat formatCalendar = new SimpleDateFormat("yyyy-MM-dd"); 
+		
 		Date entranceDate = resultSet.getDate("ENTRANCE_DATE");
 		Calendar entranceCalendar = new GregorianCalendar();
 		entranceCalendar.setTime(entranceDate);
-		log.debug("Student Entrance Date=" + entranceCalendar);
+		log.debug("Student Entrance Date=" + formatCalendar.format(entranceDate));
 		student.setEntranceDate(entranceCalendar);
-		
+
 		Date completionDate = resultSet.getDate("COMPLETION_DATE");
 		Calendar completionCalendar = new GregorianCalendar();
 		completionCalendar.setTime(completionDate);
-		log.debug("Student Completion Date=" + completionCalendar);
+		log.debug("Student Completion Date=" + formatCalendar.format(completionDate));
 		student.setCompletionDate(completionCalendar);
 		
 		return student;
@@ -514,22 +516,22 @@ public class StudentDao {
 		}
 	}
 	
-	public void dropStudentById(Long id) throws DaoException {
+	public void dropStudent(Student student) throws DaoException {
 		String sql = "DELETE FROM STUDENT WHERE STUDENT_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
-		Student student = getStudentById(id);
 		Long personId = student.getPersonId();
+		Long studentId = student.getStudentId();
 		
 		personDao.dropPersonById(personId);
-		dropStudentMarks(id);
+		dropStudentMarks(studentId);
 		
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
-			statement.setLong(1, id);
+			statement.setLong(1, studentId);
 			statement.executeUpdate();
 		}
 		catch (SQLException e) {

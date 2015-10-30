@@ -134,17 +134,17 @@ public class Faculty {
 	}
 
 	public void removeStudent(Student student) throws DomainException {
-		log.info("Remove Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") from Student Groups");
+		log.info("Remove Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ")");
 		StudentGroup studentGroup = student.getStudentGroup();
-		student.setStudentGroup(null);
-			if(studentGroup.getStudentQuantity() == 0) {
+		studentGroup.removeStudent(student);
+		if(studentGroup.getStudentQuantity() == 0) {
 			this.removeStudentGroup(studentGroup);
 		}
 	}
 	
 	private void removeStudentGroup(StudentGroup studentGroup) throws DomainException {
 		Integer studentGroupId = studentGroup.getId();
-		log.info("Remove Student Group '" + studentGroup.getName() + "' (id=" + studentGroupId);
+		log.info("Remove Student Group '" + studentGroup.getName() + "' (id=" + studentGroupId + ")");
 		try {
 			studentGroupDao.dropStudentGroupById(studentGroupId);
 		}
@@ -189,7 +189,7 @@ public class Faculty {
 	
 	public void removeDepartment(Department department) throws DomainException {
 		Integer id = department.getId();
-		log.info("Remove Department '" + department.getName() + "' (id=" + id + "'");
+		log.info("Remove Department '" + department.getName() + "' (id=" + id + ")");
 		try {
 			departmentDao.dropDepartmentById(id);
 		}

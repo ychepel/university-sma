@@ -113,10 +113,12 @@ public class CourseScheduleDao {
 
 			while(resultSet.next()) {
 				Integer studentGroupId = resultSet.getInt("STUDENT_GROUP_ID");
-				log.warn("Selected StudentGroup.id=" + studentGroupId);
 				StudentGroup studentGroup = studentGroupDao.getStudentGroupById(studentGroupId);
-				log.debug("Selected StudentGroup.name=" + studentGroup.getName());
-				set.add(studentGroup);
+				log.warn("Selected StudentGroup=" + studentGroup);
+				if(studentGroup != null) {
+					log.debug("Selected StudentGroup.id=" + studentGroupId + ", StudentGroup.name=" + studentGroup.getName());
+					set.add(studentGroup);
+				}
 			}
 		}
 		catch (SQLException e) {

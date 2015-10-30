@@ -197,7 +197,7 @@ public class AddressDao {
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
 		
-		log.warn("Getting Affress by Id=" + id);
+		log.warn("Getting Address by Id=" + id);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -254,7 +254,7 @@ public class AddressDao {
 		result.setProvince(resultSet.getString("PROVINCE").trim());
 		result.setStreet(resultSet.getString("STREET").trim());
 		
-		log.debug("Slected Address: id=" + result.getId() + "; city=" + result.getCity() + "; falt=" + result.getFlat());
+		log.debug("Selected Address: id=" + result.getId() + "; city=" + result.getCity() + "; falt=" + result.getFlat());
 		
 		return result;
 	}

@@ -28,7 +28,7 @@ public class DepartmentDao {
 		ResultSet resultSet = null;
 		
 		Integer facultyId = faculty.getId();
-		log.debug("Get Department for Fculty.id=" + facultyId);
+		log.debug("Get Department for Faculty.id=" + facultyId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -36,7 +36,7 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 
 			while(resultSet.next()) {
-				String departmentName = resultSet.getString("DEPARTMENT_NAME");
+				String departmentName = resultSet.getString("DEPARTMENT_NAME").trim();
 				Integer departmentId = resultSet.getInt("DEPARTMENT_ID");
 				log.warn("Create Department name=" + departmentName + " with id=" + departmentId);
 				Department department = new Department(departmentName);
@@ -94,7 +94,7 @@ public class DepartmentDao {
 			resultSet = statement.executeQuery();
 			
 			resultSet.next();
-			String departmentName = resultSet.getString("DEPARTMENT_NAME");
+			String departmentName = resultSet.getString("DEPARTMENT_NAME").trim();
 			log.debug("Selected Department.name=" + departmentName);
 			result = new Department(departmentName);
 			result.setId(id);

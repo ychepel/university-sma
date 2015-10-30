@@ -1,19 +1,33 @@
 package university.domain.tests;
 
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import org.apache.log4j.Logger;
 
 import university.dao.*;
 import university.domain.*;
 
-public class DBSample {
+public class SampleData {
 	
-	private University university = new University("CAMBREDGE");
+	private University testUniversity;
+	private Faculty testFaculty;
+	private Department testDepartment;
+	private Course testCourse1;
+	private Course testCourse2;
+	private Course testCourse3;
+	private Course testCourse4;
+	private Address testStudentAddress;
+	private Student testStudent;
+	private Lecturer testLecturer;
+	private Address addressTestLecturer;
+	private CourseSchedule testCourseSchedule;
 
+	private static Logger log = Logger.getLogger(SampleData.class);
+	
 	public void printDBData() throws DaoException, DomainException {
 		
-		for(Faculty faculty : university.getFaculties()) {
+		for(Faculty faculty : testUniversity.getFaculties()) {
 			System.out.println(faculty.getName().trim() + ":");
 			for(Department department : faculty.getDepartments()) {
 				System.out.println("   D# " + department.getName().trim() + ":");
@@ -53,31 +67,35 @@ public class DBSample {
 		}
 	}
 	
-	public void fillDB() throws DaoException, DomainException {
-		Faculty testFaculty = university.createFaculty("Testing Faculty");
-		Department testDepartment = testFaculty.createDepartment("Testing Department");
-		Course testCourse1 = new Course("Testing Course 1");
-		Course testCourse2 = new Course("Testing Course 2");
-		Course testCourse3 = new Course("Testing Course 3");
+	public void fillDBWithSampleData() throws DaoException, DomainException {
+		testUniversity = new University("Test.University");
+		testFaculty = testUniversity.createFaculty("Testing Faculty");
+		testDepartment = testFaculty.createDepartment("Testing Department");
+		
+		testCourse1 = new Course("Testing Course 1");
+		testCourse2 = new Course("Testing Course 2");
+		testCourse3 = new Course("Testing Course 3");
+		testCourse4 = new Course("Testing Course 4");
 		testDepartment.addCourse(testCourse1);
 		testDepartment.addCourse(testCourse2);
 		testDepartment.addCourse(testCourse3);
 		testCourse1.setGrade(1);
 		testCourse2.setGrade(2);
 		testCourse3.setGrade(3);
+		testCourse4.setGrade(4);
 		
-		Address testAddress = new Address();
-		testAddress.setCity("Odessa");
-		testAddress.setEmail("aaa@c.com");
-		testAddress.setFlat(3);
-		testAddress.setHouse("4");
-		testAddress.setPhone("5-432-43-54");
-		testAddress.setProvince("Odesska");
-		testAddress.setStreet("Nekrasova");
+		testStudentAddress = new Address();
+		testStudentAddress.setCity("Odessa");
+		testStudentAddress.setEmail("aaa@c.com");
+		testStudentAddress.setFlat(3);
+		testStudentAddress.setHouse("4");
+		testStudentAddress.setPhone("5-432-43-54");
+		testStudentAddress.setProvince("Odesska");
+		testStudentAddress.setStreet("Nekrasova");
 		
 		Long maxId = (new StudentDao()).getMaxStudentId();
 		Student.setStudentCount(maxId);
-		Student testStudent = new Student();
+		testStudent = new Student();
 		testStudent.setBirthDate((new GregorianCalendar(1993, Calendar.JUNE, 4)).getTime());
 		testStudent.setEntranceDate(new GregorianCalendar(2013, Calendar.SEPTEMBER, 1));
 		testStudent.setFirstName("Oleg");
@@ -88,18 +106,16 @@ public class DBSample {
 		testStudent.setNationality("ua");
 		testStudent.setPassport("DF53743");
 		testStudent.setSchoolGraduateSertificate("423543543");
-		testStudent.setAddress(testAddress);
+		testStudent.setAddress(testStudentAddress);
 		
 		testFaculty.addStudent(testStudent);
 		testDepartment.enrollStudent(testStudent, testCourse1);
 		testDepartment.enrollStudent(testStudent, testCourse2);
-		testDepartment.enrollStudent(testStudent, testCourse3);
 		
 		testStudent.addMark(testCourse1, 22);
 		testStudent.addMark(testCourse2, 0);
-		testStudent.addMark(testCourse3, -1);
 
-		Lecturer testLecturer = new Lecturer();
+		testLecturer = new Lecturer();
 		testLecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
 		testLecturer.setCurrentPosition("Professor");
 		testLecturer.setFirstName("Mariya");
@@ -110,20 +126,75 @@ public class DBSample {
 		testLecturer.setPatronymicName("Nikolaevna");
 		testLecturer.setScienceDegree("doctor");
 		
-		Address addressL = new Address();
-		addressL.setCity("Kiev");
-		addressL.setEmail("adds@cs.net");
-		addressL.setFlat(3);
-		addressL.setHouse("4a");
-		addressL.setPhone("5435-543-54");
-		addressL.setProvince("Kievska");
-		addressL.setStreet("Getmana");
-		testLecturer.setAddress(addressL);
+		addressTestLecturer = new Address();
+		addressTestLecturer.setCity("Kiev");
+		addressTestLecturer.setEmail("adds@cs.net");
+		addressTestLecturer.setFlat(3);
+		addressTestLecturer.setHouse("4a");
+		addressTestLecturer.setPhone("5435-543-54");
+		addressTestLecturer.setProvince("Kievska");
+		addressTestLecturer.setStreet("Getmana");
+		testLecturer.setAddress(addressTestLecturer);
 		testFaculty.addLecturer(testDepartment, testLecturer);
 		
-		CourseSchedule courseScheduleC1 = testCourse1.createCourseSchedule(testLecturer, testStudent.getStudentGroup());
-		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
-		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
-		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
+		testCourseSchedule = testCourse1.createCourseSchedule(testLecturer, testStudent.getStudentGroup());
+		testCourseSchedule.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
+		testCourseSchedule.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
+		testCourseSchedule.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
+		
+		log.debug("Sample data uploaded");
 	}
+	
+	public void clearDBFromSampleData() throws DomainException {
+		log.debug("Clearing sample data");
+		testFaculty.removeStudent(testStudent);
+		testDepartment.excludeStudentGroup(testStudent.getStudentGroup());
+		testDepartment.removeCourse(testCourse1);
+		testDepartment.removeCourse(testCourse2);
+		testDepartment.removeCourse(testCourse3);
+		testDepartment.removeLecturer(testLecturer);
+		testFaculty.removeDepartment(testDepartment);
+		testUniversity.removeFaculty(testFaculty);
+	}
+
+	public University getTestUniversity() {
+		return testUniversity;
+	}
+
+	public Faculty getTestFaculty() {
+		return testFaculty;
+	}
+
+	public Department getTestDepartment() {
+		return testDepartment;
+	}
+
+	public Course getTestCourse1() {
+		return testCourse1;
+	}
+
+	public Course getTestCourse2() {
+		return testCourse2;
+	}
+
+	public Course getTestCourse3() {
+		return testCourse3;
+	}
+
+	public Student getTestStudent() {
+		return testStudent;
+	}
+
+	public Lecturer getTestLecturer() {
+		return testLecturer;
+	}
+
+	public CourseSchedule getTestCourseSchedule() {
+		return testCourseSchedule;
+	}
+	
+	public Course getTestCourse4() {
+		return testCourse4;
+	}
+	
 }

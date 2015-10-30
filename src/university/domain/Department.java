@@ -86,6 +86,7 @@ public class Department {
 	public void removeCourse(Course course) throws DomainException {
 		log.info("Remove Course '" + course.getName() + "' (id=" + course.getId() + ") "
 				+ "from Department '" + this.name + "' (id=" + this.id + ")");
+		course.clearCourseSchedules();
 		Integer courseId = course.getId();
 		try {
 			courseDao.dropCourseById(courseId);
@@ -119,7 +120,7 @@ public class Department {
 
 	public void excludeStudentGroup(StudentGroup studentGroup) throws DomainException {
 		for(Course course : getCourses()) {
-			course.excludeStudent(studentGroup);
+			course.excludeStudentGroup(studentGroup);
 		}
 	}
 	

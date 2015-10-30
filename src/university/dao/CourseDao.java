@@ -28,7 +28,7 @@ public class CourseDao {
 		ResultSet resultSet = null;
 		
 		Integer departmentId = department.getId();
-		log.debug("Getting Course for Department '" + department.getName() + "' (id=" + departmentId + ")");
+		log.debug("Getting Courses for Department '" + department.getName() + "' (id=" + departmentId + ")");
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);

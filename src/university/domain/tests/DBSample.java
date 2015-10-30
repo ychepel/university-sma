@@ -1,4 +1,4 @@
-package university.dao.test;
+package university.domain.tests;
 
 
 import java.util.Calendar;
@@ -7,11 +7,11 @@ import java.util.GregorianCalendar;
 import university.dao.*;
 import university.domain.*;
 
-public class DaoTest {
+public class DBSample {
 	
-	private static University university = new University("CAMBREDGE");
+	private University university = new University("CAMBREDGE");
 
-	public static void printDBData() throws DaoException, DomainException {
+	public void printDBData() throws DaoException, DomainException {
 		
 		for(Faculty faculty : university.getFaculties()) {
 			System.out.println(faculty.getName().trim() + ":");
@@ -53,10 +53,7 @@ public class DaoTest {
 		}
 	}
 	
-	public static void main (String[] args) throws DaoException, DomainException {
-		
-		//printDBData();
-		
+	public void fillDB() throws DaoException, DomainException {
 		Faculty testFaculty = university.createFaculty("Testing Faculty");
 		Department testDepartment = testFaculty.createDepartment("Testing Department");
 		Course testCourse1 = new Course("Testing Course 1");
@@ -101,7 +98,7 @@ public class DaoTest {
 		testStudent.addMark(testCourse1, 22);
 		testStudent.addMark(testCourse2, 0);
 		testStudent.addMark(testCourse3, -1);
-		
+
 		Lecturer testLecturer = new Lecturer();
 		testLecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
 		testLecturer.setCurrentPosition("Professor");
@@ -128,21 +125,5 @@ public class DaoTest {
 		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
 		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
 		courseScheduleC1.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
-	
-		System.out.println("************************************************");
-		printDBData();
-		
-		testCourse1.excludeStudent(testStudent.getStudentGroup());
-		testDepartment.removeLecturer(testLecturer);
-		testDepartment.removeCourse(testCourse1);
-		testDepartment.removeCourse(testCourse2);
-		testDepartment.removeCourse(testCourse3);
-		testFaculty.removeDepartment(testDepartment);
-		university.removeFaculty(testFaculty);
-		(new StudentDao()).dropStudentById(testStudent.getStudentId());
-		
-		System.out.println("************************************************");
-		printDBData();
-
 	}
 }

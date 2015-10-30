@@ -279,9 +279,14 @@ public class CourseScheduleDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		
 		Integer courseScheduleId = courseSchedule.getId();
 		Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
-		log.warn("Inserting StudentGroups for CourseSchedule.Id=" + courseScheduleId);
+		if(studentGroups.size() == 0) {
+			log.warn("No Student Groups for Course Schedule (id=" + courseScheduleId + ")");
+			return;
+		}
+		log.info("Inserting StudentGroups for CourseSchedule.id=" + courseScheduleId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -289,9 +294,9 @@ public class CourseScheduleDao {
 			
 			for(StudentGroup studentGroup : studentGroups) {
 				Integer studentGroupId = studentGroup.getId();
-				log.debug("Inserting StudentGroup.Id=" + studentGroupId);
+				log.debug("Inserting StudentGroup.id=" + studentGroupId);
 				statement.setInt(2, studentGroupId);
-				statement.executeQuery();
+				statement.executeUpdate();
 			}
 		}
 		catch (SQLException e) {
@@ -334,9 +339,14 @@ public class CourseScheduleDao {
 		Connection connection = null;
 		PreparedStatement statement = null;
 		ResultSet resultSet = null;
+		
 		Integer courseScheduleId = courseSchedule.getId();
 		Set<Calendar> timetables = courseSchedule.getTimetables();
-		log.warn("Inserting Timetables for CourseSchedule.Id=" + courseScheduleId);
+		if(timetables.size() == 0) {
+			log.warn("No Timetables for Course Schedule (id=" + courseScheduleId + ")");
+			return;
+		}
+		log.info("Inserting Timetables for CourseSchedule.id=" + courseScheduleId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);
@@ -346,7 +356,7 @@ public class CourseScheduleDao {
 				Timestamp timestamp = new Timestamp(calendar.getTimeInMillis());
 				log.debug("Inserting StudentGroup timestamp=" + timestamp);
 				statement.setTimestamp(2, timestamp);
-				statement.executeQuery();
+				statement.executeUpdate();
 			}
 		}
 		catch (SQLException e) {
@@ -384,7 +394,7 @@ public class CourseScheduleDao {
 	}
 	
 	public void updateCourseSchedule(CourseSchedule courseSchedule) throws DaoException {
-		String sql = "UPDATE COURSE_SCHEDULE SET LECTURER_ID=? WHERE COURSE_SCHEDULE_DI=?";
+		String sql = "UPDATE COURSE_SCHEDULE SET LECTURER_ID=? WHERE COURSE_SCHEDULE_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;

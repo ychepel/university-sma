@@ -27,12 +27,19 @@ public class Course {
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			Lecturer courseLecturer = courseSchedule.getLecturer();
 			if(courseLecturer.equals(lecturer)) {
+				log.debug("Adding Group to existing Course Schedule");
 				courseSchedule.addStudentGroup(studentGroup);
 				return courseSchedule;
 			}
 		}
-		
+		log.debug("Creating new Course Schedule");
 		CourseSchedule newCourseSchedule = new CourseSchedule(this, lecturer);
+		try {
+			courseScheduleDao.createCourseSchedule(newCourseSchedule, this);
+		}
+		catch (DaoException e ) {
+			throw new DomainException("Cannot create Course Schedule", e);
+		}
 		newCourseSchedule.addStudentGroup(studentGroup);
 		this.addCourseSchedule(newCourseSchedule);
 		return newCourseSchedule;

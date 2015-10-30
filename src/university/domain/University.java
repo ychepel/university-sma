@@ -96,7 +96,7 @@ public class University {
 	
 	public void removeFaculty(Faculty faculty) throws DomainException {
 		Integer id = faculty.getId();
-		log.info("Remove Faculty '" + name + "' (id=" + id + ")");
+		log.info("Remove Faculty '" + faculty.getName() + "' (id=" + faculty.getId() + ")");
 		try {
 			facultyDao.dropFacultyById(id);
 		}

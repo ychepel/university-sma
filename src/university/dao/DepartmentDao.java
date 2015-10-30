@@ -28,7 +28,7 @@ public class DepartmentDao {
 		ResultSet resultSet = null;
 		
 		Integer facultyId = faculty.getId();
-		log.debug("Get Dpartment for Fculty.id=" + facultyId);
+		log.debug("Get Department for Fculty.id=" + facultyId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);

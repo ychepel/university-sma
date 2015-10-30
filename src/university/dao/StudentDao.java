@@ -33,8 +33,11 @@ public class StudentDao {
 	private Student parseResultSet(ResultSet resultSet) throws SQLException, DaoException, DomainException {
 		Long studentId = resultSet.getLong("STUDENT_ID");
 		log.warn("Student id=" + studentId);
-		
 		Student student = new Student(studentId);
+		
+		Map<Course, Integer> marks = getStudentMarks(studentId);
+		student.setMarks(marks);
+		
 		Long personId = resultSet.getLong("PERSON_ID");
 		log.warn("Student person.id=" + personId);
 		
@@ -173,9 +176,6 @@ public class StudentDao {
 
 			while(resultSet.next()) {
 				Student student = parseResultSet(resultSet);
-				Long studentId = student.getStudentId();
-				Map<Course, Integer> marks = getStudentMarks(studentId);
-				student.setMarks(marks);
 				set.add(student);
 			}
 		}
@@ -232,9 +232,6 @@ public class StudentDao {
 
 			while(resultSet.next()) {
 				Student student = parseResultSet(resultSet);
-				Long studentId = student.getStudentId();
-				Map<Course, Integer> marks = getStudentMarks(studentId);
-				student.setMarks(marks);
 				set.add(student);
 			}
 		}
@@ -289,8 +286,6 @@ public class StudentDao {
 			resultSet = statement.executeQuery();
 			resultSet.next();
 			student = parseResultSet(resultSet);
-			Map<Course, Integer> marks = getStudentMarks(id);
-			student.setMarks(marks);
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {
@@ -567,7 +562,7 @@ public class StudentDao {
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
-		
+		log.debug("Delete all marks for Student.id=" + studentId);
 		try {
 			connection = daoFactory.getConnection();
 			statement = connection.prepareStatement(sql);

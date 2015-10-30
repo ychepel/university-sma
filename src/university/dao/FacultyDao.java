@@ -31,7 +31,7 @@ public class FacultyDao {
 			resultSet = statement.executeQuery(sql);
 
 			while(resultSet.next()) {
-				String facultyName = resultSet.getString("FACULTY_NAME");
+				String facultyName = resultSet.getString("FACULTY_NAME").trim();
 				Integer facultyId = resultSet.getInt("FACULTY_ID");
 				log.warn("Get Faculty with id=" + facultyId + " and name=" + facultyName);
 				Faculty faculty = new Faculty(facultyName);
@@ -88,7 +88,7 @@ public class FacultyDao {
 			statement.setInt(1, id);
 			resultSet = statement.executeQuery();
 			resultSet.next();
-			String facultyName = resultSet.getString("FACULTY_NAME");
+			String facultyName = resultSet.getString("FACULTY_NAME").trim();
 			log.debug("Selected Faculty.name=" + facultyName);
 			result = new Faculty(facultyName);
 			result.setId(id);

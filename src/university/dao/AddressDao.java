@@ -246,13 +246,13 @@ public class AddressDao {
 		Address result = new Address();
 		
 		result.setId(resultSet.getLong("ADDRESS_ID"));
-		result.setCity(resultSet.getString("CITY"));
-		result.setEmail(resultSet.getString("EMAIL"));
+		result.setCity(resultSet.getString("CITY").trim());
+		result.setEmail(resultSet.getString("EMAIL").trim());
 		result.setFlat(resultSet.getInt("FLAT"));
-		result.setHouse(resultSet.getString("HOUSE"));
-		result.setPhone(resultSet.getString("PHONE"));
-		result.setProvince(resultSet.getString("PROVINCE"));
-		result.setStreet(resultSet.getString("STREET"));
+		result.setHouse(resultSet.getString("HOUSE").trim());
+		result.setPhone(resultSet.getString("PHONE").trim());
+		result.setProvince(resultSet.getString("PROVINCE").trim());
+		result.setStreet(resultSet.getString("STREET").trim());
 		
 		log.debug("Slected Address: id=" + result.getId() + "; city=" + result.getCity() + "; falt=" + result.getFlat());
 		

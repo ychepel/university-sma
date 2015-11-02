@@ -46,7 +46,7 @@ public class CourseSchedule {
 		updateCourseScheduleDB();
 	}
 	
-	public void remove(Calendar calendar) throws DomainException {
+	public void removeTimetable(Calendar calendar) throws DomainException {
 		timetables.remove(calendar);
 		updateCourseScheduleDB();
 	}

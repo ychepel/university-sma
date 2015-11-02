@@ -11,86 +11,65 @@ import java.util.Set;
 
 import org.junit.Test;
 
+import university.dao.DaoException;
 import university.domain.*;
 
 
 public class StudentGroupTest {
-
+	
+	private SampleData  sampleData = AllTests.sampleData;
+	
 	@Test
-	public void testGetStudentsOnCourse() {
-		StudentGroup studentGroup = new StudentGroup("Group-001");
+	public void testGetStudentsOnCourse() throws DomainException {
+		Student sampleStudent = sampleData.getTestStudent();
+		Set<Long> expectedResult = new HashSet<>();
+		expectedResult.add(sampleStudent.getStudentId());
 		
-		assertEquals(new HashSet<Student>(), studentGroup.getStudents());
-		
-		Student student1 = new Student();
-		student1.setStudentGroup(studentGroup);
-		Student student2 = new Student();
-		student2.setStudentGroup(studentGroup);
-		Student student3 = new Student();
-		student3.setStudentGroup(studentGroup);
-		
-		
-		Course courseA = new Course("A");
-		Course courseB = new Course("B");
-		
-		student1.addMark(courseA, -1);
-		student1.addMark(courseB, 5);
-		student2.addMark(courseA, -1);
-		student2.addMark(courseB, -1);
-		student3.addMark(courseB, 10);
-		
-		Set<Student> expectedResult = new HashSet<>();
-		expectedResult.add(student1);
-		expectedResult.add(student2);
-		assertEquals(expectedResult, studentGroup.getStudentsOnCourse(courseA));
-		
-		expectedResult = new HashSet<>();
-		expectedResult.add(student2);
-		assertEquals(expectedResult, studentGroup.getStudentsOnCourse(courseB));
+		StudentGroup studentGroup = sampleStudent.getStudentGroup();
+		Course sampleCourse = sampleData.getTestCourse2();
+		Set<Student> resultStudents = studentGroup.getStudentsOnCourse(sampleCourse);;
+		Set<Long> result = new HashSet<>();
+		for(Student student : resultStudents) {
+			Long resutStudentId = student.getStudentId();
+			result.add(resutStudentId);
+		}
+		assertEquals(expectedResult, result);
 	}
 	
 	@Test
-	public void testGetGrade() {
-		StudentGroup studentGroup = new StudentGroup("Group-001");
-		Student student1 = new Student() {
+	public void testGetGrade() throws DomainException, DaoException {
+		Faculty sampleFaculty = sampleData.getTestFaculty();
+		Student student = new Student() {
 			@Override
 			protected Calendar getCalendar() {
 				return new GregorianCalendar(2015, Calendar.NOVEMBER, 1);
 			}
 		};
-		student1.setCompletionDate(new GregorianCalendar(2016, Calendar.MAY, 31));
+		student.setCompletionDate(new GregorianCalendar(2016, Calendar.MAY, 31));
+		sampleFaculty.addStudent(student);
+		StudentGroup studentGroup = student.getStudentGroup();
 		
-		student1.setStudentGroup(studentGroup);
 		assertEquals(Integer.valueOf(5) , studentGroup.getGrade());
+		
+		sampleFaculty.removeStudent(student);
 	}
 	
 	@Test
-	public void testGetSuccessRating() {
-		StudentGroup studentGroup = new StudentGroup("Group-001");
+	public void testGetSuccessRating() throws DomainException {
+		Student sampleStudent = sampleData.getTestStudent();
+		Course sampleCourse = sampleData.getTestCourse1();
+		Long sampleStudentId = sampleStudent.getStudentId();
+		Integer mark = sampleStudent.getCourseMark(sampleCourse);
 		
-		Student student1 = new Student();
-		student1.setStudentGroup(studentGroup);
-		Student student2 = new Student();
-		student2.setStudentGroup(studentGroup);
-		Student student3 = new Student();
-		student3.setStudentGroup(studentGroup);
-		
-		Course courseA = new Course("A");
-		Course courseB = new Course("B");
-		
-		student1.addMark(courseA, -1);
-		student1.addMark(courseB, 8);
-		student2.addMark(courseA, -1);
-		student2.addMark(courseB, 5);
-		student3.addMark(courseB, 10);
-		
-		Map<Student, Integer> expectedResult = new LinkedHashMap<>();
-		
-		expectedResult.put(student3, 10);
-		expectedResult.put(student1, 8);
-		expectedResult.put(student2, 5);
+		Map<Long, Integer> expectedResult = new LinkedHashMap<>();
+		expectedResult.put(sampleStudentId, mark);
 
-		Map<Student, Integer> result= studentGroup.getSuccessRating(courseB);
+		StudentGroup studentGroup = sampleStudent.getStudentGroup();
+		Map<Student, Integer> resultSuccessRating = studentGroup.getSuccessRating(sampleCourse);
+		Map<Long, Integer> result = new LinkedHashMap<>();
+		for(Map.Entry<Student, Integer> entry : resultSuccessRating.entrySet()) {
+			result.put(entry.getKey().getStudentId(), entry.getValue());
+		}
 		assertEquals(expectedResult, result);
 		
 	}

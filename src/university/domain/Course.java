@@ -21,12 +21,14 @@ public class Course {
 	private CourseScheduleDao courseScheduleDao;
 	
 	public CourseSchedule createCourseSchedule(Lecturer lecturer, StudentGroup studentGroup) throws DomainException {
+		Integer adddingLecturerId = lecturer.getLecturerId();
 		log.info("Create schedule for Course '" + this.name + "' (id=" + this.id + "): "
-				+ "Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + "), "
+				+ "Lecturer '" + lecturer.getFullName() + "' (id=" + adddingLecturerId + "), "
 				+ "Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ")");
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			Lecturer courseLecturer = courseSchedule.getLecturer();
-			if(courseLecturer.equals(lecturer)) {
+			Integer courseLecturerId = courseLecturer.getLecturerId();
+			if(courseLecturerId.equals(adddingLecturerId)) {
 				log.debug("Adding Group to existing Course Schedule");
 				courseSchedule.addStudentGroup(studentGroup);
 				return courseSchedule;
@@ -34,40 +36,41 @@ public class Course {
 		}
 		log.debug("Creating new Course Schedule");
 		CourseSchedule newCourseSchedule = new CourseSchedule(this, lecturer);
-		try {
-			courseScheduleDao.createCourseSchedule(newCourseSchedule, this);
-		}
-		catch (DaoException e ) {
-			throw new DomainException("Cannot create Course Schedule", e);
-		}
+		newCourseSchedule = addNewCourseSchedule(newCourseSchedule);
 		newCourseSchedule.addStudentGroup(studentGroup);
-		this.addCourseSchedule(newCourseSchedule);
 		return newCourseSchedule;
 	}
 	
-	public Set<CourseSchedule> getScheduleByLecturer(Lecturer person) throws DomainException {
+	public Set<CourseSchedule> getScheduleByLecturer(Lecturer lecturer) throws DomainException {
+		Integer lecturerId = lecturer.getLecturerId();
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
-			Lecturer lecturer = courseSchedule.getLecturer();
-			if(lecturer.equals(person)) {
+			Lecturer courseLecturer = courseSchedule.getLecturer();
+			Integer courseLecturerId = courseLecturer.getLecturerId();
+			if(courseLecturerId.equals(lecturerId)) {
 				schedule.add(courseSchedule);
 			}
 		}
 		return schedule;
 	}
 	
-	public Set<CourseSchedule> getScheduleByStudentGroup(StudentGroup studentGroup) throws DomainException {
+	protected Set<CourseSchedule> getScheduleByStudentGroup(StudentGroup studentGroup) throws DomainException {
 		Set<CourseSchedule> schedule = new HashSet<CourseSchedule>();
+		Integer studentGroupId = studentGroup.getId();
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			Set<StudentGroup> studentGroups = courseSchedule.getStudentGroups();
-			if(studentGroups.contains(studentGroup)) {
-				schedule.add(courseSchedule);
+			for(StudentGroup scheduledStudentGroup : studentGroups) {
+				Integer scheduledStudentGroupId = scheduledStudentGroup.getId();
+				if(scheduledStudentGroupId.equals(studentGroupId)) {
+					schedule.add(courseSchedule);
+					break;
+				}	
 			}
 		}
 		return schedule;
 	}
 	
-	public void clearCourseSchedules() throws DomainException {
+	protected void clearCourseSchedules() throws DomainException {
 		log.info("Delete all schedules for Course '" + this.name + "' (id=" + this.id + ")");
 		for(CourseSchedule courseSchedule : getCourseSchedules()) {
 			Integer courseScheduleId = courseSchedule.getId();
@@ -81,7 +84,7 @@ public class Course {
 		}
 	}
 	
-	public void removeCourseSchedule(CourseSchedule courseSchedule) throws DomainException {
+	protected void removeCourseSchedule(CourseSchedule courseSchedule) throws DomainException {
 		Integer courseScheduleId = courseSchedule.getId();
 		log.debug("Delete Schedule (id=" + courseScheduleId + ") for Course '" + this.name + "' (id=" + this.id + ")");
 		try {
@@ -108,7 +111,7 @@ public class Course {
 		return false;
 	}
 	
-	public void excludeStudentGroup(StudentGroup studentGroup) throws DomainException {
+	protected void excludeStudentGroup(StudentGroup studentGroup) throws DomainException {
 		log.debug("Removing Student Group '" + studentGroup.getName() + "' (id=" + studentGroup.getId() + ") "
 				+ "from Course '" + this.name + "' (id=" + this.id + ")");
 		Set<CourseSchedule> courseSchedules = getCourseSchedules();
@@ -135,14 +138,16 @@ public class Course {
 		return result;
 	}
 	
-	public void addCourseSchedule(CourseSchedule courseSchedule) throws DomainException {
+	protected CourseSchedule addNewCourseSchedule(CourseSchedule courseSchedule) throws DomainException {
 		log.info("Add new Course Schedule");
+		CourseSchedule newCourseSchedule = null;
 		try {
-			courseScheduleDao.createCourseSchedule(courseSchedule, this);
+			newCourseSchedule = courseScheduleDao.createCourseSchedule(courseSchedule, this);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot create Course CourseSchedule", e);
 		}
+		return newCourseSchedule;
 	}
 	
 	public Course(String name) {

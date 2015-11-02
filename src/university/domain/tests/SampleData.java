@@ -21,7 +21,9 @@ public class SampleData {
 	private Student testStudent;
 	private Lecturer testLecturer;
 	private Address addressTestLecturer;
-	private CourseSchedule testCourseSchedule;
+	private CourseSchedule testCourseSchedule1;
+	private CourseSchedule testCourseSchedule2;
+	private CourseSchedule testCourseSchedule3;
 
 	private static Logger log = Logger.getLogger(SampleData.class);
 	
@@ -107,14 +109,9 @@ public class SampleData {
 		testStudent.setPassport("DF53743");
 		testStudent.setSchoolGraduateSertificate("423543543");
 		testStudent.setAddress(testStudentAddress);
-		
 		testFaculty.addStudent(testStudent);
-		testDepartment.enrollStudent(testStudent, testCourse1);
-		testDepartment.enrollStudent(testStudent, testCourse2);
+		StudentGroup studentGroup = testStudent.getStudentGroup();
 		
-		testStudent.addMark(testCourse1, 22);
-		testStudent.addMark(testCourse2, 0);
-
 		testLecturer = new Lecturer();
 		testLecturer.setBirthDate((new GregorianCalendar(1976, Calendar.MAY, 13)).getTime());
 		testLecturer.setCurrentPosition("Professor");
@@ -137,10 +134,17 @@ public class SampleData {
 		testLecturer.setAddress(addressTestLecturer);
 		testFaculty.addLecturer(testDepartment, testLecturer);
 		
-		testCourseSchedule = testCourse1.createCourseSchedule(testLecturer, testStudent.getStudentGroup());
-		testCourseSchedule.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 25, 10, 55, 00));
-		testCourseSchedule.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 26, 10, 55, 00));
-		testCourseSchedule.addTimetable(new GregorianCalendar(1966, Calendar.OCTOBER, 27, 11, 55, 00));
+		testCourseSchedule1 = testCourse1.createCourseSchedule(testLecturer, studentGroup);
+		testCourseSchedule1.addTimetable(new GregorianCalendar(2015, Calendar.OCTOBER, 25, 10, 55, 00));
+		testCourseSchedule1.addTimetable(new GregorianCalendar(2015, Calendar.OCTOBER, 26, 10, 55, 00));
+		testCourseSchedule1.addTimetable(new GregorianCalendar(2015, Calendar.OCTOBER, 27, 11, 55, 00));
+		testCourseSchedule2 = testCourse2.createCourseSchedule(testLecturer, studentGroup);
+		testCourseSchedule3 = testCourse3.createCourseSchedule(testLecturer, studentGroup);
+		testFaculty.enrollStudent(testStudent, testCourse1);
+		testFaculty.enrollStudent(testStudent, testCourse2);
+
+		testStudent.addMark(testCourse1, 22);
+		testStudent.addMark(testCourse2, -1);
 		
 		log.debug("Sample data uploaded");
 	}
@@ -148,7 +152,7 @@ public class SampleData {
 	public void clearDBFromSampleData() throws DomainException {
 		log.debug("Clearing sample data");
 		testFaculty.removeStudent(testStudent);
-		testDepartment.excludeStudentGroup(testStudent.getStudentGroup());
+		testFaculty.removeStudentGroup(testStudent.getStudentGroup());
 		testDepartment.removeCourse(testCourse1);
 		testDepartment.removeCourse(testCourse2);
 		testDepartment.removeCourse(testCourse3);
@@ -189,12 +193,21 @@ public class SampleData {
 		return testLecturer;
 	}
 
-	public CourseSchedule getTestCourseSchedule() {
-		return testCourseSchedule;
+	public CourseSchedule getTestCourseSchedule1() {
+		return testCourseSchedule1;
 	}
 	
 	public Course getTestCourse4() {
 		return testCourse4;
 	}
+
+	public CourseSchedule getTestCourseSchedule2() {
+		return testCourseSchedule2;
+	}
+
+	public CourseSchedule getTestCourseSchedule3() {
+		return testCourseSchedule3;
+	}
+	
 	
 }

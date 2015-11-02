@@ -27,7 +27,7 @@ public class University {
 		Integer result = 0;
 		Set<CourseSchedule> lecturerSchedule = new HashSet<>();
 		for(Faculty faculty : getFaculties()) {
-			Set<CourseSchedule> courseSchedules = faculty.getSchedule(lecturer); 
+			Set<CourseSchedule> courseSchedules = faculty.getLecturerSchedule(lecturer); 
 			lecturerSchedule.addAll(courseSchedules);
 		}
 
@@ -47,7 +47,7 @@ public class University {
 		for(Faculty faculty : getFaculties()) {
 			Set<CourseSchedule> facultySchedule = new HashSet<>();
 			for(Lecturer lecturer : faculty.getLecturers()) {
-				Set<CourseSchedule> courseSchedules = faculty.getSchedule(lecturer);
+				Set<CourseSchedule> courseSchedules = faculty.getLecturerSchedule(lecturer);
 				facultySchedule.addAll(courseSchedules);
 			}
 			schedule.put(faculty, facultySchedule);
@@ -59,18 +59,21 @@ public class University {
 		log.info("Remove Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") "
 				+ "to Faculty '" + newFaculty.getName() + "' (id=" + newFaculty.getId() + ")");
 		StudentGroup oldStudentGroup = student.getStudentGroup();
+		Integer oldStudentGroupId = oldStudentGroup.getId();
 		Faculty oldStudentFaculty = null;
 		for(Faculty faculty : getFaculties()) {
 			Set<StudentGroup> facultyStudentGroups = faculty.getStudentGroups();
-			if(facultyStudentGroups.contains(oldStudentGroup)) {
-				oldStudentFaculty = faculty;
-				break;
+			for(StudentGroup facultyStudentGroup : facultyStudentGroups) {
+				Integer facultyStudentGroupId = facultyStudentGroup.getId();
+				if(facultyStudentGroupId.equals(oldStudentGroupId)) {
+					oldStudentFaculty = faculty;
+					break;
+				}
 			}
 		}
 		if(oldStudentFaculty != null) {
 			oldStudentFaculty.removeStudent(student);
 		}
-
 		newFaculty.addStudent(student);
 	}
 	

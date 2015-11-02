@@ -25,12 +25,18 @@ public class StudentGroup {
 	
 	public Map<Student, Integer> getSuccessRating(Course course) throws DomainException {
 		Map<Student, Integer> result = new HashMap<>();
+		Integer courseId = course.getId();
 		for(Student student : getStudents()) {
 			Map<Course, Integer> studentMarks = student.getMarks();
-			if(studentMarks.containsKey(course)) {
-				Integer mark = studentMarks.get(course);
-				if(mark.equals(-1)) continue;
-				result.put(student, studentMarks.get(course));
+			for(Map.Entry<Course, Integer> entry : studentMarks.entrySet()) {
+				Course markedCourse = entry.getKey();
+				Integer markedCourseId = markedCourse.getId();
+				if(markedCourseId.equals(courseId)) {
+					Integer mark = entry.getValue();
+					if(mark.equals(-1)) break;
+					result.put(student, mark);
+					break;
+				}
 			}
 		}
 		result = sortStudentByMark(result);
@@ -63,13 +69,19 @@ public class StudentGroup {
 	}
 	
 	public Set<Student> getStudentsOnCourse(Course course) throws DomainException {
+		Integer courseId = course.getId();
 		Set<Student> students = new HashSet<>();
 		for(Student student : getStudents()) {
 			Map<Course, Integer> marks = student.getMarks(); 
-			if(marks.containsKey(course)) {
-				Integer mark = marks.get(course);
-				if(mark.equals(-1)) {
-					students.add(student);
+			for(Map.Entry<Course, Integer> entry : marks.entrySet()) {
+				Course markedCourse = entry.getKey();
+				Integer markedCourseId = markedCourse.getId();
+				if(markedCourseId.equals(courseId)) {
+					Integer mark = entry.getValue();
+					if(mark.equals(-1)) {
+						students.add(student);
+					}
+					break;
 				}
 			}
 		}
@@ -83,7 +95,7 @@ public class StudentGroup {
 		studentDao = new StudentDao();
 	}
 	
-	public void addStudent(Student student) throws DomainException {
+	protected void addStudent(Student student) throws DomainException {
 		student.setStudentGroup(this);
 	}
 
@@ -98,7 +110,7 @@ public class StudentGroup {
 		return result;
 	}
 	
-	public void removeStudent(Student student) throws DomainException {
+	protected void removeStudent(Student student) throws DomainException {
 		log.info("Remove Student '" + student.getFullName() + "' + (id=" + student.getStudentId() + ")");
 		try {
 			studentDao.dropStudent(student);

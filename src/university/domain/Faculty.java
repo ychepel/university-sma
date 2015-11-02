@@ -12,7 +12,7 @@ import university.dao.StudentGroupDao;
 
 public class Faculty {
 	
-	private final Integer MAX_QUANTITY_IN_GROUP = 30;
+	private final Integer MAX_QUANTITY_IN_GROUP = 3;
 	private final Integer UNDERACHIEVMENT_AVG_MARK_LEVEL = 35;
 	
 	private Integer id;
@@ -38,7 +38,7 @@ public class Faculty {
 		
 		String newStudentGroupName = "G" + studentGrade + "-" + (getGroupsQuantityOnGrade(studentGrade) + 1); 
 		StudentGroup newStudentGroup = new StudentGroup(newStudentGroupName);
-		this.createStudentGroup(newStudentGroup);
+		newStudentGroup = createStudentGroup(newStudentGroup);
 		student.setStudentGroup(newStudentGroup);
 	}
 	
@@ -80,22 +80,28 @@ public class Faculty {
 		return false;
 	}
 	
-	public Set<CourseSchedule> getSchedule(Student student) throws DomainException {
+	public Set<CourseSchedule> getStudentSchedule(Student student) throws DomainException {
+		Long studentId = student.getStudentId();
+		log.info("Get CourseSchedules for Student '" + student.getFullName() +"' (id=" + studentId + ")");
 		Set<CourseSchedule> schedule = new HashSet<>();
 		StudentGroup studentGroup =  student.getStudentGroup();
 		for(Department department : getDepartments()) {
-			for(Course course : department.getCourses()) {
+			Set<Course> courses = department.getCourses();
+			for(Course course : courses) {
 				Set<Student> students = studentGroup.getStudentsOnCourse(course);
-				if(students.contains(student)) {
-					Set<CourseSchedule> courseSchedules = course.getScheduleByStudentGroup(studentGroup);
-					schedule.addAll(courseSchedules);
+				for(Student courseStudent : students) {
+					Long courseStudentId = courseStudent.getStudentId();
+					if(courseStudentId.equals(studentId)) {
+						Set<CourseSchedule> courseSchedules = course.getScheduleByStudentGroup(studentGroup);
+						schedule.addAll(courseSchedules);
+					}
 				}
 			}
 		}
 		return schedule;
 	}
 	
-	public Set<CourseSchedule> getSchedule(Lecturer lecturer) throws DomainException {
+	public Set<CourseSchedule> getLecturerSchedule(Lecturer lecturer) throws DomainException {
 		Set<CourseSchedule> schedule = new HashSet<>();
 		for(Department department :getDepartments()) {
 			Set<CourseSchedule> courseSchedules = department.getSchedule(lecturer);
@@ -142,7 +148,7 @@ public class Faculty {
 		}
 	}
 	
-	private void removeStudentGroup(StudentGroup studentGroup) throws DomainException {
+	public void removeStudentGroup(StudentGroup studentGroup) throws DomainException {
 		Integer studentGroupId = studentGroup.getId();
 		log.info("Remove Student Group '" + studentGroup.getName() + "' (id=" + studentGroupId + ")");
 		try {
@@ -157,14 +163,15 @@ public class Faculty {
 		}
 	}
 
-	public void createStudentGroup(StudentGroup studentGroup) throws DomainException {
+	protected StudentGroup createStudentGroup(StudentGroup studentGroup) throws DomainException {
 		log.info("Create Student Group '" + studentGroup.getName() + "' on Faculty '" + this.getName() + "' (id=" + this.getId() + ")");
 		try {
-			studentGroupDao.createStudentGroup(studentGroup, this);
+			studentGroup = studentGroupDao.createStudentGroup(studentGroup, this);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot create Faculty Student Group", e);
 		}
+		return studentGroup;
 	}
 	
 	public Integer getMaxQuantityInGroupParameter() {

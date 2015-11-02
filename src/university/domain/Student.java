@@ -116,7 +116,7 @@ public class Student extends Person {
 		return studentGroup;
 	}
 	
-	public Integer getMark(Course course) {
+	public Integer getCourseMark(Course course) {
 		return marks.get(course);
 	}
 	
@@ -154,11 +154,11 @@ public class Student extends Person {
 		Student.studentCount = studentCount;
 	}
 	
-	public void setStudentId(Long studentId) {
+	protected void setStudentId(Long studentId) {
 		this.studentId = studentId;
 	}
 	
-	public void updateStudentInDB() throws DomainException {
+	private void updateStudentInDB() throws DomainException {
 		log.info("Update DB information for Student '" + this.getFullName() + "' (id=" + this.getStudentId() + ")");
 		try {
 			studentDao.updateStudent(this);

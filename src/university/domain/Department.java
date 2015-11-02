@@ -29,11 +29,25 @@ public class Department {
 		return schedule;
 	}
 	
-	public Boolean enrollStudent(Student student, Course course) throws DomainException {
+	protected Boolean enrollStudent(Student student, Course course) throws DomainException {
+		Integer courseId = course.getId();
+		if(courseId ==  null) {
+			log.warn("Course '" + course.getName() + "' wasn't added to any Department");
+			return false;
+		}
 		log.info("Enroll Student '" + student.getFullName() + "' (id=" + student.getStudentId() + ") "
-				+ "to Course '" + course.getName() + "' (id=" + course.getId() + ")");
+				+ "to Course '" + course.getName() + "' (id=" + courseId + ")");
+		
 		Set<Course> courses = getCourses();
-		if(!courses.contains(course)) return false;
+		Boolean courseAvailable = false;
+		for(Course departmentCourse : courses) {
+			Integer departmentCourseId = departmentCourse.getId();
+			if(courseId.equals(departmentCourseId)) {
+				courseAvailable = true;
+				break;
+			}
+		}
+		if(!courseAvailable) return false;
 		
 		StudentGroup studentGroup = student.getStudentGroup();
 		if(course.isStudentGroupScheduled(studentGroup)) {
@@ -43,31 +57,25 @@ public class Department {
 		return false;
 	}
 	
-	public void addLecturer(Lecturer lecturer) throws DomainException {
+	protected void addLecturer(Lecturer lecturer) throws DomainException {
 		log.info("Add Lecturer '" + lecturer.getFullName() + "' (id=" + lecturer.getLecturerId() + ") "
 				+ "to Department '" + this.name + "' (id=" + this.id + ")");
-		Set<Lecturer> lecturers = getLecturers();
-		if(!lecturers.contains(lecturer)) {
-			try {
-				lecturerDao.createLecturer(lecturer, this);
-			}
-			catch (DaoException e) {
-				throw new DomainException("Cannot create Department Lecturer", e);
-			}
+		try {
+			lecturerDao.createLecturer(lecturer, this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot create Department Lecturer", e);
 		}
 	}
 	
 	public void addCourse(Course course) throws DomainException {
 		log.info("Add Course '" + course.getName() + "' (id=" + course.getId() + ") "
 				+ "to Department '" + this.name + "' (id=" + this.id + ")");
-		Set<Course> courses = getCourses();
-		if(!courses.contains(course)) {
-			try {
-				courseDao.createCourse(course, this);
-			}
-			catch (DaoException e) {
-				throw new DomainException("Cannot create Department Course", e);
-			}
+		try {
+			courseDao.createCourse(course, this);
+		}
+		catch (DaoException e) {
+			throw new DomainException("Cannot create Department Course", e);
 		}
 	}
 	
@@ -118,7 +126,7 @@ public class Department {
 		return result;
 	}
 
-	public void excludeStudentGroup(StudentGroup studentGroup) throws DomainException {
+	protected void excludeStudentGroup(StudentGroup studentGroup) throws DomainException {
 		for(Course course : getCourses()) {
 			course.excludeStudentGroup(studentGroup);
 		}

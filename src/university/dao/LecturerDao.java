@@ -204,11 +204,11 @@ public class LecturerDao {
 	}
 	
 	public void updateLecturer(Lecturer lecturer, Department department) throws DaoException {
-		String sql = "UPDATE LECTURER SET "
-				+ "SCIENCE_DEGREE=?, "
-				+ "CURRENT_POSITION=?, "
-				+ "DEPARTMENT_ID=? "
-				+ "WHERE LECTURER_ID=?";
+		String sql = "UPDATE LECTURER SET"
+				+ " SCIENCE_DEGREE=?,"
+				+ " CURRENT_POSITION=?,"
+				+ " DEPARTMENT_ID=?"
+				+ " WHERE LECTURER_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -267,7 +267,7 @@ public class LecturerDao {
 		}
 	}
 	
-	public void dropLecturerById(Integer id) throws DaoException {
+	public void deleteLecturerById(Integer id) throws DaoException {
 		String sql = "DELETE FROM LECTURER WHERE LECTURER_ID=?";
 		
 		Connection connection = null;
@@ -275,7 +275,7 @@ public class LecturerDao {
 		
 		Lecturer lecturer = getLecturerById(id);
 		Long personId = lecturer.getPersonId();
-		personDao.dropPersonById(personId);
+		personDao.deletePersonById(personId);
 		
 		try {
 			connection = daoFactory.getConnection();

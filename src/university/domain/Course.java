@@ -76,7 +76,7 @@ public class Course {
 			Integer courseScheduleId = courseSchedule.getId();
 			log.debug("Delete CourseSchedule with id=" + courseScheduleId);
 			try {
-				courseScheduleDao.dropCourseScheduleById(courseScheduleId);
+				courseScheduleDao.deleteCourseScheduleById(courseScheduleId);
 			}
 			catch (DaoException e) {
 				throw new DomainException("Cannot delete all CourseSchedules for Course", e);
@@ -88,7 +88,7 @@ public class Course {
 		Integer courseScheduleId = courseSchedule.getId();
 		log.debug("Delete Schedule (id=" + courseScheduleId + ") for Course '" + this.name + "' (id=" + this.id + ")");
 		try {
-			courseScheduleDao.dropCourseScheduleById(courseScheduleId);
+			courseScheduleDao.deleteCourseScheduleById(courseScheduleId);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot delete CourseSchedule for Course", e);

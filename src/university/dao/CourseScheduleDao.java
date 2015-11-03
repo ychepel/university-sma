@@ -408,8 +408,8 @@ public class CourseScheduleDao {
 		log.warn("Updating of Course Schedule (id=" + courseScheduleId + "): Lecturer.id=" + lecturerId);
 		
 		if(courseScheduleId != null) {
-			dropCourseScheduleStudentGroups(courseScheduleId);
-			dropCourseScheduleTimetables(courseScheduleId);
+			deleteCourseScheduleStudentGroups(courseScheduleId);
+			deleteCourseScheduleTimetables(courseScheduleId);
 		}
 		createCourseScheduleGroup(courseSchedule);
 		createCourseScheduleTimetable(courseSchedule);
@@ -457,14 +457,14 @@ public class CourseScheduleDao {
 		}
 	}
 	
-	public void dropCourseScheduleById(Integer id) throws DaoException {
+	public void deleteCourseScheduleById(Integer id) throws DaoException {
 		String sql = "DELETE FROM COURSE_SCHEDULE WHERE COURSE_SCHEDULE_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
-		dropCourseScheduleStudentGroups(id);
-		dropCourseScheduleTimetables(id);
+		deleteCourseScheduleStudentGroups(id);
+		deleteCourseScheduleTimetables(id);
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -497,7 +497,7 @@ public class CourseScheduleDao {
 		}
 	}
 	
-	private void dropCourseScheduleStudentGroups(Integer id) throws DaoException {
+	private void deleteCourseScheduleStudentGroups(Integer id) throws DaoException {
 		String sql = "DELETE FROM COURSE_SCHEDULE_GROUP WHERE COURSE_SCHEDULE_ID=?";
 		
 		Connection connection = null;
@@ -534,7 +534,7 @@ public class CourseScheduleDao {
 		}
 	}
 	
-	private void dropCourseScheduleTimetables(Integer id) throws DaoException {
+	private void deleteCourseScheduleTimetables(Integer id) throws DaoException {
 		String sql = "DELETE FROM COURSE_SCHEDULE_TIMETABLE WHERE COURSE_SCHEDULE_ID=?";
 		
 		Connection connection = null;

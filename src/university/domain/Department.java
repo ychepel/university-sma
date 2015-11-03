@@ -84,7 +84,7 @@ public class Department {
 				+ "from Department '" + this.name + "' (id=" + this.id + ")");
 		Integer lecturerId = lecturer.getLecturerId();
 		try {
-			lecturerDao.dropLecturerById(lecturerId);
+			lecturerDao.deleteLecturerById(lecturerId);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop Department Lecturer", e);
@@ -97,7 +97,7 @@ public class Department {
 		course.clearCourseSchedules();
 		Integer courseId = course.getId();
 		try {
-			courseDao.dropCourseById(courseId);
+			courseDao.deleteCourseById(courseId);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop Department Course", e);

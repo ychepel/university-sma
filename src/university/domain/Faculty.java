@@ -152,7 +152,7 @@ public class Faculty {
 		Integer studentGroupId = studentGroup.getId();
 		log.info("Remove Student Group '" + studentGroup.getName() + "' (id=" + studentGroupId + ")");
 		try {
-			studentGroupDao.dropStudentGroupById(studentGroupId);
+			studentGroupDao.deleteStudentGroupById(studentGroupId);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop Faculty Student Group", e);
@@ -198,7 +198,7 @@ public class Faculty {
 		Integer id = department.getId();
 		log.info("Remove Department '" + department.getName() + "' (id=" + id + ")");
 		try {
-			departmentDao.dropDepartmentById(id);
+			departmentDao.deleteDepartmentById(id);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop the department", e);

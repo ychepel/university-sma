@@ -101,7 +101,7 @@ public class University {
 		Integer id = faculty.getId();
 		log.info("Remove Faculty '" + faculty.getName() + "' (id=" + faculty.getId() + ")");
 		try {
-			facultyDao.dropFacultyById(id);
+			facultyDao.deleteFacultyById(id);
 		}
 		catch (DaoException e) {
 			throw new DomainException("Cannot drop the faculty", e);

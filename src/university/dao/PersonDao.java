@@ -85,15 +85,15 @@ public class PersonDao {
 	}
 	
 	protected void updatePerson(Person person) throws DaoException {
-		String sql = "UPDATE PERSON SET "
-				+ "FIRST_NAME=?, "
-				+ "LAST_NAME=?, "
-				+ "PATRONYMIC_NAME=?, "
-				+ "BIRTH_DATE=?, "
-				+ "GENDER=?, "
-				+ "PASSPORT=?, "
-				+ "NATIONALITY=? "
-				+ "WHERE PERSON_ID=?";
+		String sql = "UPDATE PERSON SET"
+				+ " FIRST_NAME=?,"
+				+ " LAST_NAME=?,"
+				+ " PATRONYMIC_NAME=?,"
+				+ " BIRTH_DATE=?,"
+				+ " GENDER=?,"
+				+ " PASSPORT=?,"
+				+ " NATIONALITY=?"
+				+ " WHERE PERSON_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -165,14 +165,14 @@ public class PersonDao {
 		}
 	}
 
-	protected void dropPersonById(Long id) throws DaoException {
+	protected void deletePersonById(Long id) throws DaoException {
 		String sql = "DELETE FROM PERSON WHERE PERSON_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
 		
 		Long addressId = getAddressIdByPersonId(id);
-		addressDao.dropAddressById(addressId);
+		addressDao.deleteAddressById(addressId);
 		
 		try {
 			connection = daoFactory.getConnection();

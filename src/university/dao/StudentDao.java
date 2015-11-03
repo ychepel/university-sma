@@ -466,7 +466,7 @@ public class StudentDao {
 		log.debug("Updating Student: Address=" + student.getAddress() + "; Address.id=" + student.getAddress().getId());
 		Map<String, Object> sqlParameters = parseStudent(student);
 		
-		dropStudentMarks(studentId);
+		deleteStudentMarks(studentId);
 		createStudentMark(student);
 		
 		personDao.updatePerson(student);
@@ -516,7 +516,7 @@ public class StudentDao {
 		}
 	}
 	
-	public void dropStudent(Student student) throws DaoException {
+	public void deleteStudent(Student student) throws DaoException {
 		String sql = "DELETE FROM STUDENT WHERE STUDENT_ID=?";
 		
 		Connection connection = null;
@@ -525,8 +525,8 @@ public class StudentDao {
 		Long personId = student.getPersonId();
 		Long studentId = student.getStudentId();
 		
-		personDao.dropPersonById(personId);
-		dropStudentMarks(studentId);
+		personDao.deletePersonById(personId);
+		deleteStudentMarks(studentId);
 		
 		try {
 			connection = daoFactory.getConnection();
@@ -559,7 +559,7 @@ public class StudentDao {
 		}
 	}
 	
-	private void dropStudentMarks(Long studentId) throws DaoException {
+	private void deleteStudentMarks(Long studentId) throws DaoException {
 		String sql = "DELETE FROM STUDENT_MARK WHERE STUDENT_ID=?";
 		
 		Connection connection = null;

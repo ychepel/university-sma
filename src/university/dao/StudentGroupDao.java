@@ -246,7 +246,7 @@ public class StudentGroupDao {
 		}
 	}
 	
-	public void dropStudentGroupById(Integer id) throws DaoException {
+	public void deleteStudentGroupById(Integer id) throws DaoException {
 		String sql = "DELETE FROM STUDENT_GROUP WHERE STUDENT_GROUP_ID=?";
 		
 		Connection connection = null;

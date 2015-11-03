@@ -79,15 +79,15 @@ public class AddressDao {
 	}
 	
 	public void updateAddress(Address address) throws DaoException {
-		String sql = "UPDATE ADDRESS "
-				+ "SET CITY=?, "
-				+ "EMAIL=?, "
-				+ "FLAT=?, "
-				+ "HOUSE=?, "
-				+ "PHONE=?, "
-				+ "PROVINCE=?, "
-				+ "STREET=? "
-				+ "WHERE ADDRESS_ID=?";
+		String sql = "UPDATE ADDRESS"
+				+ " SET CITY=?, "
+				+ " EMAIL=?,"
+				+ " FLAT=?,"
+				+ " HOUSE=?,"
+				+ " PHONE=?,"
+				+ " PROVINCE=?,"
+				+ " STREET=?"
+				+ " WHERE ADDRESS_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -152,7 +152,7 @@ public class AddressDao {
 		
 	}
 
-	protected void dropAddressById(Long id) throws DaoException {
+	protected void deleteAddressById(Long id) throws DaoException {
 		String sql = "DELETE FROM ADDRESS WHERE ADDRESS_ID=?";
 		
 		Connection connection = null;

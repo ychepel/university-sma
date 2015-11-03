@@ -200,10 +200,10 @@ public class CourseDao {
 	
 	public void updateCourse(Course course) throws DaoException {
 		
-		String sql = "UPDATE COURSE SET "
-				+ "COURSE_NAME=?, "
-				+ "GRADE=? "
-				+ "WHERE COURSE_ID=?";
+		String sql = "UPDATE COURSE SET"
+				+ " COURSE_NAME=?,"
+				+ " GRADE=?"
+				+ " WHERE COURSE_ID=?";
 		
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -259,7 +259,7 @@ public class CourseDao {
 		}
 	}
 	
-	public void dropCourseById(Integer id) throws DaoException {
+	public void deleteCourseById(Integer id) throws DaoException {
 		String sql = "DELETE FROM COURSE WHERE COURSE_ID=?";
 		
 		Connection connection = null;

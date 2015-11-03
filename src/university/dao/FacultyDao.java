@@ -235,7 +235,7 @@ public class FacultyDao {
 		}
 	}
 	
-	public void dropFacultyById(Integer id) throws DaoException {
+	public void deleteFacultyById(Integer id) throws DaoException {
 		String sql = "DELETE FROM FACULTY WHERE FACULTY_ID=?";
 		
 		Connection connection = null;

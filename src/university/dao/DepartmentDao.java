@@ -240,7 +240,7 @@ public class DepartmentDao {
 		}
 	}
 	
-	public void dropDepartmentById(Integer id) throws DaoException {
+	public void deleteDepartmentById(Integer id) throws DaoException {
 		String sql = "DELETE FROM DEPARTMENT WHERE DEPARTMENT_ID=?";
 		
 		Connection connection = null;

@@ -113,7 +113,7 @@ public class StudentGroup {
 	protected void removeStudent(Student student) throws DomainException {
 		log.info("Remove Student '" + student.getFullName() + "' + (id=" + student.getStudentId() + ")");
 		try {
-			studentDao.dropStudent(student);
+			studentDao.deleteStudent(student);
 		}
 		catch (DaoException e) {
 			throw new DomainException ("Cannot remove Student", e);

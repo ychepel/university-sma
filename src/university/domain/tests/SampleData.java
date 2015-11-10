@@ -10,7 +10,7 @@ import university.domain.*;
 
 public class SampleData {
 	
-	private University testUniversity;
+	private University testUniversity = new University("Test.University");
 	private Faculty testFaculty;
 	private Department testDepartment;
 	private Course testCourse1;
@@ -26,6 +26,28 @@ public class SampleData {
 	private CourseSchedule testCourseSchedule3;
 
 	private static Logger log = Logger.getLogger(SampleData.class);
+	
+	public static void main (String[] args) throws DaoException, DomainException {
+		Sample sample1 = new Sample();
+		sample1.start();
+		Sample sample2 = new Sample();
+		sample2.start();
+		Sample sample3 = new Sample();
+		sample3.start();
+	}
+	
+	private static class Sample extends Thread {
+		SampleData data = new SampleData();
+		@Override
+		public void run() {
+			try {
+				data.printDBData();
+			} catch (DaoException | DomainException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	
 	public void printDBData() throws DaoException, DomainException {
 		
@@ -70,7 +92,6 @@ public class SampleData {
 	}
 	
 	public void fillDBWithSampleData() throws DaoException, DomainException {
-		testUniversity = new University("Test.University");
 		testFaculty = testUniversity.createFaculty("Testing Faculty");
 		testDepartment = testFaculty.createDepartment("Testing Department");
 		

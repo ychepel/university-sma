@@ -15,7 +15,7 @@ import university.domain.Faculty;
 
 public class StudentGroupDao {
 
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	
 	private static Logger log = Logger.getLogger(StudentGroupDao.class);
 	

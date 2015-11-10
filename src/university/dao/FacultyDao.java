@@ -14,7 +14,7 @@ import university.domain.Faculty;
 
 public class FacultyDao {
 
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	private static Logger log = Logger.getLogger(FacultyDao.class);
 	
 	public Set<Faculty> getFaculties() throws DaoException {

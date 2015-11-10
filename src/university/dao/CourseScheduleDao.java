@@ -19,7 +19,7 @@ import university.domain.Lecturer;
 import university.domain.StudentGroup;
 
 public class CourseScheduleDao {
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	private LecturerDao lecturerDao = new LecturerDao();
 	private StudentGroupDao studentGroupDao = new StudentGroupDao();
 	

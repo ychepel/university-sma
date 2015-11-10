@@ -15,7 +15,7 @@ public class DaoFactory {
 	
 	private static Logger log = Logger.getLogger(DaoFactory.class);
 	
-	public DaoFactory() {
+	protected DaoFactory() {
 		try {
 			Class.forName(driver);
 		}
@@ -25,7 +25,7 @@ public class DaoFactory {
 		}
 	}
 	
-	public Connection getConnection() throws SQLException {
+	protected Connection getConnection() throws SQLException {
 		return DriverManager.getConnection(url, user, password);
 	}
 	

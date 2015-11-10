@@ -23,7 +23,7 @@ import university.domain.Person;
 import university.domain.Course;
 
 public class StudentDao {
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	private PersonDao personDao = new PersonDao();
 	private StudentGroupDao studentGroupDao = new StudentGroupDao();
 	private CourseDao courseDao = new CourseDao();

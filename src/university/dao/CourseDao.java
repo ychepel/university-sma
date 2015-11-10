@@ -15,7 +15,7 @@ import university.domain.Department;
 import university.domain.DomainException;
 
 public class CourseDao {
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	
 	private static Logger log = Logger.getLogger(CourseDao.class);
 	

@@ -13,7 +13,7 @@ import university.domain.Address;
 import university.domain.Person;
 
 public class PersonDao {
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	private AddressDao addressDao = new AddressDao();
 	
 	private static Logger log = Logger.getLogger(PersonDao.class);

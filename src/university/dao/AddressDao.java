@@ -11,7 +11,7 @@ import org.apache.log4j.Logger;
 import university.domain.Address;
 
 public class AddressDao {
-	private DaoFactory daoFactory = new DaoFactory();
+	private ConnectionFactory daoFactory = new ConnectionFactory();
 	
 	private static Logger log = Logger.getLogger(AddressDao.class);
 	

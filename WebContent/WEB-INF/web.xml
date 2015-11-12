@@ -7,7 +7,7 @@
   <description>University App</description>
  	
  	<resource-ref>
- 		<description>University App Datasource</description>
+ 		<description>University App DataSource</description>
  		<res-ref-name>jdbc/univerdb</res-ref-name>
  		<res-type>javax.sql.DataSource</res-type>
  		<res-auth>Container</res-auth>

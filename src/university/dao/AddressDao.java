@@ -42,11 +42,11 @@ public class AddressDao {
 			Long id = resultSet.getLong(1);
 			address.setId(id);
 			log.warn("New Adress Id=" + id);
-		}
+		} 
 		catch (SQLException e) {
 			log.error("Cannot create Address", e);
 			throw new DaoException("Cannot create Address", e);
-		}
+		} 
 		finally {
 			try {
 				if(resultSet != null) {

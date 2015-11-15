@@ -286,8 +286,9 @@ public class StudentDao {
 			statement = connection.prepareStatement(sql);
 			statement.setLong(1, id);
 			resultSet = statement.executeQuery();
-			resultSet.next();
-			student = parseResultSet(resultSet);
+			if(resultSet.next()) {
+				student = parseResultSet(resultSet);
+			}
 		}
 		catch (DomainException ignore) {/*NOP*/}
 		catch (SQLException e) {

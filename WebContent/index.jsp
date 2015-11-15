@@ -9,6 +9,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-Hello World!
+	<%@ include file="student-id.jsp" %>
 </body>
 </html>

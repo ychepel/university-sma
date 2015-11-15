@@ -1,0 +1,33 @@
+22:34:20,352 FATAL Thread-2 DaoFactory:getConnection:27 - Cannot get Connection
+javax.naming.NoInitialContextException: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+	at javax.naming.spi.NamingManager.getInitialContext(Unknown Source)
+	at javax.naming.InitialContext.getDefaultInitCtx(Unknown Source)
+	at javax.naming.InitialContext.getURLOrDefaultInitCtx(Unknown Source)
+	at javax.naming.InitialContext.lookup(Unknown Source)
+	at university.dao.ConnectionFactory.getConnection(ConnectionFactory.java:22)
+	at university.dao.FacultyDao.getFaculties(FacultyDao.java:29)
+	at university.domain.University.getFaculties(University.java:145)
+	at university.domain.tests.SampleData.printDBData(SampleData.java:54)
+	at university.domain.tests.SampleData$Sample.run(SampleData.java:44)
+22:34:20,352 FATAL Thread-1 DaoFactory:getConnection:27 - Cannot get Connection
+javax.naming.NoInitialContextException: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+	at javax.naming.spi.NamingManager.getInitialContext(Unknown Source)
+	at javax.naming.InitialContext.getDefaultInitCtx(Unknown Source)
+	at javax.naming.InitialContext.getURLOrDefaultInitCtx(Unknown Source)
+	at javax.naming.InitialContext.lookup(Unknown Source)
+	at university.dao.ConnectionFactory.getConnection(ConnectionFactory.java:22)
+	at university.dao.FacultyDao.getFaculties(FacultyDao.java:29)
+	at university.domain.University.getFaculties(University.java:145)
+	at university.domain.tests.SampleData.printDBData(SampleData.java:54)
+	at university.domain.tests.SampleData$Sample.run(SampleData.java:44)
+22:34:20,352 FATAL Thread-0 DaoFactory:getConnection:27 - Cannot get Connection
+javax.naming.NoInitialContextException: Need to specify class name in environment or system property, or as an applet parameter, or in an application resource file:  java.naming.factory.initial
+	at javax.naming.spi.NamingManager.getInitialContext(Unknown Source)
+	at javax.naming.InitialContext.getDefaultInitCtx(Unknown Source)
+	at javax.naming.InitialContext.getURLOrDefaultInitCtx(Unknown Source)
+	at javax.naming.InitialContext.lookup(Unknown Source)
+	at university.dao.ConnectionFactory.getConnection(ConnectionFactory.java:22)
+	at university.dao.FacultyDao.getFaculties(FacultyDao.java:29)
+	at university.domain.University.getFaculties(University.java:145)
+	at university.domain.tests.SampleData.printDBData(SampleData.java:54)
+	at university.domain.tests.SampleData$Sample.run(SampleData.java:44)

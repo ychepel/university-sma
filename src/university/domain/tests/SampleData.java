@@ -27,28 +27,6 @@ public class SampleData {
 
 	private static Logger log = Logger.getLogger(SampleData.class);
 	
-	public static void main (String[] args) throws DaoException, DomainException {
-		Sample sample1 = new Sample();
-		sample1.start();
-		Sample sample2 = new Sample();
-		sample2.start();
-		Sample sample3 = new Sample();
-		sample3.start();
-	}
-	
-	private static class Sample extends Thread {
-		SampleData data = new SampleData();
-		@Override
-		public void run() {
-			try {
-				data.printDBData();
-			} catch (DaoException | DomainException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public void printDBData() throws DaoException, DomainException {
 		
 		for(Faculty faculty : testUniversity.getFaculties()) {
